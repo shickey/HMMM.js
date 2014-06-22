@@ -1,0 +1,18 @@
+0  read  r1
+1  calln r14 7
+2  write r2    # Here's a comment about  this particular line
+3  halt
+4  nop
+# This, on the other hand, is a full-line comment
+5  nop
+6  nop
+
+7  jltzn r1 14
+8  jeqzn r1 14
+9  setn  r2 1
+10 jeqzn r1 15
+11 mul   r2 r2 r1
+12 addn  r1 -1
+13 jumpn 10
+14 setn  r2 -1
+15 jumpr r14
