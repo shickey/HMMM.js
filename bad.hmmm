@@ -1,0 +1,10 @@
+ 0	read r1
+1	write r1
+2	read  r2 # read r2
+3	jeqz r2, 7
+  4	div r3 r1, r2
+5	write r3
+6	halt		# end
+7      setn r3 	0
+8	write r3
+9	halt

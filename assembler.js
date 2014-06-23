@@ -1,28 +1,62 @@
 var hmmm = require('./hmmm_language');
+var StringScanner = require('StringScanner');
 
 exports = module.exports = (function() {
 
   'use strict';
 
   function tokenizeLine(line) {
-    var trimmed = line.trim();
+    var tokens = [];
+    var ss = new StringScanner(line);
 
-    // Clean out comments
-    var hash = trimmed.indexOf('#');
-    if (hash !== -1) {
-      trimmed = trimmed.substring(0, hash).trim();
+    // Scan for leading whitespace
+    ss.scan(/\s*/);
+    if (ss.eos() || ss.peek(1) === "#") {
+      // If the line was blank or a comment, just return an empty array of tokens
+      return tokens;
     }
 
-    // Ignore blank lines by returning empty array, I guess?
-    if (trimmed.length === 0) {
-      return [];
+    // Grab the line number
+    var lineNum = ss.scan(/\d+/);
+    if (lineNum === null) {
+      // TODO Throw missing line number error
+    }
+    tokens.push(lineNum);
+
+    if (ss.scan(/\s+/) === null) {
+      // Try to advance through whitespace, if there is none
+      // TODO Throw parse error
     }
 
-    // Tokenize
-    var tokens = trimmed.split(/\s+/);
+    var inst = ss.scan(/\w+/);
+    if (inst === null) {
+      // TODO Throw missing instruction error
+    }
+    tokens.push(inst);
+
+    if (ss.scan(/\s+/) === null) {
+      // Try to advance through whitespace, if there is none
+      // TODO Throw parse error
+    }
+
+    while (!ss.eos()) {
+      if (ss.peek(1) === "#") {
+        ss.terminate();
+        break;
+      }
+
+      var regOrNumToken = ss.scan(/[rR][0-9]|[rR]1[0-5]|-?[0-9xXa-fA-F]+/);
+      if (regOrNumToken === null) {
+        // TODO Parse error
+      }
+      tokens.push(regOrNumToken);
+      ss.scan(/[,\s]+/);
+    }
+
+    console.log(tokens);
 
     return tokens;
-  };
+  }
 
   function parseTokens(tokens) {
     if (tokens.length === 0) {
@@ -168,6 +202,7 @@ exports = module.exports = (function() {
           bitstring += binaryForRegister(arg);
         }
         else {
+          console.log("Error: Improper register");
           // TODO Handle error
         }
       }
