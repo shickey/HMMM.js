@@ -45,7 +45,7 @@ exports = module.exports = (function() {
         break;
       }
 
-      var regOrNumToken = ss.scan(/[rR][0-9]|[rR]1[0-5]|-?[0-9xXa-fA-F]+/);
+      var regOrNumToken = ss.scan(/[rR]1[0-5]|[rR][0-9]|-?[0-9xXa-fA-F]+/);
       if (regOrNumToken === null) {
         // TODO Parse error
       }
@@ -173,8 +173,10 @@ exports = module.exports = (function() {
     var inst = hmmm.instructions[instruction.inst];
     var signature = hmmm.signatures[inst];
 
-    // TODO: Fix this since signatures containing 'z' will throw things off
-    if (signature.length !== instruction.args.length) {
+    // Since some signatures contain the 'z' padding argument,
+    // the expected number of args does not necessarily equal signature.length;
+    var numExpectedArgs = signature.length - (signature.match(/z/) || []).length;
+    if (numExpectedArgs !== instruction.args.length) {
       // TODO ERROR! Instruction has wrong number of arguments
     }
 
