@@ -1,0 +1,20 @@
+{
+  "name": "hmmm-node",
+  "version": "0.0.0",
+  "description": "Javascript implementation of the Harvey Mudd Miniature Machine language.",
+  "main": "assemble_hmmm.js",
+  "dependencies": {
+    "StringScanner": "^0.0.3",
+    "split": "^0.3.0",
+    "through": "^2.3.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "education"
+  ],
+  "author": "Sean Hickey",
+  "license": "MIT"
+}
