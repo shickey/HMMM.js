@@ -73,6 +73,11 @@ var hmmm = exports = module.exports = {
         "jgtz"   : { opcode : "1110000000000000", mask : "1111000000000000" },
         "jltz"   : { opcode : "1111000000000000", mask : "1111000000000000" },
         "data"   : { opcode : "0000000000000000", mask : "0000000000000000" }
-  }
+  },
+  
+  opcodePrecedence : 
+    ["halt","read","write","jumpi","loadn","load","store","loadi","storei",
+     "addn","nop","mov","add","neg","sub","mul","div","mod","jump","call",
+     "jeqz","jnez","jgtz","jltz","data"]
 
 }

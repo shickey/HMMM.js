@@ -133,6 +133,7 @@ exports = module.exports = (function() {
     }
 
     if (integer < 0) {
+      // Two's Complement
       var positive = padZeroesLeft(Math.abs(integer).toString(2), width);
       var flipped = flipBitstring(positive);
       var backToNum = parseInt(flipped, 2);
