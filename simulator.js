@@ -3,6 +3,8 @@ var fs   = require('fs');
 
 exports = module.exports = (function() {
   
+  'use strict';
+  
   var machine = this;
   var states = Object.freeze({
     EMPTY   : 1,
@@ -86,11 +88,11 @@ exports = module.exports = (function() {
       ram[i] = instructions[i];
     }
     boundary = instructions.length;
-    program = true;
+    state = states.READY;
   }
   
   function fetchInstruction() {
-    if (!program) {
+    if (!state == states.EMPTY) {
       // TODO throw
     }
     if (pc >= boundary) {
@@ -124,7 +126,7 @@ exports = module.exports = (function() {
     }
     
     // Parse Arguments
-    signature = hmmm.signatures[decoded.operation];
+    var signature = hmmm.signatures[decoded.operation];
     encoded = encoded << 4;
     for (var i = 0; i < signature.length; ++i) {
       var type = signature.charAt(i);
@@ -164,7 +166,8 @@ exports = module.exports = (function() {
     pc += 1;
     
     // Get the operation
-    var op = inst.operation;
+    var op   = inst.operation;
+    var args = inst.args; 
     
     if (op === "halt") {
       state = states.HALTED;
@@ -173,20 +176,17 @@ exports = module.exports = (function() {
       // TODO Find synchronous method of getting user input
     }
     else if (op === "write") {
-      var rx = +(arg[0].slice(1));
+      var rx = +(args[0].slice(1));
       var val = getRegister(rx);
       console.log(val); // TODO Determine the best mechanism for output (stream interface?)
     }
-    else if (op === "jumpi") {
-      var rx = +(arg[0].slice(1));
+    else if (op === "jumpr") {
+      var rx = +(args[0].slice(1));
       var val = getRegister(rx);
       if (val < 0 || val >= boundary) {
         // TODO Throw invalid jump target
       }
       pc = val;
-    }
-    else if (op === "loadn") {
-      
     }
     
   }
@@ -244,6 +244,7 @@ exports = module.exports = (function() {
     },
     
     dumpAllInstructions : function() {
+      // TODO This won't dump correctly if pc !== 0
       while (pc < boundary) {
         this.runNextInstruction();
         console.log(inst);
