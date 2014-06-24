@@ -3,19 +3,29 @@ var fs   = require('fs');
 
 exports = module.exports = (function() {
   
-  var NUM_REGISTERS = 16;
-  var MEM_SIZE      = 256;
+  var machine = this;
+  var states = Object.freeze({
+    EMPTY   : 1,
+    READY   : 2,
+    RUNNING : 3,
+    PAUSED  : 4,
+    HALTED  : 5,
+    ERROR   : 6
+  });
   
-  var program, pc, ir, registers, memory, programLoaded;
+  var NUM_REGISTERS = 16;
+  var RAM_SIZE      = 256;
+  
+  var state, boundary, pc, ir, inst, registers, ram;
   
   function resetMachine() {
-    program   = false;  // Whether or not a program is loaded in memory
-    boundary  = 0;      // Index of the first free memory slot (after the program data)
-    pc        = 0;      // Program Counter
-    ir        = null;   // Instruction Register (hold binary data)
-    inst      = null;   // Decoded Instruction
-    registers = [];     // General Purpose Registers r0-r15
-    ram       = [];     // 256 * 16 bits of Memory
+    state     = states.EMPTY; // State of machine (starts with no program loaded)
+    boundary  = 0;            // Index of the first free memory slot (after the program data)
+    pc        = 0;            // Program Counter
+    ir        = null;         // Instruction Register (hold binary data)
+    inst      = null;         // Decoded Instruction
+    registers = [];           // General Purpose Registers r0-r15
+    ram       = [];           // Memory
     
     // Instantiate Registers
     for (var i = 0; i < NUM_REGISTERS; ++i) {
@@ -23,9 +33,52 @@ exports = module.exports = (function() {
     }
     
     // Instantiate Memory
-    for (var j = 0 ; j < MEM_SIZE; ++j) {
+    for (var j = 0 ; j < RAM_SIZE; ++j) {
       ram.push(0);
     }
+  }
+  
+  // Only interact with registers via these getters and setters
+  // This will guarantee that r0 is always 0
+  function getRegister(register) {
+    if (register < 0 || register > NUM_REGISTERS - 1) {
+      // TODO Throw invalid register exception
+    }
+    return registers[register];
+  }
+  
+  function setRegister(register, value) {
+    if (register === 0) {
+      // Can't set r0
+      return;
+    }
+    
+    if (register < 0 || register > NUM_REGISTERS - 1) {
+      // TODO Throw invalid register exception
+    }
+    
+    if (value < -32768 || value > 65535) {
+      // TODO Throw (warn?) overflow exception
+    }
+    
+    registers[register] = value;
+  }
+  
+  function getRam(address) {
+    if (address < 0 || address > RAM_SIZE - 1) {
+      // TODO Throw invalid address exception
+    }
+    return ram[address];
+  }
+  
+  function setRam(address, value) {
+    if (address < 0 || address > RAM_SIZE - 1) {
+      // TODO Throw invalid address exception
+    }
+    if (value < -32768 || value > 65535) {
+      // TODO Throw (warn?) overflow exception
+    }
+    ram[address] = value;
   }
   
   function loadInstructions(instructions) {
@@ -38,7 +91,10 @@ exports = module.exports = (function() {
   
   function fetchInstruction() {
     if (!program) {
-      // throw
+      // TODO throw
+    }
+    if (pc >= boundary) {
+      // TODO Throw Memory out of bounds error
     }
     ir = ram[pc];
     inst = null;
@@ -47,28 +103,28 @@ exports = module.exports = (function() {
   function decodeInstruction() {
     var encoded = ir;
     var decoded = {
-      inst : null,
-      args : []
+      operation : null,
+      args      : []
     };
     
-    // Find the correct instruction by iterating over the
+    // Find the correct operation by iterating over the
     // list of instructions in order of precedence
-    hmmm.opcodePrecedence.some(function(possibleInstruction){
-      var opcode = parseInt(hmmm.opcodes[possibleInstruction].opcode, 2);
-      var mask   = parseInt(hmmm.opcodes[possibleInstruction].mask,   2);
+    hmmm.opcodePrecedence.some(function(operation){
+      var opcode = parseInt(hmmm.opcodes[operation].opcode, 2);
+      var mask   = parseInt(hmmm.opcodes[operation].mask,   2);
       if ((encoded & mask) === opcode) {
-        // We found the right instruction
-        decoded.inst = possibleInstruction;
+        // We found the right operation
+        decoded.operation = operation;
         return true;
       }
     });
     
-    if (!decoded.inst) {
-      // TODO Throw, we could decode the instruction
+    if (!decoded.operation) {
+      // TODO Throw, we could decode the operation
     }
     
     // Parse Arguments
-    signature = hmmm.signatures[decoded.inst];
+    signature = hmmm.signatures[decoded.operation];
     encoded = encoded << 4;
     for (var i = 0; i < signature.length; ++i) {
       var type = signature.charAt(i);
@@ -106,6 +162,52 @@ exports = module.exports = (function() {
   
   function executeInstruction() {
     pc += 1;
+    
+    // Get the operation
+    var op = inst.operation;
+    
+    if (op === "halt") {
+      state = states.HALTED;
+    }
+    else if (op === "read") {
+      // TODO Find synchronous method of getting user input
+    }
+    else if (op === "write") {
+      var rx = +(arg[0].slice(1));
+      var val = getRegister(rx);
+      console.log(val); // TODO Determine the best mechanism for output (stream interface?)
+    }
+    else if (op === "jumpi") {
+      var rx = +(arg[0].slice(1));
+      var val = getRegister(rx);
+      if (val < 0 || val >= boundary) {
+        // TODO Throw invalid jump target
+      }
+      pc = val;
+    }
+    else if (op === "loadn") {
+      
+    }
+    
+  }
+  
+  function next() {
+    fetchInstruction();
+    decodeInstruction();
+    executeInstruction();
+  }
+  
+  function run() {
+    state = states.RUNNING;
+    while (state === states.RUNNING) {
+      next();
+    }
+  }
+  
+  function runNextInstruction() {
+    state = states.RUNNING;
+    next();
+    state = states.PAUSED;
   }
   
   resetMachine();
@@ -126,15 +228,11 @@ exports = module.exports = (function() {
     },
 
     run : function() {
-      while (true) {
-        this.runNextInstruction();
-      }
+      run();
     },
 
     runNextInstruction : function() {
-      fetchInstruction();
-      decodeInstruction();
-      executeInstruction();
+      runNextInstruction();
     },
     
     dumpRam : function() {
