@@ -40,8 +40,9 @@ exports = module.exports = (function() {
     }
   }
   
-  // Only interact with registers via these getters and setters
-  // This will guarantee that r0 is always 0
+  // Only interact with machine via these getters and setters
+  // These will guarantee that r0 is always 0 and throw appropriate
+  // errors and such
   function getRegister(register) {
     if (register < 0 || register > NUM_REGISTERS - 1) {
       // TODO Throw invalid register exception
@@ -81,6 +82,17 @@ exports = module.exports = (function() {
       // TODO Throw (warn?) overflow exception
     }
     ram[address] = value;
+  }
+  
+  function getProgramCounter() {
+    return pc;
+  }
+  
+  function setProgramCounter(target) {
+    if (target < 0 || target >= boundary) {
+      // TODO Throw invalid jump target error
+    }
+    pc = target;
   }
   
   function loadInstructions(instructions) {
@@ -163,30 +175,163 @@ exports = module.exports = (function() {
   }
   
   function executeInstruction() {
-    pc += 1;
+    // Bump the instruction number
+    setProgramCounter(getProgramCounter() + 1);
     
     // Get the operation
     var op   = inst.operation;
     var args = inst.args; 
     
+    // Unpack Arguments
+    var rx, ry, rz, n;
+    var signature = hmmm.signatures[op];
+    
+    var argNum = 0; // Must keep track separately from loop iteration due
+                    // to signatures containing 'z'
+    for (var i = 0; i < signature.length; ++i) {
+      var type = signature.charAt(i);
+      if (type === "r") {
+        var arg = +(args[argNum].slice(1));
+        // Declare registers in order
+        if (rx === undefined) {
+          rx = arg;
+        }
+        else if (ry === undefined) {
+          ry = arg;
+        }
+        else if (rz === undefined) {
+          rz = arg;
+        }
+        else {
+          // TODO Internal inconsistency error
+        }
+        argNum += 1;
+      }
+      else if (type === "u" || type === "s") {
+        n = +(args[argNum]);
+        argNum += 1;
+      }
+      else if (type === "z"){
+        // Do nothing
+        // And don't increment argNum
+      }
+      else {
+        // TODO Throw internal inconsistency error
+      }
+    }
+    
+    // Now actually execute the correct operation
     if (op === "halt") {
       state = states.HALTED;
     }
     else if (op === "read") {
       // TODO Find synchronous method of getting user input
+      setRegister(rx, 5);
     }
     else if (op === "write") {
-      var rx = +(args[0].slice(1));
-      var val = getRegister(rx);
-      console.log(val); // TODO Determine the best mechanism for output (stream interface?)
+      var data = getRegister(rx);
+      console.log(data); // TODO Determine the best mechanism for output (stream interface?)
     }
     else if (op === "jumpr") {
-      var rx = +(args[0].slice(1));
-      var val = getRegister(rx);
-      if (val < 0 || val >= boundary) {
-        // TODO Throw invalid jump target
+      var data = getRegister(rx);
+      setProgramCounter(data);
+    }
+    else if (op === "setn") {
+      setRegister(rx, n);
+    }
+    else if (op === "loadn") {
+      var data = getRam(n);
+      setRegister(rx, data);
+    }
+    else if (op === "storen") {
+      var data = getRegister(rx);
+      setRam(n, data);
+    }
+    else if (op === "loadr") {
+      var address = getRegister(ry);
+      var data = getRam(address);
+      setRegister(rx, data);
+    }
+    else if (op === "storer") {
+      var data = getRegister(rx);
+      var address = getRegister(ry);
+      setRam(address, data);
+    }
+    else if (op === "addn") {
+      var data = getRegister(rx);
+      setRegister(rx, data + n);
+      // TODO Check overflow
+    }
+    else if (op === "nop") {
+      // Do nothing
+    }
+    else if (op === "copy") {
+      var data = getRegister(ry);
+      setRegister(rx, data);
+    }
+    else if (op === "add") {
+      var data1 = getRegister(ry);
+      var data2 = getRegister(rz);
+      setRegister(rx, data1 + data2);
+    }
+    else if (op === "neg") {
+      var data = getRegister(ry);
+      setRegister(rx, -data);
+    }
+    else if (op === "sub") {
+      var data1 = getRegister(ry);
+      var data2 = getRegister(rz);
+      setRegister(rx, data1 - data2);
+    }
+    else if (op === "mul") {
+      var data1 = getRegister(ry);
+      var data2 = getRegister(rz);
+      setRegister(rx, data1 * data2);
+    }
+    else if (op === "div") {
+      var data1 = getRegister(ry);
+      var data2 = getRegister(rz);
+      setRegister(rx, parseInt(data1 / data2));
+    }
+    else if (op === "mod") {
+      var data1 = getRegister(ry);
+      var data2 = getRegister(rz);
+      setRegister(rx, data1 % data2);
+    }
+    else if (op === "jumpn") {
+      setProgramCounter(n);
+    }
+    else if (op === "calln") {
+      var nextInst = getProgramCounter(); // We've already bumped at this point
+      setRegister(rx, nextInst);
+      setProgramCounter(n);
+    }
+    else if (op === "jeqzn") {
+      var data = getRegister(rx);
+      if (data === 0) {
+        setProgramCounter(n);
       }
-      pc = val;
+    }
+    else if (op === "jnezn") {
+      var data = getRegister(rx);
+      if (data !== 0) {
+        setProgramCounter(n);
+      }
+    }
+    else if (op === "jgtzn") {
+      var data = getRegister(rx);
+      if (data > 0) {
+        setProgramCounter(n);
+      }
+    }
+    else if (op === "jltzn") {
+      var data = getRegister(rx);
+      if (data < 0) {
+        setProgramCounter(n);
+      }
+    }
+    else {
+      // TODO BIG ERROR
     }
     
   }

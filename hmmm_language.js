@@ -51,7 +51,6 @@ var hmmm = exports = module.exports = (function() {
     // s : Signed 8-bit Integer
     // u : Unsigned 8-bit Integer
     // z : 4-bit Padding (0000)
-    // n : 16-bit Integer (Signed or Unsigned)
     signatures : Object.freeze({
       "halt"   : "",
       "read"   : "r",
