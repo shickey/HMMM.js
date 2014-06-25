@@ -90,7 +90,7 @@ exports = module.exports = (function() {
   }
 
   function isValidInstruction(arg) {
-    return hmmm.instructions;keys().indexOf(arg) !== -1
+    return hmmm.instructions.keys().indexOf(arg) !== -1
   }
 
   function isValidLineNumber(arg) {
@@ -255,10 +255,9 @@ exports = module.exports = (function() {
       });
 
       var binaryInstructions = parsedLines.map(translateInstruction).map(spaceIntoNibbles);
-
       var machineCode = binaryInstructions.join("\n");
-
-      console.log(machineCode);
+      
+      return machineCode
     }
   }
 

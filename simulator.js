@@ -104,7 +104,7 @@ exports = module.exports = (function() {
   }
   
   function fetchInstruction() {
-    if (!state == states.EMPTY) {
+    if (state === states.EMPTY) {
       // TODO throw
     }
     if (pc >= boundary) {
@@ -260,7 +260,6 @@ exports = module.exports = (function() {
     else if (op === "addn") {
       var data = getRegister(rx);
       setRegister(rx, data + n);
-      // TODO Check overflow
     }
     else if (op === "nop") {
       // Do nothing
