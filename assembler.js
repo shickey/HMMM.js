@@ -4,6 +4,26 @@ var StringScanner = require('StringScanner');
 exports = module.exports = (function() {
 
   'use strict';
+  
+  var instNumber  = 0;
+  var lineNumber  = 0;
+  var error = null;
+  
+  var errors = Object.freeze({
+    PARSE    : 'PARSE ERROR',
+    INST_NUM : 'BAD INSTRUCTION NUMBER',
+    INTERNAL : 'INTERNAL ASSEMBLER ERROR'
+  });
+  
+  function constructError(type, message) {
+    var errorMessage = message || "General assembler error";
+    error = {
+      type    : type,
+      line    : lineNumber,
+      message : type + ": " + errorMessage + ' at line ' + lineNumber
+    };
+    return;
+  };
 
   function tokenizeLine(line) {
     var tokens = [];
@@ -19,7 +39,8 @@ exports = module.exports = (function() {
     // Grab the line number
     var lineNum = ss.scan(/\d+/);
     if (lineNum === null) {
-      // TODO Throw missing line number error
+      constructError(errors.INST_NUM, 0, "Missing instruction number");
+      return;
     }
     tokens.push(lineNum);
 
@@ -66,9 +87,14 @@ exports = module.exports = (function() {
     var parsed = {};
 
     // Validations
-    var lineNum = tokens[0];
-    if (!isValidLineNumber(lineNum)) {
+    var instNum = tokens[0];
+    if (!isValidInstructionNumber(instNum)) {
       // TODO PARSE ERROR! NOT A LINE NUMBER
+    }
+    
+    if (+(instNum) !== instNumber) {
+      constructError(errors.INST_NUM, "Wrong instruction number");
+      return;
     }
 
     var inst = tokens[1];
@@ -79,7 +105,7 @@ exports = module.exports = (function() {
     var args = tokens.slice(2);
 
     return {
-      lineNum : lineNum,
+      lineNum : instNum,
       inst    : inst,
       args    : args
     };
@@ -90,10 +116,10 @@ exports = module.exports = (function() {
   }
 
   function isValidInstruction(arg) {
-    return hmmm.instructions.keys().indexOf(arg) !== -1
+    return Object.keys(hmmm.instructions).indexOf(arg) !== -1
   }
 
-  function isValidLineNumber(arg) {
+  function isValidInstructionNumber(arg) {
     return /^(0|[1-9]\d*)$/.test(arg);
   }
 
@@ -232,32 +258,47 @@ exports = module.exports = (function() {
 
     output = padZeroesLeft(output, 16);
 
-    console.log("INSTRUCTION " + instruction.lineNum);
-    console.log(instruction);
-    console.log("Opcode:    " + opcode);
-    console.log("Bitstring: " + bitstring);
-    console.log("OR'd:      " + output + "\n");
-
     return output;
   }
 
   return {
-    assemble : function(source) {
+    assemble : function(source, callback) {
       var lines = source.split(/\n/);
-      var tokenizedLines = lines.map(tokenizeLine);
-      var parsedLines = [];
-
-      tokenizedLines.forEach(function(tokens) {
-        var parsed = parseTokens(tokens);
-        if (parsed !== null) {
-          parsedLines.push(parsed);
-        }
-      });
-
-      var binaryInstructions = parsedLines.map(translateInstruction).map(spaceIntoNibbles);
-      var machineCode = binaryInstructions.join("\n");
       
-      return machineCode
+      instNumber = 0;
+      lineNumber = 0;
+      var instructions = [];
+      
+      for (var i = 0; i < lines.length; ++i) {
+        var line = lines[i];
+        var tokens = tokenizeLine(line);
+        if (error) {
+          callback(null, error);
+          return;
+        }
+        var parsed = parseTokens(tokens);
+        if (error) {
+          callback(null, error);
+          return;
+        }
+        if (parsed === null) { // If the line was empty or comment-only...
+          lineNumber += 1;     // Increment the line number and keep parsing...
+          continue;            // But DON'T increment instruction number
+        }
+        var instruction = translateInstruction(parsed);
+        if (error) {
+          callback(null, error);
+          return;
+        }
+        instructions.push(instruction);
+        lineNumber += 1;
+        instNumber += 1;
+      }
+
+      var machineCode = instructions.map(spaceIntoNibbles).join("\n");
+      machineCode += "\n" // Newline at end of file
+      
+      callback(machineCode);
     }
   }
 

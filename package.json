@@ -8,7 +8,9 @@
     "split": "^0.3.0",
     "through": "^2.3.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^1.9.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

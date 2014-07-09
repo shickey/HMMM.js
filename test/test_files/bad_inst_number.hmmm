@@ -1,0 +1,4 @@
+0 setn r1 3
+1 setn r2 8
+4 setn r3 4
+5 halt
