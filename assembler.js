@@ -5,26 +5,52 @@ exports = module.exports = (function() {
 
   'use strict';
   
-  var instNumber  = 0;
-  var lineNumber  = 0;
-  var error = null;
-  
   var errors = Object.freeze({
-    PARSE    : 'PARSE ERROR',
-    INST_NUM : 'BAD INSTRUCTION NUMBER',
-    INTERNAL : 'INTERNAL ASSEMBLER ERROR'
+    ASSEMBLER   : "ASSEMBLER ERROR",
+    SYNTAX      : "SYNTAX ERROR",
+    ARGUMENT    : "ARGUMENT ERROR",
+    REGISTER    : "REGISTER ERROR",
+    INST_NUM    : "INSTRUCTION NUMBER ERROR",
+    INSTRUCTION : "INSTRUCTION ERROR"
   });
   
-  function constructError(type, message) {
-    var errorMessage = message || "General assembler error";
-    error = {
-      type    : type,
-      line    : lineNumber,
-      message : type + ": " + errorMessage + ' at line ' + lineNumber
-    };
-    return;
-  };
-
+  // Error Constructors
+  function AssemblerError(lineNumber, message) {
+    this.type = errors.ASSEMBLER;
+    this.lineNumber = lineNumber;
+    this.message = message || "";
+  }
+  
+  function SyntaxError(lineNumber, message) {
+    this.type = errors.SYNTAX;
+    this.lineNumber = lineNumber;
+    this.message = message || "";
+  }
+  
+  function ArgumentError(lineNumber, message) {
+    this.type = errors.ARGUMENT;
+    this.lineNumber = lineNumber;
+    this.message = message || "";
+  }
+  
+  function RegisterError(lineNumber, message) {
+    this.type = errors.REGISTER;
+    this.lineNumber = lineNumber;
+    this.message = message || "";
+  }
+  
+  function InstructionNumberError(lineNumber, message) {
+    this.type = errors.INST_NUM;
+    this.lineNumber = lineNumber;
+    this.message = message || "";
+  }
+  
+  function InstructionError(lineNumber, message) {
+    this.type = errors.INSTRUCTION;
+    this.lineNumber = lineNumber;
+    this.message = message || "";
+  }
+  
   function tokenizeLine(line) {
     var tokens = [];
     var ss = new StringScanner(line);
@@ -39,13 +65,12 @@ exports = module.exports = (function() {
     // Grab the line number
     var lineNum = ss.scan(/\d+/);
     if (lineNum === null) {
-      constructError(errors.INST_NUM, 0, "Missing instruction number");
-      return;
+      throw new InstructionNumberError(0, "Missing instruction number");
     }
     tokens.push(lineNum);
 
     if (ss.scan(/\s+/) === null) {
-      // Try to advance through whitespace, if there is none
+      // Try to advance through whitespace
       // TODO Throw parse error
     }
 
@@ -56,7 +81,7 @@ exports = module.exports = (function() {
     tokens.push(inst);
 
     if (ss.scan(/\s+/) === null) {
-      // Try to advance through whitespace, if there is none
+      // Try to advance through whitespace
       // TODO Throw parse error
     }
 
@@ -74,8 +99,6 @@ exports = module.exports = (function() {
       ss.scan(/[,\s]+/);
     }
 
-    console.log(tokens);
-
     return tokens;
   }
 
@@ -84,28 +107,21 @@ exports = module.exports = (function() {
       return null;
     }
 
-    var parsed = {};
-
     // Validations
     var instNum = tokens[0];
     if (!isValidInstructionNumber(instNum)) {
       // TODO PARSE ERROR! NOT A LINE NUMBER
     }
     
-    if (+(instNum) !== instNumber) {
-      constructError(errors.INST_NUM, "Wrong instruction number");
-      return;
-    }
-
     var inst = tokens[1];
     if (!isValidInstruction(inst)) {
-      // TODO PARSE ERROR! NOT AN INSTRUCTION
+      throw new InstructionError(1, "Invalid instruction at line 1");
     }
 
     var args = tokens.slice(2);
 
     return {
-      lineNum : instNum,
+      instNum : +(instNum),
       inst    : inst,
       args    : args
     };
@@ -262,44 +278,43 @@ exports = module.exports = (function() {
   }
 
   return {
-    assemble : function(source, callback) {
+  
+    assemble: function(source, callback) {
       var lines = source.split(/\n/);
       
-      instNumber = 0;
-      lineNumber = 0;
       var instructions = [];
-      
-      for (var i = 0; i < lines.length; ++i) {
-        var line = lines[i];
-        var tokens = tokenizeLine(line);
-        if (error) {
-          callback(null, error);
+      var expectedInstNum = 0;
+      for (var lineNumber = 0; lineNumber < lines.length; ++lineNumber) {
+        try {
+          var line = lines[lineNumber];
+          var tokens = tokenizeLine(line);
+          var parsed = parseTokens(tokens);
+          if (parsed === null) { // Line was empty or comment-only
+            continue;
+          }
+          else {
+            // Check to make sure the instructions are in order
+            if (parsed.instNum !== expectedInstNum) {
+              throw new InstructionNumberError(lineNumber, "Wrong instruction number. Expected " + expectedInstNum + ", found " + parsed.instNum);
+            }
+            expectedInstNum += 1;
+          }
+          var instruction = translateInstruction(parsed);
+          instructions.push(instruction);
+        }
+        catch(e) {
+          if (callback) {
+            callback(null, e);
+          }
           return;
         }
-        var parsed = parseTokens(tokens);
-        if (error) {
-          callback(null, error);
-          return;
-        }
-        if (parsed === null) { // If the line was empty or comment-only...
-          lineNumber += 1;     // Increment the line number and keep parsing...
-          continue;            // But DON'T increment instruction number
-        }
-        var instruction = translateInstruction(parsed);
-        if (error) {
-          callback(null, error);
-          return;
-        }
-        instructions.push(instruction);
-        lineNumber += 1;
-        instNumber += 1;
       }
-
       var machineCode = instructions.map(spaceIntoNibbles).join("\n");
-      machineCode += "\n" // Newline at end of file
+      machineCode += "\n"; // Newline at end of file
       
       callback(machineCode);
     }
+    
   }
 
 }());
