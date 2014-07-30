@@ -92,8 +92,6 @@ describe('Assembler', function() {
     });
   });
   
-  it('should return an error when an invalid register is accessed');
-  it('should return an error when an invalid RAM address is accessed');
   it('should return an error when a numerical number is out of bounds');
   
 });
