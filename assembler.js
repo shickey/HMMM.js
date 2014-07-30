@@ -51,23 +51,27 @@ exports = module.exports = (function() {
     this.message = message || "";
   }
   
-  function tokenizeLine(line) {
-    var tokens = [];
+  function tokenizeLine(line, lineNumber) {
+    var tokenizedLine = {
+      lineNumber : lineNumber,
+      tokens     : []
+    };
+    
     var ss = new StringScanner(line);
 
     // Scan for leading whitespace
     ss.scan(/\s*/);
     if (ss.eos() || ss.peek(1) === "#") {
       // If the line was blank or a comment, just return an empty array of tokens
-      return tokens;
+      return tokenizedLine;
     }
 
     // Grab the line number
     var lineNum = ss.scan(/\d+/);
     if (lineNum === null) {
-      throw new InstructionNumberError(0, "Missing instruction number");
+      throw new InstructionNumberError(lineNumber, "Missing instruction number");
     }
-    tokens.push(lineNum);
+    tokenizedLine.tokens.push(lineNum);
 
     if (ss.scan(/\s+/) === null) {
       // Try to advance through whitespace
@@ -78,7 +82,7 @@ exports = module.exports = (function() {
     if (inst === null) {
       // TODO Throw missing instruction error
     }
-    tokens.push(inst);
+    tokenizedLine.tokens.push(inst);
 
     if (ss.scan(/\s+/) === null) {
       // Try to advance through whitespace
@@ -95,14 +99,15 @@ exports = module.exports = (function() {
       if (regOrNumToken === null) {
         // TODO Parse error
       }
-      tokens.push(regOrNumToken);
+      tokenizedLine.tokens.push(regOrNumToken);
       ss.scan(/[,\s]+/);
     }
 
-    return tokens;
+    return tokenizedLine;
   }
 
-  function parseTokens(tokens) {
+  function parseTokens(tokenizedLine) {
+    var tokens = tokenizedLine.tokens;
     if (tokens.length === 0) {
       return null;
     }
@@ -115,15 +120,16 @@ exports = module.exports = (function() {
     
     var inst = tokens[1];
     if (!isValidInstruction(inst)) {
-      throw new InstructionError(1, "Invalid instruction at line 1");
+      throw new InstructionError(tokenizedLine.lineNumber, "Invalid instruction at line 1");
     }
 
     var args = tokens.slice(2);
 
     return {
-      instNum : +(instNum),
-      inst    : inst,
-      args    : args
+      lineNumber : tokenizedLine.lineNumber,
+      instNum    : +(instNum),
+      inst       : inst,
+      args       : args
     };
   }
 
@@ -220,7 +226,7 @@ exports = module.exports = (function() {
     // the expected number of args does not necessarily equal signature.length;
     var numExpectedArgs = signature.length - (signature.match(/z/) || []).length;
     if (numExpectedArgs !== instruction.args.length) {
-      // TODO ERROR! Instruction has wrong number of arguments
+      throw new ArgumentError(instruction.lineNumber, "Wrong number of arguments. Expected " + numExpectedArgs + " and found " + instruction.args.length);
     }
 
     // Start with the opcode
@@ -284,11 +290,13 @@ exports = module.exports = (function() {
       
       var instructions = [];
       var expectedInstNum = 0;
-      for (var lineNumber = 0; lineNumber < lines.length; ++lineNumber) {
+      
+      // Use a 1-indexed offest for the line number (which matches text-editor conventions)
+      for (var lineNumber = 1; lineNumber <= lines.length; ++lineNumber) {
         try {
-          var line = lines[lineNumber];
-          var tokens = tokenizeLine(line);
-          var parsed = parseTokens(tokens);
+          var line = lines[lineNumber - 1];
+          var tokenizedLine = tokenizeLine(line, lineNumber);
+          var parsed = parseTokens(tokenizedLine);
           if (parsed === null) { // Line was empty or comment-only
             continue;
           }

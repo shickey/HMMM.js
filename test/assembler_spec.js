@@ -25,7 +25,7 @@ describe('Assembler', function() {
   it('should return an error when syntax is invalid', function(done) {
     assembleFile('syntax_error.hmmm', function(binary, error) {
       expect(error).to.be.defined;
-      expect(error.lineNumber).to.equal(0);
+      expect(error.lineNumber).to.equal(1);
       expect(error.type).to.have.string('INSTRUCTION NUMBER');
       done();
     });
@@ -34,7 +34,7 @@ describe('Assembler', function() {
   it('should return an error when an instruction has the wrong instruction number', function(done) {
     assembleFile('bad_inst_number.hmmm', function(binary, error) {
       expect(error).to.be.defined;
-      expect(error.lineNumber).to.equal(2);
+      expect(error.lineNumber).to.equal(3);
       expect(error.type).to.have.string('INSTRUCTION NUMBER');
       done();
     });
@@ -43,13 +43,21 @@ describe('Assembler', function() {
   it('should return an error when an invalid instruction is given', function(done) {
     assembleFile('bad_inst.hmmm', function(binary, error) {
       expect(error).to.be.defined;
-      expect(error.lineNumber).to.equal(1);
+      expect(error.lineNumber).to.equal(2);
       expect(error.type).to.have.string('INSTRUCTION ERROR');
       done();
     });
   });
   
-  it('should return an error when an operation is given the wrong number of arguments');
+  it('should return an error when an operation is given the wrong number of arguments', function(done) {
+    assembleFile('wrong_num_args.hmmm', function(binary, error) {
+      expect(error).to.be.defined;
+      expect(error.lineNumber).to.equal(1);
+      expect(error.type).to.have.string('ARGUMENT');
+      done();
+    });
+  });
+  
   it('should return an error when an operation is given the wrong type of argument');
   it('should return an error when an invalid register is accessed');
   it('should return an error when an invalid RAM address is accessed');
