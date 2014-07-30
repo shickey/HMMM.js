@@ -253,14 +253,27 @@ exports = module.exports = (function() {
           bitstring += binaryForRegister(arg);
         }
         else {
-          console.log("Error: Improper register");
-          // TODO Handle error
+          throw new ArgumentError(instruction.lineNumber, "Wrong argument type. Expected register.");
         }
       }
-      else if (type === "u" || type === "s") {
-        bitstring += binaryForInteger(parseInt(arg), 8);
+      else if (type === "u") {
+        if (isValidUnsignedArgument(arg)) {
+          bitstring += binaryForInteger(parseInt(arg), 8);
+        }
+        else {
+          throw new ArgumentError(instruction.lineNumber, "Wrong argument type. Expected unsigned integer.");
+        }
+      }
+      else if (type === "s") {
+        if (isValidSignedArgument(arg)) {
+          bitstring += binaryForInteger(parseInt(arg), 8);
+        }
+        else {
+          throw new ArgumentError(instruction.lineNumber, "Wrong argument type. Expected signed integer.");
+        }
       }
       else if (type === "n") {
+        // TODO: Remove? No instructions in the current instruction set use this in their signature
         bitstring += binaryForIntger(parseInt(arg), 16);
       }
       else {
