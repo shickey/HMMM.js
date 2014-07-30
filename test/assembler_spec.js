@@ -17,7 +17,7 @@ describe('Assembler', function() {
     var validBinary = fs.readFileSync('test/test_files/valid.out').toString();
     assembleFile('valid.hmmm', function(binary, error) {
       expect(error).to.be.undefined;
-      expect(binary).to.equal(binary);
+      expect(binary).to.equal(validBinary);
       done();
     });
   });
