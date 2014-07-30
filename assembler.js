@@ -120,7 +120,7 @@ exports = module.exports = (function() {
     
     var inst = tokens[1];
     if (!isValidInstruction(inst)) {
-      throw new InstructionError(tokenizedLine.lineNumber, "Invalid instruction at line 1");
+      throw new InstructionError(tokenizedLine.lineNumber, "Invalid instruction at line " + tokenizedLine.lineNumber);
     }
 
     var args = tokens.slice(2);
