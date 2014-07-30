@@ -1,5 +1,4 @@
 var hmmm = require('./hmmm_language');
-var fs   = require('fs');
 
 exports = module.exports = (function() {
   
@@ -358,10 +357,9 @@ exports = module.exports = (function() {
   
   return {
 
-    loadProgram : function(binaryFilename) {
-      var machineCode = fs.readFileSync(binaryFilename).toString();
+    loadProgram : function(binary) {
       var codeArray = [];
-      machineCode.split("\n").forEach(function(line) {
+      binary.split("\n").forEach(function(line) {
         if (line.trim() === "") {
           return;
         }
