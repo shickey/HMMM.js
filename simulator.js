@@ -1,10 +1,16 @@
-var hmmm = require('./hmmm_language');
+var hmmm   = require('./hmmm_language');
+var events = require('events');
+var util   = require('util');
 
-exports = module.exports = (function() {
+function HmmmSimulator(binary) {
   
   'use strict';
   
-  var machine = this;
+  events.EventEmitter.call(this);
+  
+  var that = this;
+  
+  // Internal State
   var states = Object.freeze({
     EMPTY   : 1,
     READY   : 2,
@@ -19,14 +25,15 @@ exports = module.exports = (function() {
   
   var state, boundary, pc, ir, inst, registers, ram;
   
+  // Private Interface
   function resetMachine() {
-    state     = states.EMPTY; // State of machine (starts with no program loaded)
-    boundary  = 0;            // Index of the first free memory slot (after the program data)
-    pc        = 0;            // Program Counter
-    ir        = null;         // Instruction Register (hold binary data)
-    inst      = null;         // Decoded Instruction
-    registers = [];           // General Purpose Registers r0-r15
-    ram       = [];           // Memory
+    setMachineState(states.EMPTY); // State of machine (starts with no program loaded)
+    boundary  = 0;                 // Index of the first free memory slot (after the program data)
+    pc        = 0;                 // Program Counter
+    ir        = null;              // Instruction Register (hold binary data)
+    inst      = null;              // Decoded Instruction
+    registers = [];                // General Purpose Registers r0-r15
+    ram       = [];                // Memory
     
     // Instantiate Registers
     for (var i = 0; i < NUM_REGISTERS; ++i) {
@@ -69,6 +76,7 @@ exports = module.exports = (function() {
   function getRam(address) {
     if (address < 0 || address > RAM_SIZE - 1) {
       // TODO Throw invalid address exception
+      // TODO Handle case where attempting to access program segment
     }
     return ram[address];
   }
@@ -76,6 +84,7 @@ exports = module.exports = (function() {
   function setRam(address, value) {
     if (address < 0 || address > RAM_SIZE - 1) {
       // TODO Throw invalid address exception
+      // TODO Handle case where setting RAM inside the program segment boundary
     }
     if (value < -32768 || value > 65535) {
       // TODO Throw (warn?) overflow exception
@@ -94,27 +103,35 @@ exports = module.exports = (function() {
     pc = target;
   }
   
+  function getMachineState() {
+    return state;
+  }
+  
+  function setMachineState(newState) {
+    state = newState;
+    // TODO Emit events
+  }
+  
   function loadInstructions(instructions) {
     for(var i = 0; i < instructions.length; ++i) {
       ram[i] = instructions[i];
     }
     boundary = instructions.length;
-    state = states.READY;
+    setMachineState(states.READY);
   }
   
-  function fetchInstruction() {
-    if (state === states.EMPTY) {
-      // TODO throw
+  function getInstructionAtAddress(address) {
+    if (getMachineState() === states.EMPTY) {
+      // TODO emit error
     }
-    if (pc >= boundary) {
-      // TODO Throw Memory out of bounds error
+    if (address <= 0 || address >= boundary) {
+      // TODO Emit Out of Bounds Error
     }
-    ir = ram[pc];
-    inst = null;
+    return ram[address];
   }
   
-  function decodeInstruction() {
-    var encoded = ir;
+  function decodeBinaryInstruction(binaryInstruction) {
+    var encoded = binaryInstruction;
     var decoded = {
       operation : null,
       args      : []
@@ -133,7 +150,7 @@ exports = module.exports = (function() {
     });
     
     if (!decoded.operation) {
-      // TODO Throw, we could decode the operation
+      // TODO Throw, we couldn't decode the operation
     }
     
     // Parse Arguments
@@ -170,7 +187,16 @@ exports = module.exports = (function() {
         // TODO throw, internal inconsistency
       }
     }
-    inst = decoded;
+    return decoded;
+  }
+  
+  function fetchInstruction() {
+    ir = getInstructionAtAddress(pc);
+    inst = null;
+  }
+  
+  function decodeInstruction() {
+    inst = decodeBinaryInstruction(ir);
   }
   
   function executeInstruction() {
@@ -221,7 +247,7 @@ exports = module.exports = (function() {
     
     // Now actually execute the correct operation
     if (op === "halt") {
-      state = states.HALTED;
+      setMachineState(states.HALTED);
     }
     else if (op === "read") {
       // TODO Find synchronous method of getting user input
@@ -341,94 +367,92 @@ exports = module.exports = (function() {
   }
   
   function run() {
-    state = states.RUNNING;
-    while (state === states.RUNNING) {
+    setMachineState(states.RUNNING);
+    while (getMachineState() == states.RUNNING) {
       next();
     }
   }
   
   function runNextInstruction() {
-    state = states.RUNNING;
+    setMachineState(states.RUNNING);
     next();
-    state = states.PAUSED;
+    setMachineState(states.PAUSED);
   }
   
+  // Public Interface
+  this.loadProgram = function(binary) {
+    var codeArray = [];
+    binary.split("\n").forEach(function(line) {
+      if (line.trim() === "") {
+        return;
+      }
+      codeArray.push(parseInt(line.replace(/ /g, ""), 2));
+    });
+    resetMachine();
+    loadInstructions(codeArray);
+  };
+
+  this.run = function() {
+    run();
+  };
+
+  this.stepForward = function() {
+    runNextInstruction();
+  };
+  
+  this.dumpRam = function() {
+    return ram.slice(0); // Shallow Copy
+  };
+  
+  this.dumpCurrentInstruction = function() {
+    return inst.toString();
+  };
+  
+  this.dumpAllInstructions = function() {
+    var dumped = [];
+    for (var i = 0; i < boundary; ++i) {
+      var binInst = getInstructionAtAddress[i];
+      dumped.push(decodeBinaryInstruction(binInst));
+    }
+    return dumped;
+  };
+  
+  this.padZeroesLeft = function(string, width) {
+    var pad = "";
+    for (var i = 0; i < width; ++i) {
+      pad += "0";
+    }
+    return pad.substring(0, pad.length - string.length) + string;
+  };
+  
+  this.spaceIntoNibbles = function(bitstring) {
+    var spaced = "";
+    for (var i = 0; i < bitstring.length; ++i) {
+      if (i % 4 === 0 && i !== 0) {
+        spaced += " ";
+      }
+      spaced += bitstring[i];
+    }
+    return spaced;
+  };
+  
+  this.dumpProgram = function() {
+    var bins = [];
+    for (var i = 0; i < boundary; ++i) {
+      var bin = ram[i].toString(2);
+      bins.push(this.spaceIntoNibbles(this.padZeroesLeft(bin, 16)));
+    }
+    return bins
+  }
+
   resetMachine();
   
-  return {
+  if (binary) {
+    this.loadProgram(binary);
+  };
 
-    loadProgram : function(binary) {
-      var codeArray = [];
-      binary.split("\n").forEach(function(line) {
-        if (line.trim() === "") {
-          return;
-        }
-        codeArray.push(parseInt(line.replace(/ /g, ""), 2));
-      });
-      resetMachine();
-      loadInstructions(codeArray);
-    },
+};
 
-    run : function() {
-      run();
-    },
+util.inherits(HmmmSimulator, events.EventEmitter);
 
-    runNextInstruction : function() {
-      runNextInstruction();
-    },
-    
-    dumpRam : function() {
-      console.log(ram);
-    },
-    
-    dumpInstruction : function() {
-      console.log(inst);
-    },
-    
-    dumpAllInstructions : function() {
-      // TODO This won't dump correctly if pc !== 0
-      while (pc < boundary) {
-        this.runNextInstruction();
-        console.log(inst);
-      }
-    },
-    
-    dumpAll : function() {
-      console.log(program   );
-      console.log(boundary  );
-      console.log(pc        );
-      console.log(ir        );
-      console.log(inst      );
-      console.log(registers );
-      console.log(ram       );
-    },
-    
-    padZeroesLeft : function(string, width) {
-      var pad = "";
-      for (var i = 0; i < width; ++i) {
-        pad += "0";
-      }
-      return pad.substring(0, pad.length - string.length) + string;
-    },
-    
-    spaceIntoNibbles : function(bitstring) {
-      var spaced = "";
-      for (var i = 0; i < bitstring.length; ++i) {
-        if (i % 4 === 0 && i !== 0) {
-          spaced += " ";
-        }
-        spaced += bitstring[i];
-      }
-      return spaced;
-    },
-    
-    dumpProgram : function() {
-      for (var i = 0; i < boundary; ++i) {
-        var bin = ram[i].toString(2);
-        console.log('Instruction ' + i + ' : ' + this.spaceIntoNibbles(this.padZeroesLeft(bin, 16)));
-      }
-    }
-
-  }
-
-}());
+module.exports = exports = HmmmSimulator;
