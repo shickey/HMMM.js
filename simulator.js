@@ -10,14 +10,25 @@ function HmmmSimulator(binary) {
   
   var that = this;
   
+  var simEvents = Object.freeze({
+    RESET    : "reset",
+    REGISTER : "register",
+    RAM      : "ram",
+    PC       : "pc",
+    HALT     : "halt",
+    ERROR    : "error",
+    INPUT    : "input",
+    OUTPUT   : "output"
+  });
+  
   // Internal State
   var states = Object.freeze({
-    EMPTY   : 1,
-    READY   : 2,
-    RUNNING : 3,
-    PAUSED  : 4,
-    HALTED  : 5,
-    ERROR   : 6
+    EMPTY   : 'empty',
+    READY   : 'ready',
+    RUNNING : 'running',
+    PAUSED  : 'paused',
+    HALTED  : 'halted',
+    ERROR   : 'error'
   });
   
   var NUM_REGISTERS = 16;
@@ -44,6 +55,8 @@ function HmmmSimulator(binary) {
     for (var j = 0 ; j < RAM_SIZE; ++j) {
       ram.push(0);
     }
+    
+    that.emit(simEvents.RESET);
   }
   
   // Only interact with machine via these getters and setters
@@ -59,6 +72,7 @@ function HmmmSimulator(binary) {
   function setRegister(register, value) {
     if (register === 0) {
       // Can't set r0
+      // TODO emit event here anyway?
       return;
     }
     
@@ -71,6 +85,8 @@ function HmmmSimulator(binary) {
     }
     
     registers[register] = value;
+    
+    that.emit(simEvents.REGISTER, "r" + register, value);
   }
   
   function getRam(address) {
@@ -90,6 +106,8 @@ function HmmmSimulator(binary) {
       // TODO Throw (warn?) overflow exception
     }
     ram[address] = value;
+    
+    that.emit(simEvents.RAM, address, value);
   }
   
   function getProgramCounter() {
@@ -101,6 +119,8 @@ function HmmmSimulator(binary) {
       // TODO Throw invalid jump target error
     }
     pc = target;
+    
+    that.emit(simEvents.PC, target);
   }
   
   function getMachineState() {
@@ -109,6 +129,9 @@ function HmmmSimulator(binary) {
   
   function setMachineState(newState) {
     state = newState;
+    if (newState == states.HALTED) {
+      that.emit(simEvents.HALT);
+    }
     // TODO Emit events
   }
   
@@ -251,11 +274,11 @@ function HmmmSimulator(binary) {
     }
     else if (op === "read") {
       // TODO Find synchronous method of getting user input
-      setRegister(rx, 5);
+      setRegister(rx, 5);  // Dummy code for getting input. REMOVE! (eventually)
     }
     else if (op === "write") {
       var data = getRegister(rx);
-      console.log(data); // TODO Determine the best mechanism for output (stream interface?)
+      that.emit(simEvents.OUTPUT, data);
     }
     else if (op === "jumpr") {
       var data = getRegister(rx);
@@ -444,7 +467,8 @@ function HmmmSimulator(binary) {
     }
     return bins
   }
-
+  
+  // Setup Machine
   resetMachine();
   
   if (binary) {
