@@ -1,150 +1,216 @@
+var util = require('util');
 var hmmm = require('./hmmm_language');
-var StringScanner = require('StringScanner');
 
-exports = module.exports = (function() {
+//*********************************************
+// Tokens
+//*********************************************
 
-  'use strict';
+var tokenTypes = Object.freeze({
+  INSTRUCTION : "INSTRUCTION",
+  REGISTER    : "REGISTER",
+  CONSTANT    : "CONSTANT",
+  UNKNOWN     : "UNKNOWN"
+});
+
+function Token(type, row, column) {
+  this.type = type;
+  this.row = row;
+  this.column = column;
+}
+
+function InstructionToken(inst, row, column) {
+  InstructionToken.super_.call(this, tokenTypes.INSTRUCTION, row, column);
+  this.val = inst;
+}
+
+function RegisterToken(reg, row, column) {
+  RegisterToken.super_.call(this, tokenTypes.REGISTER, row, column);
+  this.val = reg;
+}
+
+function ConstantToken(constant, row, column) {
+  ConstantToken.super_.call(this, tokenTypes.CONSTANT, row, column);
+  this.val = constant;
+}
+
+function UnknownToken(value, row, column) {
+  UnknownToken.super_.call(this, tokenTypes.UNKNOWN, row, column);
+  this.val = value;
+}
+
+util.inherits(InstructionToken, Token);
+util.inherits(RegisterToken, Token);
+util.inherits(ConstantToken, Token);
+util.inherits(UnknownToken, Token);
+
+function Line(lineNum) {
+  this.lineNum = lineNum;
+  this.tokens  = [];
+}
+
+//*********************************************
+// Lexer
+//*********************************************
+
+function HmmmLexer() {
   
-  var errors = Object.freeze({
-    ASSEMBLER   : "ASSEMBLER ERROR",
-    SYNTAX      : "SYNTAX ERROR",
-    ARGUMENT    : "ARGUMENT ERROR",
-    REGISTER    : "REGISTER ERROR",
-    INST_NUM    : "INSTRUCTION NUMBER ERROR",
-    INSTRUCTION : "INSTRUCTION ERROR"
-  });
+  'use strict'
   
-  // Error Constructors
-  function AssemblerError(lineNumber, message) {
-    this.type = errors.ASSEMBLER;
-    this.lineNumber = lineNumber;
-    this.message = message || "";
+  // Helper Functions
+  function isWhitespace(character) {
+    return character === ' ' || character === '\t';
   }
   
-  function SyntaxError(lineNumber, message) {
-    this.type = errors.SYNTAX;
-    this.lineNumber = lineNumber;
-    this.message = message || "";
+  function isNewline(character) {
+    return character === '\n';
   }
   
-  function ArgumentError(lineNumber, message) {
-    this.type = errors.ARGUMENT;
-    this.lineNumber = lineNumber;
-    this.message = message || "";
+  function isNumericConstant(string) {
+    return /^-?[0-9]+$/.test(string);
   }
   
-  function RegisterError(lineNumber, message) {
-    this.type = errors.REGISTER;
-    this.lineNumber = lineNumber;
-    this.message = message || "";
+  function isRegister(string) {
+    return /^r[0-9]+$/i.test(string);
   }
   
-  function InstructionNumberError(lineNumber, message) {
-    this.type = errors.INST_NUM;
-    this.lineNumber = lineNumber;
-    this.message = message || "";
+  function isInstruction(string) {
+    return /^[a-zA-Z]+$/.test(string);
   }
   
-  function InstructionError(lineNumber, message) {
-    this.type = errors.INSTRUCTION;
-    this.lineNumber = lineNumber;
-    this.message = message || "";
+  function isTokenBreak(character) {
+    return (character === undefined || isWhitespace(character) || isNewline(character));
   }
   
-  function tokenizeLine(line, lineNumber) {
-    var tokenizedLine = {
-      lineNumber : lineNumber,
-      tokens     : []
-    };
+  this.lex = function(source) {
     
-    var ss = new StringScanner(line);
-
-    // Scan for leading whitespace
-    ss.scan(/\s*/);
-    if (ss.eos() || ss.peek(1) === "#") {
-      // If the line was blank or a comment, just return an empty array of tokens
-      return tokenizedLine;
-    }
-
-    // Grab the line number
-    var lineNum = ss.scan(/\d+/);
-    if (lineNum === null) {
-      throw new InstructionNumberError(lineNumber, "Missing instruction number");
-    }
-    tokenizedLine.tokens.push(lineNum);
-
-    if (ss.scan(/\s+/) === null) {
-      // Try to advance through whitespace
-      // TODO Throw parse error
-    }
-
-    var inst = ss.scan(/\w+/);
-    if (inst === null) {
-      // TODO Throw missing instruction error
-    }
-    tokenizedLine.tokens.push(inst);
-
-    if (ss.scan(/\s+/) === null) {
-      // Try to advance through whitespace
-      // TODO Throw parse error
-    }
-
-    while (!ss.eos()) {
-      if (ss.peek(1) === "#") {
-        ss.terminate();
-        break;
+    var tokenizedLines = [];
+    var currentLine = undefined;
+    var lineNum = 1;
+    var colNum = 0; // Start at 0 since we haven't looked at any characters yet
+    var peek = '';
+    
+    // Inner functions for scanning
+    var currPos = 0;
+    function getNextChar() {
+      if (currPos >= source.length) {
+        return undefined;
       }
-
-      var regOrNumToken = ss.scan(/[rR]1[0-5]|[rR][0-9]|-?[0-9xXa-fA-F]+/);
-      if (regOrNumToken === null) {
-        // TODO Parse error
-      }
-      tokenizedLine.tokens.push(regOrNumToken);
-      ss.scan(/[,\s]+/);
-    }
-
-    return tokenizedLine;
-  }
-
-  function parseTokens(tokenizedLine) {
-    var tokens = tokenizedLine.tokens;
-    if (tokens.length === 0) {
-      return null;
-    }
-
-    // Validations
-    var instNum = tokens[0];
-    if (!isValidInstructionNumber(instNum)) {
-      // TODO PARSE ERROR! NOT A LINE NUMBER
+      var nextChar = source[currPos];
+      currPos += 1;
+      colNum += 1;
+      return nextChar;
     }
     
-    var inst = tokens[1];
-    if (!isValidInstruction(inst)) {
-      throw new InstructionError(tokenizedLine.lineNumber, "Invalid instruction at line " + tokenizedLine.lineNumber);
+    function lookAhead(numChars) {
+      if (currPos >= source.length) {
+        return undefined;
+      }
+      return source.slice(currPos, currPos + numChars);
     }
+    
+    function scanToTokenBreak() {
+      var chars = peek;
+      var next = lookAhead(1);
+      while (!isTokenBreak(next)) {
+        peek = getNextChar();
+        chars += peek;
+        next = lookAhead(1);
+      }
+      return chars;
+    }
+    
+    // Inner function for grouping tokens by source code line
+    function addToken(token) {
+      if (currentLine === undefined) {
+        currentLine = new Line(lineNum);
+      }
+      currentLine.tokens.push(token);
+    }
+    
+    while (peek !== undefined) {
+      // Scan over whitespace and find newlines
+      while (true) {
+        peek = getNextChar();
+        if (isWhitespace(peek)) {
+          continue;
+        }
+        else if (isNewline(peek)) {
+          if (currentLine) {
+            tokenizedLines.push(currentLine);
+            currentLine = undefined;
+          }
+          lineNum += 1;
+          colNum = 0;
+        }
+        else {
+          break;
+        }
+      }
+      
+      // Ignore comments
+      if (peek === '#') {
+        while (!isNewline(lookAhead(1))) {
+          peek = getNextChar();
+        }
+        continue;
+      }
+      
+      var startOfToken = colNum;
+      var currToken = scanToTokenBreak();
+      
+      if (currToken === undefined) {
+        continue;
+      }
+      else if (isNumericConstant(currToken)) {
+        var num = (+currToken);
+        addToken(new ConstantToken(num, lineNum, startOfToken));
+      }
+      else if (isRegister(currToken)) {
+        addToken(new RegisterToken(currToken, lineNum, startOfToken));
+      }
+      else if (isInstruction(currToken)) {
+        addToken(new InstructionToken(currToken, lineNum, startOfToken));
+      }
+      else {
+        addToken(new UnknownToken(currToken, lineNum, startOfToken));
+      }
 
-    var args = tokens.slice(2);
-
-    return {
-      lineNumber : tokenizedLine.lineNumber,
-      instNum    : +(instNum),
-      inst       : inst,
-      args       : args
-    };
+    }
+    // Once we've reached EOF, add the last line, if it exists
+    if (currentLine) {
+      tokenizedLines.push(currentLine);
+      currentLine = undefined;
+    }
+    
+    return tokenizedLines;
+    
   }
+  
+}
 
-  function isValidRegister(arg) {
+//*********************************************
+// Parser
+//*********************************************
+
+
+function HmmmParser() {
+  
+  'use strict'
+  
+  // Error constructor
+  
+  function ParseError(row, column, message) {
+    this.row = row;
+    this.column = column;
+    this.message = message;
+  }
+  
+  // Argument validators
+  
+  function isValidRegisterArgument(arg) {
     return /^(r[0-9]|r1[0-5])$/i.test(arg);
   }
-
-  function isValidInstruction(arg) {
-    return Object.keys(hmmm.instructions).indexOf(arg) !== -1
-  }
-
-  function isValidInstructionNumber(arg) {
-    return /^(0|[1-9]\d*)$/.test(arg);
-  }
-
+  
   function isValidSignedArgument(arg) {
     var valid_decimal =  /^-?[0-9]+$/.test(arg) && +arg >= -128 && +arg <= 127;
     // The unary + doesn't play nicely with negative hex values, so we use parseInt here
@@ -157,7 +223,9 @@ exports = module.exports = (function() {
     var valid_hex     =  /^0[xX][0-9a-fA-F]+$/.test(arg) && +arg >= 0 && +arg <= 255;
     return valid_decimal || valid_hex;
   }
-
+  
+  // Binary helper methods
+  
   function padZeroesLeft(string, width) {
     var pad = "";
     for (var i = 0; i < width; ++i) {
@@ -206,7 +274,7 @@ exports = module.exports = (function() {
     }
     return flipped;
   }
-
+  
   function spaceIntoNibbles(bitstring) {
     var spaced = "";
     for (var i = 0; i < bitstring.length; ++i) {
@@ -217,71 +285,46 @@ exports = module.exports = (function() {
     }
     return spaced;
   }
-
-  function translateInstruction(instruction) {
-    var inst = hmmm.instructions[instruction.inst];
+  
+  function binaryForTokens(instToken, argTokens) {
+    // At this point, we assume that the tokens are formed correctly and in the
+    // right order, so we forgo error checking in this function
+    
+    // Get standarized instruction name (i.e., resolve aliases)
+    var inst = hmmm.instructions[instToken.val];
     var signature = hmmm.signatures[inst];
-
-    // Since some signatures contain the 'z' padding argument,
-    // the expected number of args does not necessarily equal signature.length;
-    var numExpectedArgs = signature.length - (signature.match(/z/) || []).length;
-    if (numExpectedArgs !== instruction.args.length) {
-      throw new ArgumentError(instruction.lineNumber, "Wrong number of arguments. Expected " + numExpectedArgs + " and found " + instruction.args.length);
-    }
-
+    var unpaddedSignature = signature.replace(/z/, ""); // Remove z's (since they only represent padding)
+    var expectedNumArgs = unpaddedSignature.length;
+    
     // Start with the opcode
     var opcode = hmmm.opcodes[inst].opcode;
-
-    // Build a bit string that we will OR with the output, handle 'data' instruction as a special case
-    var bitstring = "0000";
-    if (inst === "data") {
-      bitstring = "";
-    }
-
-    var argIndex = 0;
-    for (var signatureIndex = 0; signatureIndex < signature.length; ++signatureIndex) {
-      var arg = instruction.args[argIndex];
-      var type = signature[signatureIndex];
-
-      if (type === "z") {
+    
+    // Build the argument bitstring which will be OR'd with the opcode to produce final binary
+    var bitstring = "0000"
+    
+    var argIndex = 0; // Keep track of argument index separately to handle signatures with z's (i.e., padding)
+    for (var i = 0; i < signature.length; ++i) {
+      var argToken = argTokens[argIndex];
+      var argType = signature[i];
+      
+      if (argType === "z") {
+        // Add padding, but don't increment argIndex
         bitstring += "0000";
-        continue; // Don't increment the argIndex
+        continue;
       }
-
-      if (type === "r") {
-        if (isValidRegister(arg)) {
-          bitstring += binaryForRegister(arg);
-        }
-        else {
-          throw new ArgumentError(instruction.lineNumber, "Wrong argument type. Expected register.");
-        }
+      else if (argType === "r") {
+        bitstring += binaryForRegister(argToken.val);
       }
-      else if (type === "u") {
-        if (isValidUnsignedArgument(arg)) {
-          bitstring += binaryForInteger(parseInt(arg), 8);
-        }
-        else {
-          throw new ArgumentError(instruction.lineNumber, "Wrong argument type. Expected unsigned integer.");
-        }
-      }
-      else if (type === "s") {
-        if (isValidSignedArgument(arg)) {
-          bitstring += binaryForInteger(parseInt(arg), 8);
-        }
-        else {
-          throw new ArgumentError(instruction.lineNumber, "Wrong argument type. Expected signed integer.");
-        }
-      }
-      else if (type === "n") {
-        // TODO: Remove? No instructions in the current instruction set use this in their signature
-        bitstring += binaryForIntger(parseInt(arg), 16);
+      else if (argType === "u" || argType === "s") {
+        bitstring += binaryForInteger(argToken.val, 8);
       }
       else {
-        // TODO Throw compiler error
+        // TODO: Internal error
       }
+      
       argIndex += 1;
     }
-
+    
     // Pad with zeroes to make width always 16 bits
     var paddingNeeded = 16 - bitstring.length;
     for (var j = 0; j < paddingNeeded; ++j) {
@@ -295,47 +338,186 @@ exports = module.exports = (function() {
 
     return output;
   }
-
-  return {
   
-    assemble: function(source, callback) {
-      var lines = source.split(/\n/);
+  this.parse = function(tokenizedLines) {
+    
+    var expectedInstNum = 0;
+    var binary = "";
+    var errors = [];
+    
+    for (var i = 0; i < tokenizedLines.length; ++i) {
+      var line = tokenizedLines[i];
+      var tokens = line.tokens;
       
-      var instructions = [];
-      var expectedInstNum = 0;
+      // Do all error checking first
+      // Bail and try to parse next line as soon as any error is found
       
-      // Use a 1-indexed offest for the line number (which matches text-editor conventions)
-      for (var lineNumber = 1; lineNumber <= lines.length; ++lineNumber) {
-        try {
-          var line = lines[lineNumber - 1];
-          var tokenizedLine = tokenizeLine(line, lineNumber);
-          var parsed = parseTokens(tokenizedLine);
-          if (parsed === null) { // Line was empty or comment-only
-            continue;
-          }
-          else {
-            // Check to make sure the instructions are in order
-            if (parsed.instNum !== expectedInstNum) {
-              throw new InstructionNumberError(lineNumber, "Wrong instruction number. Expected " + expectedInstNum + ", found " + parsed.instNum);
-            }
-            expectedInstNum += 1;
-          }
-          var instruction = translateInstruction(parsed);
-          instructions.push(instruction);
-        }
-        catch(e) {
-          if (callback) {
-            callback(null, e);
-          }
-          return;
-        }
+      if (tokens.length === 0) {
+        // The only way this happens is if the tokenized lines are malformed
+        // Big error so bail completely
+        errors.push(new ParseError(1, 1, "Internal Parser Error"));
+        break;
       }
-      var machineCode = instructions.map(spaceIntoNibbles).join("\n");
-      machineCode += "\n"; // Newline at end of file
       
-      callback(machineCode);
+      // Check for the correct instruction number
+      var instNumToken = tokens[0];
+      if (!instNumToken instanceof ConstantToken || instNumToken.val !== expectedInstNum) {
+        errors.push(new ParseError(instNumToken.row,
+                                   instNumToken.column,
+                                   "Expected instruction number: " + expectedInstNum));
+        continue;
+      }
+      
+      // If we get this far, we're going to try to parse the rest of the line,
+      // so we increase expectedInstNum in an effort to recover parsing on the
+      // next line if we run into any errors on this one
+      expectedInstNum += 1;
+      
+      // Check for a valid instruction
+      if (tokens.length < 2) {
+        errors.push(new ParseError(instNumToken.row, 
+                                   instNumToken.col + instNumToken.val.length,
+                                   "Missing instruction"));
+        continue;
+      }
+      var instToken = tokens[1];
+      if (!instToken instanceof InstructionToken) {
+        errors.push(new ParseError(instToken.row,
+                                   instToken.column,
+                                   "Expected instruction"));
+        continue;
+      }
+      if (Object.keys(hmmm.instructions).indexOf(instToken.val) === -1) {
+        errors.push(new ParseError(instToken.row,
+                                   instToken.column,
+                                   "Invalid instruction"));
+        continue;
+      }
+      
+      
+      // Get instruction and arguments
+      var inst = hmmm.instructions[instToken.val]; // Resolve aliases
+      var argTokens = tokens.slice(2);
+      
+      // Check for proper number of arguments
+      var signature = hmmm.signatures[inst];
+      var unpaddedSignature = signature.replace(/z/, ""); // Remove z's (since they only represent padding)
+      var expectedArgs = unpaddedSignature.length;
+      if (expectedArgs !== argTokens.length) {
+        var row = 0;
+        var col = 0;
+        if (argTokens.length === 0) {
+          row = instToken.row;
+          col = instToken.column + instToken.val.length
+        }
+        else {
+          row = argTokens[0].row;
+          col = argTokens[0].column;
+        }
+        errors.push(new ParseError(row,
+                                   col,
+                                   "Wrong number of arguments. Expected: " + expectedArgs + ". Found: " + argTokens.length + "."));
+        continue;
+      }
+      
+      // Check for arguments for types and validity
+      var generatedError = false;
+      for (var j = 0; j < unpaddedSignature.length; ++j) {
+        var argType = unpaddedSignature[j];
+        var argToken = argTokens[j];
+        
+        // Register Args
+        if (argType === 'r') {
+          if (argToken.type !== tokenTypes.REGISTER) {
+            errors.push(new ParseError(argToken.row,
+                                       argToken.column,
+                                       "Wrong argument type. Expected register, found " + argToken.type.toLowerCase()));
+            generatedError = true;
+            break;
+          }
+          if (!isValidRegisterArgument(argToken.val)) {
+            errors.push(new ParseError(argToken.row,
+                                       argToken.column,
+                                       "Invalid register argument (must be r0-r15). Found " + argToken.val));
+            generatedError = true;
+            break;
+          }
+        }
+        // Signed 8-bit args
+        else if (argType === 's') {
+          if (argToken.type !== tokenTypes.CONSTANT) {
+            errors.push(new ParseError(argToken.row,
+                                       argToken.column,
+                                       "Wrong argument type. Expected signed integer, found " + argToken.type.toLowerCase()));
+            generatedError = true;
+            break;
+          }
+          if (!isValidSignedArgument(argToken.val)) {
+            errors.push(new ParseError(argToken.row,
+                                       argToken.column,
+                                       "Invalid signed integer argument (must be between -128 and 127). Found " + argToken.val));
+            generatedError = true;
+            break;
+          }
+        }
+        // Unsigned 8-bit args
+        else if (argType === 'u') {
+          if (argToken.type !== tokenTypes.CONSTANT) {
+            errors.push(new ParseError(argToken.row,
+                                       argToken.column,
+                                       "Wrong argument type. Expected unsigned integer, found " + argToken.type.toLowerCase()));
+            generatedError = true;
+            break;
+          }
+          if (!isValidSignedArgument(argToken.val)) {
+            errors.push(new ParseError(argToken.row,
+                                       argToken.column,
+                                       "Invalid unsigned integer argument (must be between 0 and 255). Found " + argToken.val));
+            generatedError = true;
+            break;
+          }
+        }
+        // Any other signature value
+        else {
+          errors.push(new ParseError(argToken.row,
+                                     argToken.column,
+                                     "Internal Parser Error. Unknown argument signature type."));
+          generatedError = true;
+          break;
+        }
+        
+      }
+      if (generatedError) {
+        continue;
+      }
+      
+      // Create binary for instruction and args and add to binary output string
+      var binForLine = spaceIntoNibbles(binaryForTokens(instToken, argTokens)) + '\n';
+      binary += binForLine;
+      
     }
     
+    return { binary: binary, errors: errors }
+    
   }
+  
+}
 
-}());
+//*********************************************
+// Assembler (Public)
+//*********************************************
+
+function HmmmAssembler() {
+  
+  'use strict';
+
+  this.assemble = function(source) {
+    var lexer = new HmmmLexer();
+    var parser = new HmmmParser();
+    var tokenizedLines = lexer.lex(source);
+    return parser.parse(tokenizedLines);
+  }
+  
+}
+
+module.exports = exports = HmmmAssembler;
