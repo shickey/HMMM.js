@@ -13,27 +13,29 @@ function HmmmLexer() {
     UNKNOWN     : "UNKNOWN"
   });
   
-  function Token(type) {
+  function Token(type, row, column) {
     this.type = type;
+    this.row = row;
+    this.column = column;
   }
   
-  function InstructionToken(inst) {
-    InstructionToken.super_.call(this, tokenTypes.INSTRUCTION);
+  function InstructionToken(inst, row, column) {
+    InstructionToken.super_.call(this, tokenTypes.INSTRUCTION, row, column);
     this.val = inst;
   }
   
-  function RegisterToken(reg) {
-    RegisterToken.super_.call(this, tokenTypes.REGISTER);
+  function RegisterToken(reg, row, column) {
+    RegisterToken.super_.call(this, tokenTypes.REGISTER, row, column);
     this.val = reg;
   }
   
-  function ConstantToken(constant) {
-    ConstantToken.super_.call(this, tokenTypes.CONSTANT);
+  function ConstantToken(constant, row, column) {
+    ConstantToken.super_.call(this, tokenTypes.CONSTANT, row, column);
     this.val = constant;
   }
   
-  function UnknownToken(value) {
-    UnknownToken.super_.call(this, tokenTypes.UNKNOWN);
+  function UnknownToken(value, row, column) {
+    UnknownToken.super_.call(this, tokenTypes.UNKNOWN, row, column);
     this.val = value;
   }
   
@@ -77,6 +79,7 @@ function HmmmLexer() {
     var tokenizedLines = [];
     var currentLine = undefined;
     var lineNum = 1;
+    var colNum = 0; // Start at 0 since we haven't looked at any characters yet
     var peek = '';
     
     // Inner functions for scanning
@@ -87,6 +90,7 @@ function HmmmLexer() {
       }
       var nextChar = source[currPos];
       currPos += 1;
+      colNum += 1;
       return nextChar;
     }
     
@@ -129,6 +133,7 @@ function HmmmLexer() {
             currentLine = undefined;
           }
           lineNum += 1;
+          colNum = 0;
         }
         else {
           break;
@@ -143,6 +148,7 @@ function HmmmLexer() {
         continue;
       }
       
+      var startOfToken = colNum;
       var currToken = scanToTokenBreak();
       
       if (currToken === undefined) {
@@ -150,16 +156,16 @@ function HmmmLexer() {
       }
       else if (isNumericConstant(currToken)) {
         var num = (+currToken);
-        addToken(new ConstantToken(num));
+        addToken(new ConstantToken(num, lineNum, startOfToken));
       }
       else if (isRegister(currToken)) {
-        addToken(new RegisterToken(currToken));
+        addToken(new RegisterToken(currToken, lineNum, startOfToken));
       }
       else if (isInstruction(currToken)) {
-        addToken(new InstructionToken(currToken));
+        addToken(new InstructionToken(currToken, lineNum, startOfToken));
       }
       else {
-        addToken(new UnknownToken(currToken));
+        addToken(new UnknownToken(currToken, lineNum, startOfToken));
       }
 
     }
