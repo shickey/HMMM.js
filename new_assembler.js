@@ -56,12 +56,16 @@ function HmmmLexer() {
     return character === '\n';
   }
   
-  function isDigit(character) {
-    return /^[0-9]$/.test(character);
+  function isNumericConstant(string) {
+    return /^-?[0-9]+$/.test(string);
   }
   
-  function isAlpha(character) {
-    return /^[a-zA-Z]$/.test(character);
+  function isRegister(string) {
+    return /^r[0-9]+$/i.test(string);
+  }
+  
+  function isInstruction(string) {
+    return /^[a-zA-Z]+$/.test(string);
   }
   
   function isTokenBreak(character) {
@@ -73,6 +77,7 @@ function HmmmLexer() {
     var tokenizedLines = [];
     var currentLine = undefined;
     var lineNum = 1;
+    var peek = '';
     
     // Inner functions for scanning
     var currPos = 0;
@@ -93,7 +98,7 @@ function HmmmLexer() {
     }
     
     function scanToTokenBreak() {
-      var chars = "";
+      var chars = peek;
       var next = lookAhead(1);
       while (!isTokenBreak(next)) {
         peek = getNextChar();
@@ -110,9 +115,6 @@ function HmmmLexer() {
       }
       currentLine.tokens.push(token);
     }
-    
-    
-    var peek = '';
     
     while (peek !== undefined) {
       // Scan over whitespace and find newlines
@@ -141,83 +143,25 @@ function HmmmLexer() {
         continue;
       }
       
-      // Numeric constants (including negative values)
-      if (isDigit(peek) || (peek === '-' && isDigit(lookAhead(1)))) {
-        var num = undefined;
-        if (peek == '-') {
-          peek = getNextChar();
-          num = (+peek) * -1;
-        }
-        else {
-          num = (+peek);
-        }
-        
-        while (isDigit(lookAhead(1))) {
-          peek = getNextChar();
-          num = (num * 10) + (+peek); // Convert to int
-        }
-        
-        if (isTokenBreak(lookAhead(1))) {
-          addToken(new ConstantToken(num));
-          continue;
-        }
-        else {
-          num = "" + num;
-          num += scanToTokenBreak();
-          addToken(new UnknownToken(num));
-          continue;
-        }
-      }
+      var currToken = scanToTokenBreak();
       
-      // Registers
-      if (peek === 'r' || peek === 'R') {
-        // First, check to see if next character is numerical
-        // Only lex as register if so
-        if (isDigit(lookAhead(1))) {
-          var reg = 'r'
-          while(isDigit(lookAhead(1))) {
-            peek = getNextChar();
-            reg += peek
-          }
-          if (isTokenBreak(lookAhead(1))) {
-            addToken(new RegisterToken(reg));
-            continue;
-          }
-          else {
-            reg += scanToTokenBreak();
-            addToken(new UnknownToken(reg))
-            continue;
-          }
-        }
+      if (currToken === undefined) {
+        continue;
       }
-      
-      // Instructions
-      if (isAlpha(peek)) {
-        var inst = peek;
-        while (isAlpha(lookAhead(1))) {
-          peek = getNextChar();
-          inst += peek;
-        }
-        if (isTokenBreak(lookAhead(1))) {
-          addToken(new InstructionToken(inst));
-          continue;
-        }
-        else {
-          inst += scanToTokenBreak();
-          addToken(new UnknownToken(inst));
-          continue;
-        }
+      else if (isNumericConstant(currToken)) {
+        var num = (+currToken);
+        addToken(new ConstantToken(num));
       }
-      
-      // Anything else
-      if (peek !== undefined) {
-        var unknown = peek;
-        while (peek !== undefined && !isWhitespace(lookAhead(1))) {
-          peek = getNextChar();
-          unknown += peek;
-        }
-        addToken(new UnknownToken(unknown));
+      else if (isRegister(currToken)) {
+        addToken(new RegisterToken(currToken));
       }
+      else if (isInstruction(currToken)) {
+        addToken(new InstructionToken(currToken));
+      }
+      else {
+        addToken(new UnknownToken(currToken));
+      }
+
     }
     // Once we've reached EOF, add the last line, if it exists
     if (currentLine) {
