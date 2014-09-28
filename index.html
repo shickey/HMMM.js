@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="hmmmApp">
+<head>
+  <title>HMMM Simulator</title>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="site.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="ace/ace.js"></script>
+  <script src="hmmm/hmmm-assembler.js"></script>
+  <script src="app.js"></script>
+</head>
+<body>
+
+  <div class="container-fluid">
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <a href="#" class="navbar-brand">HMMM Simulator</a>
+      <ul class="nav navbar-nav pull-right">
+        <li><a href="#/about">About/Credits</a></li>
+      </ul>
+    </nav>
+    <div class="view-container">
+      <div ng-view class="view-frame" ng-class="animationClass"></div>
+    </div>
+  </div>
+  
+</body>
+</html>

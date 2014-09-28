@@ -1,0 +1,39 @@
+<div class="panel panel-primary">
+  <div class="panel-heading clearfix">
+    <h2 class="panel-title pull-left">Instructions</h2>
+    <button class="btn btn-sm btn-link pull-right"><span class="glyphicon glyphicon-remove"></span></button>
+  </div>
+  <div class="panel-body">
+    <p>Write HMMM code on the left side, then click "Assemble!" to build your binary. Once you have a binary on the right, click "Simulate!" to run it!</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">HMMM Editor</h4>
+      </div>
+      <div class="panel-body">
+        <div class="editor-head">
+          <button class="btn btn-default">Load File <span class="glyphicon glyphicon-floppy-open"></span></button>
+          <button class="btn btn-default">Save File <span class="glyphicon glyphicon-floppy-save"></span></button>
+          <button class="btn btn-primary pull-right" ng-click="assemble()">Assemble! <span class="glyphicon glyphicon-arrow-right"></span></button>
+        </div>
+        <div id="hmmm-editor" class="editor"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Binary</h4>
+      </div>
+      <div class="panel-body">
+        <div class="editor-head text-right">
+          <button class="btn btn-primary" ng-click="beginSimulation()">Simulate! <span class="glyphicon glyphicon-arrow-right"></span></button>
+        </div>
+        <div id="bin-editor" class="editor"></div>
+      </div>
+    </div>
+  </div>
+</div>
