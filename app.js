@@ -1,5 +1,12 @@
 var app = angular.module('hmmmApp', ['ngRoute', 'ngAnimate']);
 
+app.run(function($rootScope, $location) {
+  $rootScope.go = function(path, animationClass) {
+    $rootScope.animationClass = animationClass;
+    $location.path(path);
+  }
+});
+
 app.config(function($routeProvider) {
   $routeProvider
     .when('/', {
@@ -19,7 +26,6 @@ app.config(function($routeProvider) {
 });
 
 app.controller('EditorCtrl', ['$scope', '$location', function($scope, $location) {
-  $scope.animationClass = "slide-backward";
   
   $scope.hmmmEditor = ace.edit("hmmm-editor");
   $scope.hmmmEditor.setTheme("ace/theme/monokai");
@@ -67,24 +73,12 @@ app.controller('EditorCtrl', ['$scope', '$location', function($scope, $location)
     }
   }
   
-  $scope.beginSimulation = function() {
-    $scope.animationClass = "slide-forward";
-    $location.path("/simulate");
-  }
-  
 }]);
 
 app.controller('SimulatorCtrl', ['$scope', '$location', function($scope, $location) {
-  $scope.animationClass = "slide-forward";
   var hmmmConsole = ace.edit("hmmm-console");
   hmmmConsole.setTheme("ace/theme/monokai");
   hmmmConsole.setReadOnly(true);
   hmmmConsole.setShowPrintMargin(false);
   hmmmConsole.renderer.setShowGutter(false);
-  
-  $scope.back = function() {
-    $scope.animationClass = "slide-backward";
-    $location.path("/")
-  }
-  
 }]);
