@@ -30,11 +30,13 @@ app.controller('EditorCtrl', ['$scope', '$location', function($scope, $location)
   $scope.hmmmEditor = ace.edit("hmmm-editor");
   $scope.hmmmEditor.setTheme("ace/theme/monokai");
   $scope.hmmmEditor.setHighlightActiveLine(false);
+  $scope.hmmmEditor.setShowPrintMargin(false);
 
   $scope.binEditor = ace.edit("bin-editor");
   $scope.binEditor.setTheme("ace/theme/monokai");
   $scope.binEditor.setReadOnly(true);
   $scope.binEditor.setHighlightActiveLine(false);
+  $scope.binEditor.setShowPrintMargin(false);
   
   var assembler = new HmmmAssembler();
   
