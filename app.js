@@ -27,24 +27,60 @@ app.config(function($routeProvider) {
     });
 });
 
-app.controller('EditorCtrl', ['$scope', function($scope) {
+app.factory('HmmmSim', function() {
+  
+  var _showInstructions = true;
+  var _hmmmCode = undefined;
+  var _binary = undefined;
+  
+  return {
+    getShowInstructions: function() {
+      return _showInstructions;
+    },
+    setShowInstructions: function(showInstructions) {
+      _showInstructions = showInstructions;
+      return _showInstructions;
+    },
+    getHmmmCode: function() {
+      return _hmmmCode;
+    },
+    setHmmmCode: function(hmmmCode) {
+      _hmmmCode = hmmmCode;
+      return _hmmmCode;
+    },
+    getBinary: function() {
+      return _binary;
+    },
+    setBinary: function(binary) {
+      _binary = binary;
+      return _binary;
+    }
+  }
+  
+})
+
+app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   
   var hmmmEditor = ace.edit("hmmm-editor");
   hmmmEditor.setTheme("ace/theme/monokai");
   hmmmEditor.setHighlightActiveLine(false);
   hmmmEditor.setShowPrintMargin(false);
+  hmmmEditor.setValue(HmmmSim.getHmmmCode());
 
   var binEditor = ace.edit("bin-editor");
   binEditor.setTheme("ace/theme/monokai");
   binEditor.setReadOnly(true);
   binEditor.setHighlightActiveLine(false);
   binEditor.setShowPrintMargin(false);
+  binEditor.setValue(HmmmSim.getBinary());
   
   var assembler = new HmmmAssembler();
   
   var Range = ace.require("ace/range").Range;
   
   var errorMarkerIds = [];
+  
+  $scope.showInstructions = HmmmSim.getShowInstructions();
   
   $scope.assemble = function() {
     
@@ -70,11 +106,21 @@ app.controller('EditorCtrl', ['$scope', function($scope) {
         }
       }));
       
+      HmmmSim.setHmmmCode(undefined);
+      HmmmSim.setBinary(undefined);
+      
       binEditor.setValue("");
     }
     else {
       binEditor.setValue(output.binary);
+      HmmmSim.setHmmmCode(hmmmEditor.getValue());
+      HmmmSim.setBinary(output.binary);
     }
+  }
+  
+  $scope.dismissInstructions = function() {
+    $scope.showInstructions = false;
+    HmmmSim.setShowInstructions(false);
   }
   
 }]);
@@ -86,6 +132,7 @@ app.controller('SimulatorCtrl', ['$scope', function($scope) {
   hmmmConsole.setShowPrintMargin(false);
   hmmmConsole.renderer.setShowGutter(false);
   
+  // Allow fluid layout for affixed sidebar elements
   $('[data-clampedwidth]').each(function () {
     var elem = $(this);
     var parentPanel = elem.data('clampedwidth');

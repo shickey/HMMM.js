@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-16">
-    <div class="alert alert-info alert-dismissable" role="alert">
-      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <div class="alert alert-info alert-dismissable" role="alert" ng-show="showInstructions">
+      <button type="button" class="close" data-dismiss="alert" ng-click="dismissInstructions()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
       <strong>Instructions:</strong> Write HMMM code on the left side, then click "Assemble!" to build your binary. Once you have a binary on the right, click "Simulate!" to run it!
     </div>
   </div>
