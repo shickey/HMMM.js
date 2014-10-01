@@ -1,4 +1,4 @@
-var app = angular.module('hmmmApp', ['ngRoute', 'ngAnimate']);
+var app = angular.module('hmmmApp', ['ngRoute', 'ngAnimate', 'ui.utils']);
 
 app.run(function($rootScope, $location) {
   
@@ -85,4 +85,17 @@ app.controller('SimulatorCtrl', ['$scope', function($scope) {
   hmmmConsole.setReadOnly(true);
   hmmmConsole.setShowPrintMargin(false);
   hmmmConsole.renderer.setShowGutter(false);
+  
+  $('[data-clampedwidth]').each(function () {
+    var elem = $(this);
+    var parentPanel = elem.data('clampedwidth');
+    var resizeFn = function () {
+        var sideBarNavWidth = $(parentPanel).width() - parseInt(elem.css('paddingLeft')) - parseInt(elem.css('paddingRight')) - parseInt(elem.css('marginLeft')) - parseInt(elem.css('marginRight')) - parseInt(elem.css('borderLeftWidth')) - parseInt(elem.css('borderRightWidth'));
+        elem.css('width', sideBarNavWidth);
+    };
+
+    resizeFn();
+    $(window).resize(resizeFn);
+  });
+  
 }]);

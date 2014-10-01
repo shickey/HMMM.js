@@ -1,48 +1,50 @@
 <div class="row">
-  <div class="col-md-10">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <div class="simulator-controls">
-          <button class="btn btn-default" ng-click="go('/', 'slide-backward')"><span class="glyphicon glyphicon-arrow-left"></span> Back to Editor</button>
-          <button class="btn btn-primary pull-right">Run! <span class="glyphicon glyphicon-play"></span></button>
-        </div>
-        <div id="hmmm-console"></div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">CPU</h3>
+  <div class="col-md-10 affix-parent">
+    <div ui-scrollfix="+50" data-clampedwidth=".affix-parent" class="sim-fixed">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="simulator-controls">
+            <button class="btn btn-default" ng-click="go('/', 'slide-backward')"><span class="glyphicon glyphicon-arrow-left"></span> Back to Editor</button>
+            <button class="btn btn-primary pull-right">Run! <span class="glyphicon glyphicon-play"></span></button>
           </div>
-          <table class="table table-bordered table-very-condensed">
-            <thead>
-              <th>Register</th>
-              <th>Binary Value</th>
-              <th>Decimal Value</th>
-            </thead>
-            <tr><td> pc</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td> r0</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td> r1</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td> r2</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td> r3</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td> r4</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td> r5</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td> r6</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td> r7</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td> r8</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td> r9</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td>r10</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td>r11</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td>r12</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td>r13</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td>r14</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-            <tr><td>r15</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-          </table>
+          <div id="hmmm-console"></div>
         </div>
       </div>
-      <div class="col-md-8">
-        
+      <div class="row">
+        <div class="col-md-8">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">CPU</h3>
+            </div>
+            <table class="table table-bordered table-very-condensed">
+              <thead>
+                <th>Register</th>
+                <th>Binary Value</th>
+                <th>Decimal Value</th>
+              </thead>
+              <tr><td> pc</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> r0</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> r1</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> r2</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> r3</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> r4</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> r5</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> r6</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> r7</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> r8</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> r9</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td>r10</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td>r11</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td>r12</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td>r13</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td>r14</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td>r15</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-8">
+          
+        </div>
       </div>
     </div>
   </div>

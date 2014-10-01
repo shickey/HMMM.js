@@ -35,6 +35,11 @@ table tr td:first-child, table th:first-child {
   padding-bottom: 10px;
 }
 
+.sim-fixed.ui-scrollfix {
+  position: fixed;
+  top: 21px;
+}
+
 .hmmm-error {
   background: rgba(255, 50, 50, 0.5);
   position: absolute;
