@@ -1,6 +1,22 @@
 body {
-  padding-top: 70px;
+  /*padding-top: 70px;*/
   background: rgba(0, 40, 100, .6);
+}
+
+table tr td:first-child, table th:first-child {
+  text-align: right;
+  font-weight: bold;
+  /*width: 1px;*/
+}
+
+.table-very-condensed > thead > tr > th,
+.table-very-condensed > tbody > tr > th,
+.table-very-condensed > tfoot > tr > th,
+.table-very-condensed > thead > tr > td,
+.table-very-condensed > tbody > tr > td,
+.table-very-condensed > tfoot > tr > td {
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
 
 .editor {
@@ -12,7 +28,11 @@ body {
 }
 
 #hmmm-console {
-  height: 200px;
+  height: 120px;
+}
+
+.simulator-controls {
+  padding-bottom: 10px;
 }
 
 .hmmm-error {

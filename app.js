@@ -1,10 +1,12 @@
 var app = angular.module('hmmmApp', ['ngRoute', 'ngAnimate']);
 
 app.run(function($rootScope, $location) {
+  
   $rootScope.go = function(path, animationClass) {
     $rootScope.animationClass = animationClass;
     $location.path(path);
   }
+  
 });
 
 app.config(function($routeProvider) {
@@ -25,18 +27,18 @@ app.config(function($routeProvider) {
     });
 });
 
-app.controller('EditorCtrl', ['$scope', '$location', function($scope, $location) {
+app.controller('EditorCtrl', ['$scope', function($scope) {
   
-  $scope.hmmmEditor = ace.edit("hmmm-editor");
-  $scope.hmmmEditor.setTheme("ace/theme/monokai");
-  $scope.hmmmEditor.setHighlightActiveLine(false);
-  $scope.hmmmEditor.setShowPrintMargin(false);
+  var hmmmEditor = ace.edit("hmmm-editor");
+  hmmmEditor.setTheme("ace/theme/monokai");
+  hmmmEditor.setHighlightActiveLine(false);
+  hmmmEditor.setShowPrintMargin(false);
 
-  $scope.binEditor = ace.edit("bin-editor");
-  $scope.binEditor.setTheme("ace/theme/monokai");
-  $scope.binEditor.setReadOnly(true);
-  $scope.binEditor.setHighlightActiveLine(false);
-  $scope.binEditor.setShowPrintMargin(false);
+  var binEditor = ace.edit("bin-editor");
+  binEditor.setTheme("ace/theme/monokai");
+  binEditor.setReadOnly(true);
+  binEditor.setHighlightActiveLine(false);
+  binEditor.setShowPrintMargin(false);
   
   var assembler = new HmmmAssembler();
   
@@ -46,14 +48,14 @@ app.controller('EditorCtrl', ['$scope', '$location', function($scope, $location)
   
   $scope.assemble = function() {
     
-    var session = $scope.hmmmEditor.session;
+    var session = hmmmEditor.session;
     session.clearAnnotations();
     errorMarkerIds.forEach(function(markerId) {
       session.removeMarker(markerId);
     });
     errorMarkerIds = [];
     
-    var output = assembler.assemble($scope.hmmmEditor.getValue());
+    var output = assembler.assemble(hmmmEditor.getValue());
     if (output.errors.length !== 0) {
       
       session.setAnnotations(output.errors.map(function(e){
@@ -68,16 +70,16 @@ app.controller('EditorCtrl', ['$scope', '$location', function($scope, $location)
         }
       }));
       
-      $scope.binEditor.setValue("");
+      binEditor.setValue("");
     }
     else {
-      $scope.binEditor.setValue(output.binary);
+      binEditor.setValue(output.binary);
     }
   }
   
 }]);
 
-app.controller('SimulatorCtrl', ['$scope', '$location', function($scope, $location) {
+app.controller('SimulatorCtrl', ['$scope', function($scope) {
   var hmmmConsole = ace.edit("hmmm-console");
   hmmmConsole.setTheme("ace/theme/monokai");
   hmmmConsole.setReadOnly(true);
