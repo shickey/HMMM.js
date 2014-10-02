@@ -367,7 +367,7 @@ function HmmmParser() {
         errors.push(new ParseError(instNumToken.row,
                                    instNumToken.column,
                                    instNumToken.row,
-                                   instNumToken.column + instNumToken.val.length,
+                                   instNumToken.column + instNumToken.val.toString().length,
                                    "Expected instruction number: " + expectedInstNum));
         // If the value was at least an integer, try to recover by resetting the expectedInstNum
         if (instNumToken instanceof ConstantToken && instNumToken.val > 0) {
@@ -384,9 +384,9 @@ function HmmmParser() {
       // Check for a valid instruction
       if (tokens.length < 2) {
         errors.push(new ParseError(instNumToken.row, 
-                                   instNumToken.column + instNumToken.val.length,
+                                   instNumToken.column + instNumToken.val.toString().length,
                                    instNumToken.row,
-                                   instNumToken.column + instNumToken.val.length,
+                                   instNumToken.column + instNumToken.val.toString().length,
                                    "Missing instruction"));
         continue;
       }
@@ -395,7 +395,7 @@ function HmmmParser() {
         errors.push(new ParseError(instToken.row,
                                    instToken.column,
                                    instToken.row,
-                                   instToken.column + instToken.val.length,
+                                   instToken.column + instToken.val.toString().length,
                                    "Expected instruction, found " + instToken.type.toLowerCase()));
         continue;
       }
@@ -403,7 +403,7 @@ function HmmmParser() {
         errors.push(new ParseError(instToken.row,
                                    instToken.column,
                                    instToken.row,
-                                   instToken.column + instToken.val.length,
+                                   instToken.column + instToken.val.toString().length,
                                    "Invalid instruction"));
         continue;
       }
@@ -424,15 +424,15 @@ function HmmmParser() {
         var endCol = 0;
         if (argTokens.length === 0) {
           startRow = instToken.row;
-          startCol = instToken.column + instToken.val.length
-          endCol = instToken.column + instToken.val.length
+          startCol = instToken.column + instToken.val.toString().length
+          endCol = instToken.column + instToken.val.toString().length
         }
         else {
           startRow = argTokens[0].row;
           startCol = argTokens[0].column;
           
           var lastArg = argTokens[argTokens.length - 1];
-          endCol = lastArg.column + lastArg.val.length;
+          endCol = lastArg.column + lastArg.val.toString().length;
         }
         errors.push(new ParseError(startRow,
                                    startCol,
@@ -454,7 +454,7 @@ function HmmmParser() {
             errors.push(new ParseError(argToken.row,
                                        argToken.column,
                                        argToken.row,
-                                       argToken.column + argToken.val.length,
+                                       argToken.column + argToken.val.toString().length,
                                        "Wrong argument type. Expected register, found " + argToken.type.toLowerCase()));
             generatedError = true;
             break;
@@ -463,7 +463,7 @@ function HmmmParser() {
             errors.push(new ParseError(argToken.row,
                                        argToken.column,
                                        argToken.row,
-                                       argToken.column + argToken.val.length,
+                                       argToken.column + argToken.val.toString().length,
                                        "Invalid register argument (must be r0-r15). Found " + argToken.val));
             generatedError = true;
             break;
@@ -475,7 +475,7 @@ function HmmmParser() {
             errors.push(new ParseError(argToken.row,
                                        argToken.column,
                                        argToken.row,
-                                       argToken.column + argToken.val.length,
+                                       argToken.column + argToken.val.toString().length,
                                        "Wrong argument type. Expected signed integer, found " + argToken.type.toLowerCase()));
             generatedError = true;
             break;
@@ -484,7 +484,7 @@ function HmmmParser() {
             errors.push(new ParseError(argToken.row,
                                        argToken.column,
                                        argToken.row,
-                                       argToken.column + argToken.val.length,
+                                       argToken.column + argToken.val.toString().length,
                                        "Invalid signed integer argument (must be between -128 and 127). Found " + argToken.val));
             generatedError = true;
             break;
@@ -496,7 +496,7 @@ function HmmmParser() {
             errors.push(new ParseError(argToken.row,
                                        argToken.column,
                                        argToken.row,
-                                       argToken.column + argToken.val.length,
+                                       argToken.column + argToken.val.toString().length,
                                        "Wrong argument type. Expected unsigned integer, found " + argToken.type.toLowerCase()));
             generatedError = true;
             break;
@@ -505,7 +505,7 @@ function HmmmParser() {
             errors.push(new ParseError(argToken.row,
                                        argToken.column,
                                        argToken.row,
-                                       argToken.column + argToken.val.length,
+                                       argToken.column + argToken.val.toString().length,
                                        "Invalid unsigned integer argument (must be between 0 and 255). Found " + argToken.val));
             generatedError = true;
             break;
@@ -516,7 +516,7 @@ function HmmmParser() {
           errors.push(new ParseError(argToken.row,
                                      argToken.column,
                                      argToken.row,
-                                     argToken.column + argToken.val.length,
+                                     argToken.column + argToken.val.toString().length,
                                      "Internal Parser Error. Unknown argument signature type."));
           generatedError = true;
           break;
