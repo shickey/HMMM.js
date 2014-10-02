@@ -94,8 +94,10 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
     var output = assembler.assemble(hmmmEditor.getValue());
     if (output.errors.length !== 0) {
       
+      console.log(output.errors);
+      
       session.setAnnotations(output.errors.map(function(e){
-        var markerRange = new Range(e.startRow - 1, e.startColumn - 1, e.endRow - 1, e.endColumn);
+        var markerRange = new Range(e.startRow - 1, e.startColumn - 1, e.endRow - 1, e.endColumn - 1);
         var markerId = session.addMarker(markerRange, "hmmm-error", "text");
         errorMarkerIds.push(markerId);
         return {
