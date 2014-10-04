@@ -29,10 +29,11 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   //*********************************************
   // Public State
   //*********************************************
+  this.executionDelay = 500; // Milliseconds between instruction executions
+  
   this.registers = [];
   this.ram       = [];
   this.pc        = 0;
-  this.ir        = 0;
   this.boundary  = 0;
   this.state     = states.EMPTY;
   
@@ -109,7 +110,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   
   function executeInstruction(operation, args) {
     // Bump the instruction number
-    machine.ip += 1
+    machine.pc += 1
     
     // Unpack Arguments
     var rx, ry, rz, n;
@@ -150,109 +151,109 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     }
     
     // Now actually execute the correct operation
-    if (op === "halt") {
+    if (operation === "halt") {
       machine.state = states.HALT;
     }
-    else if (op === "read") {
+    else if (operation === "read") {
       var userInput = machine.inHandler();
-      machine.register[rx] = userInput;
+      machine.registers[rx] = userInput;
     }
-    else if (op === "write") {
+    else if (operation === "write") {
       var data = machine.registers[rx];
       machine.outHandler(data);
     }
-    else if (op === "jumpr") {
+    else if (operation === "jumpr") {
       var data = machine.registers[rx];
       machine.pc = data;
     }
-    else if (op === "setn") {
+    else if (operation === "setn") {
       machine.registers[rx] = n;
     }
-    else if (op === "loadn") {
+    else if (operation === "loadn") {
       var data = getRam(n);
       machine.registers[rx] = data;
     }
-    else if (op === "storen") {
+    else if (operation === "storen") {
       var data = machine.registers[rx];
       machine.ram[n] = data;
     }
-    else if (op === "loadr") {
+    else if (operation === "loadr") {
       var address = machine.registers[ry];
       var data = getRam(address);
       machine.registers[rx] = data;
     }
-    else if (op === "storer") {
+    else if (operation === "storer") {
       var data = machine.registers[rx];
       var address = machine.registers[ry];
       machine.ram[address] = data;
     }
-    else if (op === "addn") {
+    else if (operation === "addn") {
       var data = machine.registers[rx];
       machine.registers[rx] = data + n;
     }
-    else if (op === "nop") {
+    else if (operation === "nop") {
       // Do nothing
     }
-    else if (op === "copy") {
+    else if (operation === "copy") {
       var data = machine.registers[ry];
       machine.registers[rx] = data;
     }
-    else if (op === "add") {
+    else if (operation === "add") {
       var data1 = machine.registers[ry];
       var data2 = machine.registers[rz];
       machine.registers[rx] = data1 + data2;
     }
-    else if (op === "neg") {
+    else if (operation === "neg") {
       var data = machine.registers[ry];
       machine.registers[rx] = -data;
     }
-    else if (op === "sub") {
+    else if (operation === "sub") {
       var data1 = machine.registers[ry];
       var data2 = machine.registers[rz];
       machine.registers[rx] = data1 - data2;
     }
-    else if (op === "mul") {
+    else if (operation === "mul") {
       var data1 = machine.registers[ry];
       var data2 = machine.registers[rz];
       machine.registers[rx] = data1 * data2;
     }
-    else if (op === "div") {
+    else if (operation === "div") {
       var data1 = machine.registers[ry];
       var data2 = machine.registers[rz];
       machine.registers[rx] = parseInt(data1 / data2);
     }
-    else if (op === "mod") {
+    else if (operation === "mod") {
       var data1 = machine.registers[ry];
       var data2 = machine.registers[rz];
       machine.registers[rx] = data1 % data2;
     }
-    else if (op === "jumpn") {
+    else if (operation === "jumpn") {
       machine.pc = n;
     }
-    else if (op === "calln") {
+    else if (operation === "calln") {
       var nextInst = machine.pc; // We've already bumped at this point
       machine.registers[rx] = nextInst;
       machine.pc = n;
     }
-    else if (op === "jeqzn") {
+    else if (operation === "jeqzn") {
       var data = machine.registers[rx];
       if (data === 0) {
         machine.pc = n;
       }
     }
-    else if (op === "jnezn") {
+    else if (operation === "jnezn") {
       var data = machine.registers[rx];
       if (data !== 0) {
         machine.pc = n;
       }
     }
-    else if (op === "jgtzn") {
+    else if (operation === "jgtzn") {
       var data = machine.registers[rx];
       if (data > 0) {
         machine.pc = n;
       }
     }
-    else if (op === "jltzn") {
+    else if (operation === "jltzn") {
       var data = machine.registers[rx];
       if (data < 0) {
         machine.pc = n;
@@ -268,7 +269,6 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   //*********************************************
   this.resetMachine = function(clearProgram) {
     machine.pc = 0;
-    machine.ir = 0;
     
     if (clearProgram) {
       machine.boundary = 0;
@@ -312,8 +312,8 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       return;
     }
     var binInst = machine.ram[machine.pc];
-    var decoded = machine.decodeBinaryInstruction(binInst);
-    machine.executeInstruction(decoded.operation, decoded.args);
+    var decoded = decodeBinaryInstruction(binInst);
+    executeInstruction(decoded.operation, decoded.args);
   }
   
   this.run = function() {
@@ -329,9 +329,13 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       return;
     }
     machine.state = states.RUN;
-    while (machine.state == states.RUN) {
+    var execute = function() {
       machine.runNextInstruction();
+      if (machine.state === states.RUN) {
+        setTimeout(execute, machine.executionDelay);
+      }
     }
+    execute();
   }
   
 }
