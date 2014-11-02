@@ -57,7 +57,65 @@ app.factory('HmmmSim', function() {
     }
   }
   
-})
+});
+
+app.filter('binary', function() {
+  
+  function padZeroesLeft(string, width) {
+    var pad = "";
+    for (var i = 0; i < width; ++i) {
+      pad += "0";
+    }
+    return pad.substring(0, pad.length - string.length) + string;
+  }
+  
+  function binaryForInteger(integer, width) {
+    if (width === undefined) {
+      width = 16;
+    }
+    
+    if (integer < 0) {
+      // Two's Complement
+      var positive = padZeroesLeft(Math.abs(integer).toString(2), width);
+      var flipped = flipBitstring(positive);
+      var backToNum = parseInt(flipped, 2);
+      return padZeroesLeft((backToNum + 1).toString(2), width);
+    }
+
+    return padZeroesLeft(parseInt(integer).toString(2), width);
+  }
+
+  function flipBitstring(bitstring) {
+    var flipped = "";
+    for (var i = 0; i < bitstring.length; ++i) {
+      if (bitstring[i] == "0") {
+        flipped += "1"
+      }
+      else if (bitstring[i] == "1") {
+        flipped += "0"
+      }
+      else {
+        return null;
+      }
+    }
+    return flipped;
+  }
+  
+  function spaceIntoNibbles(bitstring) {
+    var spaced = "";
+    for (var i = 0; i < bitstring.length; ++i) {
+      if (i % 4 === 0 && i !== 0) {
+        spaced += " ";
+      }
+      spaced += bitstring[i];
+    }
+    return spaced;
+  }
+  
+  return function(input) {
+    return spaceIntoNibbles(binaryForInteger(input, 16));
+  };
+});
 
 app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   
