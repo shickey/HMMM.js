@@ -5,7 +5,7 @@
         <div class="panel-body">
           <div class="simulator-controls">
             <button class="btn btn-default" ng-click="go('/', 'slide-backward')"><span class="glyphicon glyphicon-arrow-left"></span> Back to Editor</button>
-            <button class="btn btn-primary pull-right">Run! <span class="glyphicon glyphicon-play"></span></button>
+            <button class="btn btn-primary pull-right" ng-click="runProgram()">Run! <span class="glyphicon glyphicon-play"></span></button>
           </div>
           <div id="hmmm-console"></div>
         </div>
@@ -22,23 +22,23 @@
                 <th>Binary Value</th>
                 <th>Decimal Value</th>
               </thead>
-              <tr><td> pc</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td> r0</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td> r1</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td> r2</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td> r3</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td> r4</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td> r5</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td> r6</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td> r7</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td> r8</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td> r9</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td>r10</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td>r11</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td>r12</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td>r13</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td>r14</td><td>0000 0000 0000 0000</td><td>0</td></tr>
-              <tr><td>r15</td><td>0000 0000 0000 0000</td><td>0</td></tr>
+              <tr><td> pc</td><td>0000 0000 0000 0000</td><td>{{simulator.pc}}</td></tr>
+              <tr><td> r0</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[0]}}</td></tr>
+              <tr><td> r1</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[1]}}</td></tr>
+              <tr><td> r2</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[2]}}</td></tr>
+              <tr><td> r3</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[3]}}</td></tr>
+              <tr><td> r4</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[4]}}</td></tr>
+              <tr><td> r5</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[5]}}</td></tr>
+              <tr><td> r6</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[6]}}</td></tr>
+              <tr><td> r7</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[7]}}</td></tr>
+              <tr><td> r8</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[8]}}</td></tr>
+              <tr><td> r9</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[9]}}</td></tr>
+              <tr><td>r10</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[10]}}</td></tr>
+              <tr><td>r11</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[11]}}</td></tr>
+              <tr><td>r12</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[12]}}</td></tr>
+              <tr><td>r13</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[13]}}</td></tr>
+              <tr><td>r14</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[14]}}</td></tr>
+              <tr><td>r15</td><td>0000 0000 0000 0000</td><td>{{simulator.registers[15]}}</td></tr>
             </table>
           </div>
         </div>
@@ -59,262 +59,262 @@
           <th>Binary Value</th>
           <th>Info</th>
         </thead>
-        <tr><td>  0</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>  1</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>  2</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>  3</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>  4</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>  5</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>  6</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>  7</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>  8</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>  9</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 10</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 11</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 12</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 13</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 14</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 15</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 16</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 17</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 18</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 19</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 20</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 21</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 22</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 23</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 24</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 25</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 26</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 27</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 28</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 29</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 30</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 31</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 32</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 33</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 34</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 35</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 36</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 37</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 38</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 39</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 40</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 41</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 42</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 43</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 44</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 45</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 46</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 47</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 48</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 49</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 50</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 51</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 52</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 53</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 54</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 55</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 56</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 57</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 58</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 59</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 60</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 61</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 62</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 63</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 64</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 65</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 66</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 67</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 68</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 69</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 70</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 71</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 72</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 73</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 74</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 75</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 76</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 77</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 78</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 79</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 80</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 81</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 82</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 83</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 84</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 85</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 86</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 87</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 88</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 89</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 90</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 91</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 92</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 93</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 94</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 95</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 96</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 97</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 98</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td> 99</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>100</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>101</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>102</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>103</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>104</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>105</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>106</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>107</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>108</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>109</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>110</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>111</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>112</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>113</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>114</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>115</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>116</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>117</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>118</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>119</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>120</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>121</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>122</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>123</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>124</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>125</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>126</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>127</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>128</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>129</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>130</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>131</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>132</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>133</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>134</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>135</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>136</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>137</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>138</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>139</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>140</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>141</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>142</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>143</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>144</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>145</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>146</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>147</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>148</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>149</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>150</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>151</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>152</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>153</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>154</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>155</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>156</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>157</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>158</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>159</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>160</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>161</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>162</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>163</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>164</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>165</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>166</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>167</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>168</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>169</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>170</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>171</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>172</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>173</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>174</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>175</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>176</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>177</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>178</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>179</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>180</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>181</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>182</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>183</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>184</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>185</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>186</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>187</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>188</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>189</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>190</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>191</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>192</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>193</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>194</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>195</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>196</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>197</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>198</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>199</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>200</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>201</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>202</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>203</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>204</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>205</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>206</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>207</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>208</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>209</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>210</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>211</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>212</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>213</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>214</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>215</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>216</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>217</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>218</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>219</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>220</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>221</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>222</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>223</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>224</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>225</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>226</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>227</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>228</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>229</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>230</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>231</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>232</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>233</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>234</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>235</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>236</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>237</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>238</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>239</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>240</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>241</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>242</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>243</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>244</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>245</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>246</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>247</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>248</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>249</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>250</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>251</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>252</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>253</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>254</td><td>0000 0000 0000 0000</td><td></td></tr>
-        <tr><td>255</td><td>0000 0000 0000 0000</td><td></td></tr>
+        <tr><td>  0</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[0]}}</td></tr>
+        <tr><td>  1</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[1]}}</td></tr>
+        <tr><td>  2</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[2]}}</td></tr>
+        <tr><td>  3</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[3]}}</td></tr>
+        <tr><td>  4</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[4]}}</td></tr>
+        <tr><td>  5</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[5]}}</td></tr>
+        <tr><td>  6</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[6]}}</td></tr>
+        <tr><td>  7</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[7]}}</td></tr>
+        <tr><td>  8</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[8]}}</td></tr>
+        <tr><td>  9</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[9]}}</td></tr>
+        <tr><td> 10</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[10]}}</td></tr>
+        <tr><td> 11</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[11]}}</td></tr>
+        <tr><td> 12</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[12]}}</td></tr>
+        <tr><td> 13</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[13]}}</td></tr>
+        <tr><td> 14</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[14]}}</td></tr>
+        <tr><td> 15</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[15]}}</td></tr>
+        <tr><td> 16</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[16]}}</td></tr>
+        <tr><td> 17</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[17]}}</td></tr>
+        <tr><td> 18</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[18]}}</td></tr>
+        <tr><td> 19</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[19]}}</td></tr>
+        <tr><td> 20</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[20]}}</td></tr>
+        <tr><td> 21</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[21]}}</td></tr>
+        <tr><td> 22</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[22]}}</td></tr>
+        <tr><td> 23</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[23]}}</td></tr>
+        <tr><td> 24</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[24]}}</td></tr>
+        <tr><td> 25</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[25]}}</td></tr>
+        <tr><td> 26</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[26]}}</td></tr>
+        <tr><td> 27</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[27]}}</td></tr>
+        <tr><td> 28</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[28]}}</td></tr>
+        <tr><td> 29</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[29]}}</td></tr>
+        <tr><td> 30</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[30]}}</td></tr>
+        <tr><td> 31</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[31]}}</td></tr>
+        <tr><td> 32</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[32]}}</td></tr>
+        <tr><td> 33</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[33]}}</td></tr>
+        <tr><td> 34</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[34]}}</td></tr>
+        <tr><td> 35</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[35]}}</td></tr>
+        <tr><td> 36</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[36]}}</td></tr>
+        <tr><td> 37</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[37]}}</td></tr>
+        <tr><td> 38</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[38]}}</td></tr>
+        <tr><td> 39</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[39]}}</td></tr>
+        <tr><td> 40</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[40]}}</td></tr>
+        <tr><td> 41</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[41]}}</td></tr>
+        <tr><td> 42</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[42]}}</td></tr>
+        <tr><td> 43</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[43]}}</td></tr>
+        <tr><td> 44</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[44]}}</td></tr>
+        <tr><td> 45</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[45]}}</td></tr>
+        <tr><td> 46</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[46]}}</td></tr>
+        <tr><td> 47</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[47]}}</td></tr>
+        <tr><td> 48</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[48]}}</td></tr>
+        <tr><td> 49</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[49]}}</td></tr>
+        <tr><td> 50</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[50]}}</td></tr>
+        <tr><td> 51</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[51]}}</td></tr>
+        <tr><td> 52</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[52]}}</td></tr>
+        <tr><td> 53</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[53]}}</td></tr>
+        <tr><td> 54</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[54]}}</td></tr>
+        <tr><td> 55</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[55]}}</td></tr>
+        <tr><td> 56</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[56]}}</td></tr>
+        <tr><td> 57</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[57]}}</td></tr>
+        <tr><td> 58</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[58]}}</td></tr>
+        <tr><td> 59</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[59]}}</td></tr>
+        <tr><td> 60</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[60]}}</td></tr>
+        <tr><td> 61</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[61]}}</td></tr>
+        <tr><td> 62</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[62]}}</td></tr>
+        <tr><td> 63</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[63]}}</td></tr>
+        <tr><td> 64</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[64]}}</td></tr>
+        <tr><td> 65</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[65]}}</td></tr>
+        <tr><td> 66</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[66]}}</td></tr>
+        <tr><td> 67</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[67]}}</td></tr>
+        <tr><td> 68</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[68]}}</td></tr>
+        <tr><td> 69</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[69]}}</td></tr>
+        <tr><td> 70</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[70]}}</td></tr>
+        <tr><td> 71</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[71]}}</td></tr>
+        <tr><td> 72</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[72]}}</td></tr>
+        <tr><td> 73</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[73]}}</td></tr>
+        <tr><td> 74</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[74]}}</td></tr>
+        <tr><td> 75</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[75]}}</td></tr>
+        <tr><td> 76</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[76]}}</td></tr>
+        <tr><td> 77</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[77]}}</td></tr>
+        <tr><td> 78</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[78]}}</td></tr>
+        <tr><td> 79</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[79]}}</td></tr>
+        <tr><td> 80</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[80]}}</td></tr>
+        <tr><td> 81</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[81]}}</td></tr>
+        <tr><td> 82</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[82]}}</td></tr>
+        <tr><td> 83</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[83]}}</td></tr>
+        <tr><td> 84</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[84]}}</td></tr>
+        <tr><td> 85</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[85]}}</td></tr>
+        <tr><td> 86</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[86]}}</td></tr>
+        <tr><td> 87</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[87]}}</td></tr>
+        <tr><td> 88</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[88]}}</td></tr>
+        <tr><td> 89</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[89]}}</td></tr>
+        <tr><td> 90</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[90]}}</td></tr>
+        <tr><td> 91</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[91]}}</td></tr>
+        <tr><td> 92</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[92]}}</td></tr>
+        <tr><td> 93</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[93]}}</td></tr>
+        <tr><td> 94</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[94]}}</td></tr>
+        <tr><td> 95</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[95]}}</td></tr>
+        <tr><td> 96</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[96]}}</td></tr>
+        <tr><td> 97</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[97]}}</td></tr>
+        <tr><td> 98</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[98]}}</td></tr>
+        <tr><td> 99</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[99]}}</td></tr>
+        <tr><td>100</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[100]}}</td></tr>
+        <tr><td>101</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[101]}}</td></tr>
+        <tr><td>102</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[102]}}</td></tr>
+        <tr><td>103</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[103]}}</td></tr>
+        <tr><td>104</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[104]}}</td></tr>
+        <tr><td>105</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[105]}}</td></tr>
+        <tr><td>106</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[106]}}</td></tr>
+        <tr><td>107</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[107]}}</td></tr>
+        <tr><td>108</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[108]}}</td></tr>
+        <tr><td>109</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[109]}}</td></tr>
+        <tr><td>110</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[110]}}</td></tr>
+        <tr><td>111</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[111]}}</td></tr>
+        <tr><td>112</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[112]}}</td></tr>
+        <tr><td>113</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[113]}}</td></tr>
+        <tr><td>114</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[114]}}</td></tr>
+        <tr><td>115</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[115]}}</td></tr>
+        <tr><td>116</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[116]}}</td></tr>
+        <tr><td>117</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[117]}}</td></tr>
+        <tr><td>118</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[118]}}</td></tr>
+        <tr><td>119</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[119]}}</td></tr>
+        <tr><td>120</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[120]}}</td></tr>
+        <tr><td>121</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[121]}}</td></tr>
+        <tr><td>122</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[122]}}</td></tr>
+        <tr><td>123</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[123]}}</td></tr>
+        <tr><td>124</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[124]}}</td></tr>
+        <tr><td>125</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[125]}}</td></tr>
+        <tr><td>126</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[126]}}</td></tr>
+        <tr><td>127</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[127]}}</td></tr>
+        <tr><td>128</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[128]}}</td></tr>
+        <tr><td>129</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[129]}}</td></tr>
+        <tr><td>130</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[130]}}</td></tr>
+        <tr><td>131</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[131]}}</td></tr>
+        <tr><td>132</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[132]}}</td></tr>
+        <tr><td>133</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[133]}}</td></tr>
+        <tr><td>134</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[134]}}</td></tr>
+        <tr><td>135</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[135]}}</td></tr>
+        <tr><td>136</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[136]}}</td></tr>
+        <tr><td>137</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[137]}}</td></tr>
+        <tr><td>138</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[138]}}</td></tr>
+        <tr><td>139</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[139]}}</td></tr>
+        <tr><td>140</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[140]}}</td></tr>
+        <tr><td>141</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[141]}}</td></tr>
+        <tr><td>142</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[142]}}</td></tr>
+        <tr><td>143</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[143]}}</td></tr>
+        <tr><td>144</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[144]}}</td></tr>
+        <tr><td>145</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[145]}}</td></tr>
+        <tr><td>146</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[146]}}</td></tr>
+        <tr><td>147</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[147]}}</td></tr>
+        <tr><td>148</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[148]}}</td></tr>
+        <tr><td>149</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[149]}}</td></tr>
+        <tr><td>150</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[150]}}</td></tr>
+        <tr><td>151</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[151]}}</td></tr>
+        <tr><td>152</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[152]}}</td></tr>
+        <tr><td>153</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[153]}}</td></tr>
+        <tr><td>154</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[154]}}</td></tr>
+        <tr><td>155</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[155]}}</td></tr>
+        <tr><td>156</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[156]}}</td></tr>
+        <tr><td>157</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[157]}}</td></tr>
+        <tr><td>158</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[158]}}</td></tr>
+        <tr><td>159</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[159]}}</td></tr>
+        <tr><td>160</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[160]}}</td></tr>
+        <tr><td>161</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[161]}}</td></tr>
+        <tr><td>162</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[162]}}</td></tr>
+        <tr><td>163</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[163]}}</td></tr>
+        <tr><td>164</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[164]}}</td></tr>
+        <tr><td>165</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[165]}}</td></tr>
+        <tr><td>166</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[166]}}</td></tr>
+        <tr><td>167</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[167]}}</td></tr>
+        <tr><td>168</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[168]}}</td></tr>
+        <tr><td>169</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[169]}}</td></tr>
+        <tr><td>170</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[170]}}</td></tr>
+        <tr><td>171</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[171]}}</td></tr>
+        <tr><td>172</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[172]}}</td></tr>
+        <tr><td>173</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[173]}}</td></tr>
+        <tr><td>174</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[174]}}</td></tr>
+        <tr><td>175</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[175]}}</td></tr>
+        <tr><td>176</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[176]}}</td></tr>
+        <tr><td>177</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[177]}}</td></tr>
+        <tr><td>178</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[178]}}</td></tr>
+        <tr><td>179</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[179]}}</td></tr>
+        <tr><td>180</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[180]}}</td></tr>
+        <tr><td>181</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[181]}}</td></tr>
+        <tr><td>182</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[182]}}</td></tr>
+        <tr><td>183</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[183]}}</td></tr>
+        <tr><td>184</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[184]}}</td></tr>
+        <tr><td>185</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[185]}}</td></tr>
+        <tr><td>186</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[186]}}</td></tr>
+        <tr><td>187</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[187]}}</td></tr>
+        <tr><td>188</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[188]}}</td></tr>
+        <tr><td>189</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[189]}}</td></tr>
+        <tr><td>190</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[190]}}</td></tr>
+        <tr><td>191</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[191]}}</td></tr>
+        <tr><td>192</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[192]}}</td></tr>
+        <tr><td>193</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[193]}}</td></tr>
+        <tr><td>194</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[194]}}</td></tr>
+        <tr><td>195</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[195]}}</td></tr>
+        <tr><td>196</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[196]}}</td></tr>
+        <tr><td>197</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[197]}}</td></tr>
+        <tr><td>198</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[198]}}</td></tr>
+        <tr><td>199</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[199]}}</td></tr>
+        <tr><td>200</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[200]}}</td></tr>
+        <tr><td>201</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[201]}}</td></tr>
+        <tr><td>202</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[202]}}</td></tr>
+        <tr><td>203</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[203]}}</td></tr>
+        <tr><td>204</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[204]}}</td></tr>
+        <tr><td>205</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[205]}}</td></tr>
+        <tr><td>206</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[206]}}</td></tr>
+        <tr><td>207</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[207]}}</td></tr>
+        <tr><td>208</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[208]}}</td></tr>
+        <tr><td>209</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[209]}}</td></tr>
+        <tr><td>210</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[210]}}</td></tr>
+        <tr><td>211</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[211]}}</td></tr>
+        <tr><td>212</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[212]}}</td></tr>
+        <tr><td>213</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[213]}}</td></tr>
+        <tr><td>214</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[214]}}</td></tr>
+        <tr><td>215</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[215]}}</td></tr>
+        <tr><td>216</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[216]}}</td></tr>
+        <tr><td>217</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[217]}}</td></tr>
+        <tr><td>218</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[218]}}</td></tr>
+        <tr><td>219</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[219]}}</td></tr>
+        <tr><td>220</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[220]}}</td></tr>
+        <tr><td>221</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[221]}}</td></tr>
+        <tr><td>222</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[222]}}</td></tr>
+        <tr><td>223</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[223]}}</td></tr>
+        <tr><td>224</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[224]}}</td></tr>
+        <tr><td>225</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[225]}}</td></tr>
+        <tr><td>226</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[226]}}</td></tr>
+        <tr><td>227</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[227]}}</td></tr>
+        <tr><td>228</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[228]}}</td></tr>
+        <tr><td>229</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[229]}}</td></tr>
+        <tr><td>230</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[230]}}</td></tr>
+        <tr><td>231</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[231]}}</td></tr>
+        <tr><td>232</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[232]}}</td></tr>
+        <tr><td>233</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[233]}}</td></tr>
+        <tr><td>234</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[234]}}</td></tr>
+        <tr><td>235</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[235]}}</td></tr>
+        <tr><td>236</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[236]}}</td></tr>
+        <tr><td>237</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[237]}}</td></tr>
+        <tr><td>238</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[238]}}</td></tr>
+        <tr><td>239</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[239]}}</td></tr>
+        <tr><td>240</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[240]}}</td></tr>
+        <tr><td>241</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[241]}}</td></tr>
+        <tr><td>242</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[242]}}</td></tr>
+        <tr><td>243</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[243]}}</td></tr>
+        <tr><td>244</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[244]}}</td></tr>
+        <tr><td>245</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[245]}}</td></tr>
+        <tr><td>246</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[246]}}</td></tr>
+        <tr><td>247</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[247]}}</td></tr>
+        <tr><td>248</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[248]}}</td></tr>
+        <tr><td>249</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[249]}}</td></tr>
+        <tr><td>250</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[250]}}</td></tr>
+        <tr><td>251</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[251]}}</td></tr>
+        <tr><td>252</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[252]}}</td></tr>
+        <tr><td>253</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[253]}}</td></tr>
+        <tr><td>254</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[254]}}</td></tr>
+        <tr><td>255</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[255]}}</td></tr>
       </table>
     </div>
   </div>

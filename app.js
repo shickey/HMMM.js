@@ -127,7 +127,7 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   
 }]);
 
-app.controller('SimulatorCtrl', ['$scope', function($scope) {
+app.controller('SimulatorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   var hmmmConsole = ace.edit("hmmm-console");
   hmmmConsole.setTheme("ace/theme/monokai");
   hmmmConsole.setReadOnly(true);
@@ -146,5 +146,23 @@ app.controller('SimulatorCtrl', ['$scope', function($scope) {
     resizeFn();
     $(window).resize(resizeFn);
   });
+  
+  var inHandler = function() {
+    return +(prompt("Please input an integer"));
+  }
+  
+  var outAndErrHandler = function(data) {
+    hmmmConsole.navigateFileEnd();
+    hmmmConsole.insert(data + "\n");
+  }
+  
+  $scope.simulator = new HmmmSimulator(inHandler, outAndErrHandler, outAndErrHandler);
+  $scope.simulator.loadBinary(HmmmSim.getBinary());
+  
+  $scope.runProgram = function() {
+    $scope.simulator.run(function() {
+      $scope.$apply();
+    })
+  }
   
 }]);
