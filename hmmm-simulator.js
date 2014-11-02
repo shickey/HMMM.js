@@ -10,7 +10,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   var NUM_REGISTERS = 16;
   var RAM_SIZE      = 256;
   
-  this.states = Object.freeze({
+  var states = Object.freeze({
     EMPTY   : 'empty',
     READY   : 'ready',
     RUN     : 'run',
@@ -29,6 +29,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   //*********************************************
   // Public State
   //*********************************************
+  this.states    = states;
   this.registers = [];
   this.ram       = [];
   this.pc        = 0;
