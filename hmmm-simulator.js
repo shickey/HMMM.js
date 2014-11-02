@@ -10,7 +10,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   var NUM_REGISTERS = 16;
   var RAM_SIZE      = 256;
   
-  var states = Object.freeze({
+  this.states = Object.freeze({
     EMPTY   : 'empty',
     READY   : 'ready',
     RUN     : 'run',
