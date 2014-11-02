@@ -138,7 +138,7 @@ var hmmm = exports = module.exports = (function() {
 }());
 
 },{}],2:[function(require,module,exports){
-var hmmm = require('./hmmm_language');
+var hmmm = require('./hmmm-language');
 
 
 function HmmmSimulator(inHandler, outHandler, errHandler) {
@@ -169,8 +169,6 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   //*********************************************
   // Public State
   //*********************************************
-  this.executionDelay = 500; // Milliseconds between instruction executions
-  
   this.registers = [];
   this.ram       = [];
   this.pc        = 0;
@@ -456,7 +454,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     executeInstruction(decoded.operation, decoded.args);
   }
   
-  this.run = function(callback) {
+  this.run = function(willExecute, didExecute) {
     if (machine.state == states.EMPTY) {
       // TODO error
       return;
@@ -469,18 +467,19 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       return;
     }
     machine.state = states.RUN;
-    var execute = function(callback) {
+    while (machine.state === states.RUN) {
+      if (willExecute) {
+        willExecute();
+      }
       machine.runNextInstruction();
-      callback();
-      if (machine.state === states.RUN) {
-        setTimeout(execute, machine.executionDelay, callback);
+      if (didExecute) {
+        didExecute();
       }
     }
-    execute(callback);
   }
   
 }
 
 module.exports = exports = HmmmSimulator;
-},{"./hmmm_language":1}]},{},[2])(2)
+},{"./hmmm-language":1}]},{},[2])(2)
 });

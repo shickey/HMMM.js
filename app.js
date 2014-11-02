@@ -134,6 +134,8 @@ app.controller('SimulatorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) 
   hmmmConsole.setShowPrintMargin(false);
   hmmmConsole.renderer.setShowGutter(false);
   
+  $scope.timingDelay = 1000;
+  
   // Allow fluid layout for affixed sidebar elements
   $('[data-clampedwidth]').each(function () {
     var elem = $(this);
@@ -157,12 +159,18 @@ app.controller('SimulatorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) 
   }
   
   $scope.simulator = new HmmmSimulator(inHandler, outAndErrHandler, outAndErrHandler);
-  $scope.simulator.loadBinary(HmmmSim.getBinary());
+  var simulator = $scope.simulator
+  simulator.loadBinary(HmmmSim.getBinary());
   
   $scope.runProgram = function() {
-    $scope.simulator.run(function() {
-      $scope.$apply();
-    })
+    console.log(simulator);
+    var execute = function() {
+      if (simulator.state !== simulator.states.ERROR &&
+          simulator.state !== simulator.states.HALT) {
+        $timeout(execute, $scope.timingDelay);
+      }
+    }
+    execute();
   }
   
 }]);
