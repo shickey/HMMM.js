@@ -1,5 +1,5 @@
 var util = require('util');
-var hmmm = require('./hmmm_language');
+var hmmm = require('./hmmm-language');
 
 //*********************************************
 // Tokens

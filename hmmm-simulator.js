@@ -1,4 +1,4 @@
-var hmmm = require('./hmmm_language');
+var hmmm = require('./hmmm-language');
 
 
 function HmmmSimulator(inHandler, outHandler, errHandler) {

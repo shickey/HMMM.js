@@ -1,97 +1,87 @@
-var expect    = require('chai').expect;
-var fs        = require('fs');
-var assembler = require('../assembler.js');
+var expect        = require('chai').expect;
+var fs            = require('fs');
+var HmmmAssembler = require('../hmmm-assembler.js');
 
-describe('Assembler', function() {
+describe('HmmmAssembler', function() {
   
   this.timeout(500);
   
-  function assembleFile(filename, callback) {
+  var assembler;
+  
+  function readTestFile(filename) {
     var filepath = 'test/test_files/';
     filepath += filename;
-    var source = fs.readFileSync(filepath).toString();
-    assembler.assemble(source, callback);
+    return fs.readFileSync(filepath).toString();
   }
   
-  it('should return a HMMM binary for a valid HMMM source', function(done) {
-    var validBinary = fs.readFileSync('test/test_files/valid.out').toString();
-    assembleFile('valid.hmmm', function(binary, error) {
-      expect(error).to.be.undefined;
-      expect(binary).to.equal(validBinary);
-      done();
-    });
+  function assembleFile(filename) {
+    var source = readTestFile(filename);
+    return assembler.assemble(source);
+  }
+  
+  beforeEach(function() {
+    assembler = new HmmmAssembler();
   });
   
-  it('should return an error when syntax is invalid', function(done) {
-    assembleFile('syntax_error.hmmm', function(binary, error) {
-      expect(error).to.be.defined;
-      expect(error.lineNumber).to.equal(1);
-      expect(error.type).to.have.string('INSTRUCTION NUMBER');
-      done();
-    });
+  it('should return the correct HMMM binary for a valid HMMM source', function() {
+    var validBinary = readTestFile('valid.out')
+    var assembled = assembleFile('valid.hmmm')
+    expect(assembled.binary).to.equal(validBinary);
+    expect(assembled.errors.length).to.equal(0);
   });
   
-  it('should return an error when an instruction has the wrong instruction number', function(done) {
-    assembleFile('bad_inst_number.hmmm', function(binary, error) {
-      expect(error).to.be.defined;
-      expect(error.lineNumber).to.equal(3);
-      expect(error.type).to.have.string('INSTRUCTION NUMBER');
-      done();
-    });
+  it('should return an error when syntax is invalid', function() {
+    var assembled = assembleFile('syntax_error.hmmm');
+    expect(assembled.errors.length).to.be.above(0)
+    var error = assembled.errors[0];
+    expect(error.message).to.have.string('instruction number');
   });
   
-  it('should return an error when an invalid instruction is given', function(done) {
-    assembleFile('bad_inst.hmmm', function(binary, error) {
-      expect(error).to.be.defined;
-      expect(error.lineNumber).to.equal(2);
-      expect(error.type).to.have.string('INSTRUCTION ERROR');
-      done();
-    });
+  it('should return an error when an instruction has the wrong instruction number', function() {
+    var assembled = assembleFile('bad_inst_number.hmmm');
+    expect(assembled.errors.length).to.be.above(0)
+    var error = assembled.errors[0];
+    expect(error.message).to.have.string('instruction number');
   });
   
-  it('should return an error when an operation is given the wrong number of arguments', function(done) {
-    assembleFile('wrong_num_args.hmmm', function(binary, error) {
-      expect(error).to.be.defined;
-      expect(error.lineNumber).to.equal(1);
-      expect(error.type).to.have.string('ARGUMENT');
-      expect(error.message).to.have.string('Wrong number of arguments');
-      done();
-    });
+  it('should return an error when an invalid instruction is given', function() {
+    var assembled = assembleFile('bad_inst.hmmm');
+    expect(assembled.errors.length).to.be.above(0)
+    var error = assembled.errors[0];
+    expect(error.message).to.have.string('instruction');
   });
   
-  it('should return an error when an operation is given the wrong type of argument (expecting register)', function(done) {
-    assembleFile('wrong_arg_type_reg.hmmm', function(binary, error) {
-      expect(error).to.be.defined;
-      expect(error.lineNumber).to.equal(1);
-      expect(error.type).to.have.string('ARGUMENT');
-      expect(error.message).to.have.string('Wrong argument type');
-      expect(error.message).to.have.string('register');
-      done();
-    });
+  it('should return an error when an operation is given the wrong number of arguments', function() {
+    var assembled = assembleFile('wrong_num_args.hmmm');
+    expect(assembled.errors.length).to.be.above(0)
+    var error = assembled.errors[0];
+    expect(error.message).to.have.string('number of arguments');
   });
   
-  it('should return an error when an operation is given the wrong type of argument (expecting unsigned)', function(done) {
-    assembleFile('wrong_arg_type_unsigned.hmmm', function(binary, error) {
-      expect(error).to.be.defined;
-      expect(error.lineNumber).to.equal(1);
-      expect(error.type).to.have.string('ARGUMENT');
-      expect(error.message).to.have.string('Wrong argument type');
-      expect(error.message).to.have.string('unsigned');
-      done();
-    });
+  it('should return an error when an operation is given the wrong type of argument (expecting register)', function() {
+    var assembled = assembleFile('wrong_arg_type_reg.hmmm');
+    expect(assembled.errors.length).to.be.above(0)
+    var error = assembled.errors[0];
+    expect(error.message).to.have.string('argument type');
+    expect(error.message).to.have.string('Expected register');
   });
   
-  it('should return an error when an operation is given the wrong type of argument (expecting signed)', function(done) {
-    assembleFile('wrong_arg_type_signed.hmmm', function(binary, error) {
-      expect(error).to.be.defined;
-      expect(error.lineNumber).to.equal(1);
-      expect(error.type).to.have.string('ARGUMENT');
-      expect(error.message).to.have.string('Wrong argument type');
-      expect(error.message).to.have.string('signed');
-      done();
-    });
+  it('should return an error when an operation is given the wrong type of argument (expecting unsigned)', function() {
+    var assembled = assembleFile('wrong_arg_type_unsigned.hmmm');
+    expect(assembled.errors.length).to.be.above(0)
+    var error = assembled.errors[0];
+    expect(error.message).to.have.string('argument type');
+    expect(error.message).to.have.string('Expected unsigned integer');
   });
   
-  it('should return an error when a numerical number is out of bounds');
+  it('should return an error when an operation is given the wrong type of argument (expecting signed)', function() {
+    var assembled = assembleFile('wrong_arg_type_signed.hmmm');
+    expect(assembled.errors.length).to.be.above(0)
+    var error = assembled.errors[0];
+    expect(error.message).to.have.string('argument type');
+    expect(error.message).to.have.string('Expected signed integer');
+  });
+  
+  xit('should return an error when a numerical number is out of bounds');
   
 });
