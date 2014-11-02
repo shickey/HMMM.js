@@ -1,17 +1,18 @@
 <div class="row">
-  <div class="col-md-10 affix-parent">
+  <div class="col-md-8 affix-parent">
     <div ui-scrollfix="+50" data-clampedwidth=".affix-parent" class="sim-fixed">
       <div class="panel panel-default">
         <div class="panel-body">
           <div class="simulator-controls">
             <button class="btn btn-default" ng-click="go('/', 'slide-backward')"><span class="glyphicon glyphicon-arrow-left"></span> Back to Editor</button>
+            <button class="btn btn-default pull-right" ng-click="reset()">Reset <span class="glyphicon glyphicon-refresh"></span></button>
             <button class="btn btn-primary pull-right" ng-click="runProgram()">Run! <span class="glyphicon glyphicon-play"></span></button>
           </div>
           <div id="hmmm-console"></div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-16">
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title">CPU</h3>
@@ -42,13 +43,13 @@
             </table>
           </div>
         </div>
-        <div class="col-md-8">
+        <!-- <div class="col-md-8">
           
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-8">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">RAM</h3>
@@ -59,262 +60,262 @@
           <th>Binary Value</th>
           <th>Info</th>
         </thead>
-        <tr><td>  0</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[0]}}</td></tr>
-        <tr><td>  1</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[1]}}</td></tr>
-        <tr><td>  2</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[2]}}</td></tr>
-        <tr><td>  3</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[3]}}</td></tr>
-        <tr><td>  4</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[4]}}</td></tr>
-        <tr><td>  5</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[5]}}</td></tr>
-        <tr><td>  6</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[6]}}</td></tr>
-        <tr><td>  7</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[7]}}</td></tr>
-        <tr><td>  8</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[8]}}</td></tr>
-        <tr><td>  9</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[9]}}</td></tr>
-        <tr><td> 10</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[10]}}</td></tr>
-        <tr><td> 11</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[11]}}</td></tr>
-        <tr><td> 12</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[12]}}</td></tr>
-        <tr><td> 13</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[13]}}</td></tr>
-        <tr><td> 14</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[14]}}</td></tr>
-        <tr><td> 15</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[15]}}</td></tr>
-        <tr><td> 16</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[16]}}</td></tr>
-        <tr><td> 17</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[17]}}</td></tr>
-        <tr><td> 18</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[18]}}</td></tr>
-        <tr><td> 19</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[19]}}</td></tr>
-        <tr><td> 20</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[20]}}</td></tr>
-        <tr><td> 21</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[21]}}</td></tr>
-        <tr><td> 22</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[22]}}</td></tr>
-        <tr><td> 23</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[23]}}</td></tr>
-        <tr><td> 24</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[24]}}</td></tr>
-        <tr><td> 25</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[25]}}</td></tr>
-        <tr><td> 26</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[26]}}</td></tr>
-        <tr><td> 27</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[27]}}</td></tr>
-        <tr><td> 28</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[28]}}</td></tr>
-        <tr><td> 29</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[29]}}</td></tr>
-        <tr><td> 30</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[30]}}</td></tr>
-        <tr><td> 31</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[31]}}</td></tr>
-        <tr><td> 32</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[32]}}</td></tr>
-        <tr><td> 33</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[33]}}</td></tr>
-        <tr><td> 34</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[34]}}</td></tr>
-        <tr><td> 35</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[35]}}</td></tr>
-        <tr><td> 36</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[36]}}</td></tr>
-        <tr><td> 37</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[37]}}</td></tr>
-        <tr><td> 38</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[38]}}</td></tr>
-        <tr><td> 39</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[39]}}</td></tr>
-        <tr><td> 40</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[40]}}</td></tr>
-        <tr><td> 41</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[41]}}</td></tr>
-        <tr><td> 42</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[42]}}</td></tr>
-        <tr><td> 43</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[43]}}</td></tr>
-        <tr><td> 44</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[44]}}</td></tr>
-        <tr><td> 45</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[45]}}</td></tr>
-        <tr><td> 46</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[46]}}</td></tr>
-        <tr><td> 47</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[47]}}</td></tr>
-        <tr><td> 48</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[48]}}</td></tr>
-        <tr><td> 49</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[49]}}</td></tr>
-        <tr><td> 50</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[50]}}</td></tr>
-        <tr><td> 51</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[51]}}</td></tr>
-        <tr><td> 52</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[52]}}</td></tr>
-        <tr><td> 53</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[53]}}</td></tr>
-        <tr><td> 54</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[54]}}</td></tr>
-        <tr><td> 55</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[55]}}</td></tr>
-        <tr><td> 56</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[56]}}</td></tr>
-        <tr><td> 57</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[57]}}</td></tr>
-        <tr><td> 58</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[58]}}</td></tr>
-        <tr><td> 59</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[59]}}</td></tr>
-        <tr><td> 60</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[60]}}</td></tr>
-        <tr><td> 61</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[61]}}</td></tr>
-        <tr><td> 62</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[62]}}</td></tr>
-        <tr><td> 63</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[63]}}</td></tr>
-        <tr><td> 64</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[64]}}</td></tr>
-        <tr><td> 65</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[65]}}</td></tr>
-        <tr><td> 66</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[66]}}</td></tr>
-        <tr><td> 67</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[67]}}</td></tr>
-        <tr><td> 68</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[68]}}</td></tr>
-        <tr><td> 69</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[69]}}</td></tr>
-        <tr><td> 70</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[70]}}</td></tr>
-        <tr><td> 71</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[71]}}</td></tr>
-        <tr><td> 72</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[72]}}</td></tr>
-        <tr><td> 73</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[73]}}</td></tr>
-        <tr><td> 74</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[74]}}</td></tr>
-        <tr><td> 75</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[75]}}</td></tr>
-        <tr><td> 76</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[76]}}</td></tr>
-        <tr><td> 77</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[77]}}</td></tr>
-        <tr><td> 78</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[78]}}</td></tr>
-        <tr><td> 79</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[79]}}</td></tr>
-        <tr><td> 80</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[80]}}</td></tr>
-        <tr><td> 81</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[81]}}</td></tr>
-        <tr><td> 82</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[82]}}</td></tr>
-        <tr><td> 83</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[83]}}</td></tr>
-        <tr><td> 84</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[84]}}</td></tr>
-        <tr><td> 85</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[85]}}</td></tr>
-        <tr><td> 86</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[86]}}</td></tr>
-        <tr><td> 87</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[87]}}</td></tr>
-        <tr><td> 88</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[88]}}</td></tr>
-        <tr><td> 89</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[89]}}</td></tr>
-        <tr><td> 90</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[90]}}</td></tr>
-        <tr><td> 91</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[91]}}</td></tr>
-        <tr><td> 92</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[92]}}</td></tr>
-        <tr><td> 93</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[93]}}</td></tr>
-        <tr><td> 94</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[94]}}</td></tr>
-        <tr><td> 95</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[95]}}</td></tr>
-        <tr><td> 96</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[96]}}</td></tr>
-        <tr><td> 97</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[97]}}</td></tr>
-        <tr><td> 98</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[98]}}</td></tr>
-        <tr><td> 99</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[99]}}</td></tr>
-        <tr><td>100</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[100]}}</td></tr>
-        <tr><td>101</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[101]}}</td></tr>
-        <tr><td>102</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[102]}}</td></tr>
-        <tr><td>103</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[103]}}</td></tr>
-        <tr><td>104</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[104]}}</td></tr>
-        <tr><td>105</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[105]}}</td></tr>
-        <tr><td>106</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[106]}}</td></tr>
-        <tr><td>107</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[107]}}</td></tr>
-        <tr><td>108</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[108]}}</td></tr>
-        <tr><td>109</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[109]}}</td></tr>
-        <tr><td>110</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[110]}}</td></tr>
-        <tr><td>111</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[111]}}</td></tr>
-        <tr><td>112</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[112]}}</td></tr>
-        <tr><td>113</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[113]}}</td></tr>
-        <tr><td>114</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[114]}}</td></tr>
-        <tr><td>115</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[115]}}</td></tr>
-        <tr><td>116</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[116]}}</td></tr>
-        <tr><td>117</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[117]}}</td></tr>
-        <tr><td>118</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[118]}}</td></tr>
-        <tr><td>119</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[119]}}</td></tr>
-        <tr><td>120</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[120]}}</td></tr>
-        <tr><td>121</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[121]}}</td></tr>
-        <tr><td>122</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[122]}}</td></tr>
-        <tr><td>123</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[123]}}</td></tr>
-        <tr><td>124</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[124]}}</td></tr>
-        <tr><td>125</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[125]}}</td></tr>
-        <tr><td>126</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[126]}}</td></tr>
-        <tr><td>127</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[127]}}</td></tr>
-        <tr><td>128</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[128]}}</td></tr>
-        <tr><td>129</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[129]}}</td></tr>
-        <tr><td>130</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[130]}}</td></tr>
-        <tr><td>131</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[131]}}</td></tr>
-        <tr><td>132</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[132]}}</td></tr>
-        <tr><td>133</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[133]}}</td></tr>
-        <tr><td>134</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[134]}}</td></tr>
-        <tr><td>135</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[135]}}</td></tr>
-        <tr><td>136</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[136]}}</td></tr>
-        <tr><td>137</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[137]}}</td></tr>
-        <tr><td>138</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[138]}}</td></tr>
-        <tr><td>139</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[139]}}</td></tr>
-        <tr><td>140</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[140]}}</td></tr>
-        <tr><td>141</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[141]}}</td></tr>
-        <tr><td>142</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[142]}}</td></tr>
-        <tr><td>143</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[143]}}</td></tr>
-        <tr><td>144</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[144]}}</td></tr>
-        <tr><td>145</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[145]}}</td></tr>
-        <tr><td>146</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[146]}}</td></tr>
-        <tr><td>147</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[147]}}</td></tr>
-        <tr><td>148</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[148]}}</td></tr>
-        <tr><td>149</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[149]}}</td></tr>
-        <tr><td>150</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[150]}}</td></tr>
-        <tr><td>151</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[151]}}</td></tr>
-        <tr><td>152</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[152]}}</td></tr>
-        <tr><td>153</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[153]}}</td></tr>
-        <tr><td>154</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[154]}}</td></tr>
-        <tr><td>155</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[155]}}</td></tr>
-        <tr><td>156</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[156]}}</td></tr>
-        <tr><td>157</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[157]}}</td></tr>
-        <tr><td>158</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[158]}}</td></tr>
-        <tr><td>159</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[159]}}</td></tr>
-        <tr><td>160</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[160]}}</td></tr>
-        <tr><td>161</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[161]}}</td></tr>
-        <tr><td>162</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[162]}}</td></tr>
-        <tr><td>163</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[163]}}</td></tr>
-        <tr><td>164</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[164]}}</td></tr>
-        <tr><td>165</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[165]}}</td></tr>
-        <tr><td>166</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[166]}}</td></tr>
-        <tr><td>167</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[167]}}</td></tr>
-        <tr><td>168</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[168]}}</td></tr>
-        <tr><td>169</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[169]}}</td></tr>
-        <tr><td>170</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[170]}}</td></tr>
-        <tr><td>171</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[171]}}</td></tr>
-        <tr><td>172</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[172]}}</td></tr>
-        <tr><td>173</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[173]}}</td></tr>
-        <tr><td>174</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[174]}}</td></tr>
-        <tr><td>175</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[175]}}</td></tr>
-        <tr><td>176</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[176]}}</td></tr>
-        <tr><td>177</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[177]}}</td></tr>
-        <tr><td>178</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[178]}}</td></tr>
-        <tr><td>179</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[179]}}</td></tr>
-        <tr><td>180</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[180]}}</td></tr>
-        <tr><td>181</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[181]}}</td></tr>
-        <tr><td>182</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[182]}}</td></tr>
-        <tr><td>183</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[183]}}</td></tr>
-        <tr><td>184</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[184]}}</td></tr>
-        <tr><td>185</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[185]}}</td></tr>
-        <tr><td>186</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[186]}}</td></tr>
-        <tr><td>187</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[187]}}</td></tr>
-        <tr><td>188</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[188]}}</td></tr>
-        <tr><td>189</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[189]}}</td></tr>
-        <tr><td>190</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[190]}}</td></tr>
-        <tr><td>191</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[191]}}</td></tr>
-        <tr><td>192</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[192]}}</td></tr>
-        <tr><td>193</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[193]}}</td></tr>
-        <tr><td>194</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[194]}}</td></tr>
-        <tr><td>195</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[195]}}</td></tr>
-        <tr><td>196</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[196]}}</td></tr>
-        <tr><td>197</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[197]}}</td></tr>
-        <tr><td>198</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[198]}}</td></tr>
-        <tr><td>199</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[199]}}</td></tr>
-        <tr><td>200</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[200]}}</td></tr>
-        <tr><td>201</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[201]}}</td></tr>
-        <tr><td>202</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[202]}}</td></tr>
-        <tr><td>203</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[203]}}</td></tr>
-        <tr><td>204</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[204]}}</td></tr>
-        <tr><td>205</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[205]}}</td></tr>
-        <tr><td>206</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[206]}}</td></tr>
-        <tr><td>207</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[207]}}</td></tr>
-        <tr><td>208</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[208]}}</td></tr>
-        <tr><td>209</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[209]}}</td></tr>
-        <tr><td>210</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[210]}}</td></tr>
-        <tr><td>211</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[211]}}</td></tr>
-        <tr><td>212</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[212]}}</td></tr>
-        <tr><td>213</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[213]}}</td></tr>
-        <tr><td>214</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[214]}}</td></tr>
-        <tr><td>215</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[215]}}</td></tr>
-        <tr><td>216</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[216]}}</td></tr>
-        <tr><td>217</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[217]}}</td></tr>
-        <tr><td>218</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[218]}}</td></tr>
-        <tr><td>219</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[219]}}</td></tr>
-        <tr><td>220</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[220]}}</td></tr>
-        <tr><td>221</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[221]}}</td></tr>
-        <tr><td>222</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[222]}}</td></tr>
-        <tr><td>223</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[223]}}</td></tr>
-        <tr><td>224</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[224]}}</td></tr>
-        <tr><td>225</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[225]}}</td></tr>
-        <tr><td>226</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[226]}}</td></tr>
-        <tr><td>227</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[227]}}</td></tr>
-        <tr><td>228</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[228]}}</td></tr>
-        <tr><td>229</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[229]}}</td></tr>
-        <tr><td>230</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[230]}}</td></tr>
-        <tr><td>231</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[231]}}</td></tr>
-        <tr><td>232</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[232]}}</td></tr>
-        <tr><td>233</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[233]}}</td></tr>
-        <tr><td>234</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[234]}}</td></tr>
-        <tr><td>235</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[235]}}</td></tr>
-        <tr><td>236</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[236]}}</td></tr>
-        <tr><td>237</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[237]}}</td></tr>
-        <tr><td>238</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[238]}}</td></tr>
-        <tr><td>239</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[239]}}</td></tr>
-        <tr><td>240</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[240]}}</td></tr>
-        <tr><td>241</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[241]}}</td></tr>
-        <tr><td>242</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[242]}}</td></tr>
-        <tr><td>243</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[243]}}</td></tr>
-        <tr><td>244</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[244]}}</td></tr>
-        <tr><td>245</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[245]}}</td></tr>
-        <tr><td>246</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[246]}}</td></tr>
-        <tr><td>247</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[247]}}</td></tr>
-        <tr><td>248</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[248]}}</td></tr>
-        <tr><td>249</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[249]}}</td></tr>
-        <tr><td>250</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[250]}}</td></tr>
-        <tr><td>251</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[251]}}</td></tr>
-        <tr><td>252</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[252]}}</td></tr>
-        <tr><td>253</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[253]}}</td></tr>
-        <tr><td>254</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[254]}}</td></tr>
-        <tr><td>255</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[255]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 0 }"><td>  <span ng-show="simulator.pc == 0">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 0</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[0]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 1 }"><td>  <span ng-show="simulator.pc == 1">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 1</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[1]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 2 }"><td>  <span ng-show="simulator.pc == 2">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 2</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[2]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 3 }"><td>  <span ng-show="simulator.pc == 3">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 3</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[3]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 4 }"><td>  <span ng-show="simulator.pc == 4">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 4</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[4]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 5 }"><td>  <span ng-show="simulator.pc == 5">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 5</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[5]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 6 }"><td>  <span ng-show="simulator.pc == 6">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 6</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[6]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 7 }"><td>  <span ng-show="simulator.pc == 7">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 7</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[7]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 8 }"><td>  <span ng-show="simulator.pc == 8">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 8</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[8]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 9 }"><td>  <span ng-show="simulator.pc == 9">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 9</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[9]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 10 }"><td> <span ng-show="simulator.pc == 10">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 10</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[10]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 11 }"><td> <span ng-show="simulator.pc == 11">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 11</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[11]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 12 }"><td> <span ng-show="simulator.pc == 12">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 12</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[12]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 13 }"><td> <span ng-show="simulator.pc == 13">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 13</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[13]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 14 }"><td> <span ng-show="simulator.pc == 14">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 14</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[14]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 15 }"><td> <span ng-show="simulator.pc == 15">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 15</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[15]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 16 }"><td> <span ng-show="simulator.pc == 16">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 16</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[16]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 17 }"><td> <span ng-show="simulator.pc == 17">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 17</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[17]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 18 }"><td> <span ng-show="simulator.pc == 18">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 18</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[18]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 19 }"><td> <span ng-show="simulator.pc == 19">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 19</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[19]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 20 }"><td> <span ng-show="simulator.pc == 20">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 20</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[20]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 21 }"><td> <span ng-show="simulator.pc == 21">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 21</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[21]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 22 }"><td> <span ng-show="simulator.pc == 22">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 22</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[22]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 23 }"><td> <span ng-show="simulator.pc == 23">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 23</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[23]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 24 }"><td> <span ng-show="simulator.pc == 24">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 24</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[24]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 25 }"><td> <span ng-show="simulator.pc == 25">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 25</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[25]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 26 }"><td> <span ng-show="simulator.pc == 26">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 26</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[26]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 27 }"><td> <span ng-show="simulator.pc == 27">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 27</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[27]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 28 }"><td> <span ng-show="simulator.pc == 28">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 28</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[28]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 29 }"><td> <span ng-show="simulator.pc == 29">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 29</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[29]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 30 }"><td> <span ng-show="simulator.pc == 30">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 30</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[30]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 31 }"><td> <span ng-show="simulator.pc == 31">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 31</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[31]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 32 }"><td> <span ng-show="simulator.pc == 32">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 32</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[32]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 33 }"><td> <span ng-show="simulator.pc == 33">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 33</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[33]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 34 }"><td> <span ng-show="simulator.pc == 34">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 34</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[34]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 35 }"><td> <span ng-show="simulator.pc == 35">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 35</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[35]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 36 }"><td> <span ng-show="simulator.pc == 36">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 36</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[36]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 37 }"><td> <span ng-show="simulator.pc == 37">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 37</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[37]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 38 }"><td> <span ng-show="simulator.pc == 38">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 38</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[38]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 39 }"><td> <span ng-show="simulator.pc == 39">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 39</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[39]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 40 }"><td> <span ng-show="simulator.pc == 40">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 40</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[40]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 41 }"><td> <span ng-show="simulator.pc == 41">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 41</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[41]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 42 }"><td> <span ng-show="simulator.pc == 42">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 42</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[42]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 43 }"><td> <span ng-show="simulator.pc == 43">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 43</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[43]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 44 }"><td> <span ng-show="simulator.pc == 44">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 44</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[44]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 45 }"><td> <span ng-show="simulator.pc == 45">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 45</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[45]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 46 }"><td> <span ng-show="simulator.pc == 46">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 46</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[46]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 47 }"><td> <span ng-show="simulator.pc == 47">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 47</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[47]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 48 }"><td> <span ng-show="simulator.pc == 48">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 48</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[48]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 49 }"><td> <span ng-show="simulator.pc == 49">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 49</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[49]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 50 }"><td> <span ng-show="simulator.pc == 50">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 50</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[50]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 51 }"><td> <span ng-show="simulator.pc == 51">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 51</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[51]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 52 }"><td> <span ng-show="simulator.pc == 52">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 52</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[52]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 53 }"><td> <span ng-show="simulator.pc == 53">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 53</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[53]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 54 }"><td> <span ng-show="simulator.pc == 54">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 54</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[54]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 55 }"><td> <span ng-show="simulator.pc == 55">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 55</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[55]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 56 }"><td> <span ng-show="simulator.pc == 56">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 56</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[56]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 57 }"><td> <span ng-show="simulator.pc == 57">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 57</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[57]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 58 }"><td> <span ng-show="simulator.pc == 58">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 58</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[58]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 59 }"><td> <span ng-show="simulator.pc == 59">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 59</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[59]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 60 }"><td> <span ng-show="simulator.pc == 60">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 60</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[60]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 61 }"><td> <span ng-show="simulator.pc == 61">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 61</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[61]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 62 }"><td> <span ng-show="simulator.pc == 62">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 62</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[62]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 63 }"><td> <span ng-show="simulator.pc == 63">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 63</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[63]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 64 }"><td> <span ng-show="simulator.pc == 64">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 64</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[64]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 65 }"><td> <span ng-show="simulator.pc == 65">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 65</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[65]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 66 }"><td> <span ng-show="simulator.pc == 66">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 66</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[66]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 67 }"><td> <span ng-show="simulator.pc == 67">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 67</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[67]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 68 }"><td> <span ng-show="simulator.pc == 68">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 68</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[68]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 69 }"><td> <span ng-show="simulator.pc == 69">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 69</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[69]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 70 }"><td> <span ng-show="simulator.pc == 70">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 70</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[70]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 71 }"><td> <span ng-show="simulator.pc == 71">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 71</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[71]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 72 }"><td> <span ng-show="simulator.pc == 72">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 72</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[72]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 73 }"><td> <span ng-show="simulator.pc == 73">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 73</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[73]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 74 }"><td> <span ng-show="simulator.pc == 74">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 74</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[74]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 75 }"><td> <span ng-show="simulator.pc == 75">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 75</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[75]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 76 }"><td> <span ng-show="simulator.pc == 76">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 76</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[76]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 77 }"><td> <span ng-show="simulator.pc == 77">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 77</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[77]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 78 }"><td> <span ng-show="simulator.pc == 78">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 78</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[78]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 79 }"><td> <span ng-show="simulator.pc == 79">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 79</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[79]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 80 }"><td> <span ng-show="simulator.pc == 80">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 80</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[80]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 81 }"><td> <span ng-show="simulator.pc == 81">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 81</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[81]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 82 }"><td> <span ng-show="simulator.pc == 82">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 82</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[82]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 83 }"><td> <span ng-show="simulator.pc == 83">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 83</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[83]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 84 }"><td> <span ng-show="simulator.pc == 84">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 84</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[84]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 85 }"><td> <span ng-show="simulator.pc == 85">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 85</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[85]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 86 }"><td> <span ng-show="simulator.pc == 86">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 86</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[86]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 87 }"><td> <span ng-show="simulator.pc == 87">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 87</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[87]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 88 }"><td> <span ng-show="simulator.pc == 88">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 88</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[88]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 89 }"><td> <span ng-show="simulator.pc == 89">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 89</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[89]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 90 }"><td> <span ng-show="simulator.pc == 90">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 90</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[90]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 91 }"><td> <span ng-show="simulator.pc == 91">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 91</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[91]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 92 }"><td> <span ng-show="simulator.pc == 92">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 92</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[92]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 93 }"><td> <span ng-show="simulator.pc == 93">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 93</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[93]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 94 }"><td> <span ng-show="simulator.pc == 94">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 94</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[94]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 95 }"><td> <span ng-show="simulator.pc == 95">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 95</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[95]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 96 }"><td> <span ng-show="simulator.pc == 96">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 96</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[96]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 97 }"><td> <span ng-show="simulator.pc == 97">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 97</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[97]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 98 }"><td> <span ng-show="simulator.pc == 98">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 98</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[98]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 99 }"><td> <span ng-show="simulator.pc == 99">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 99</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[99]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 100 }"><td><span ng-show="simulator.pc == 100">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 100</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[100]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 101 }"><td><span ng-show="simulator.pc == 101">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 101</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[101]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 102 }"><td><span ng-show="simulator.pc == 102">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 102</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[102]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 103 }"><td><span ng-show="simulator.pc == 103">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 103</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[103]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 104 }"><td><span ng-show="simulator.pc == 104">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 104</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[104]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 105 }"><td><span ng-show="simulator.pc == 105">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 105</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[105]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 106 }"><td><span ng-show="simulator.pc == 106">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 106</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[106]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 107 }"><td><span ng-show="simulator.pc == 107">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 107</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[107]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 108 }"><td><span ng-show="simulator.pc == 108">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 108</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[108]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 109 }"><td><span ng-show="simulator.pc == 109">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 109</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[109]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 110 }"><td><span ng-show="simulator.pc == 110">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 110</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[110]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 111 }"><td><span ng-show="simulator.pc == 111">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 111</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[111]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 112 }"><td><span ng-show="simulator.pc == 112">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 112</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[112]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 113 }"><td><span ng-show="simulator.pc == 113">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 113</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[113]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 114 }"><td><span ng-show="simulator.pc == 114">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 114</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[114]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 115 }"><td><span ng-show="simulator.pc == 115">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 115</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[115]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 116 }"><td><span ng-show="simulator.pc == 116">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 116</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[116]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 117 }"><td><span ng-show="simulator.pc == 117">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 117</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[117]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 118 }"><td><span ng-show="simulator.pc == 118">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 118</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[118]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 119 }"><td><span ng-show="simulator.pc == 119">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 119</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[119]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 120 }"><td><span ng-show="simulator.pc == 120">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 120</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[120]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 121 }"><td><span ng-show="simulator.pc == 121">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 121</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[121]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 122 }"><td><span ng-show="simulator.pc == 122">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 122</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[122]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 123 }"><td><span ng-show="simulator.pc == 123">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 123</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[123]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 124 }"><td><span ng-show="simulator.pc == 124">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 124</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[124]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 125 }"><td><span ng-show="simulator.pc == 125">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 125</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[125]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 126 }"><td><span ng-show="simulator.pc == 126">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 126</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[126]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 127 }"><td><span ng-show="simulator.pc == 127">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 127</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[127]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 128 }"><td><span ng-show="simulator.pc == 128">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 128</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[128]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 129 }"><td><span ng-show="simulator.pc == 129">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 129</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[129]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 130 }"><td><span ng-show="simulator.pc == 130">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 130</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[130]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 131 }"><td><span ng-show="simulator.pc == 131">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 131</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[131]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 132 }"><td><span ng-show="simulator.pc == 132">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 132</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[132]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 133 }"><td><span ng-show="simulator.pc == 133">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 133</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[133]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 134 }"><td><span ng-show="simulator.pc == 134">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 134</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[134]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 135 }"><td><span ng-show="simulator.pc == 135">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 135</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[135]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 136 }"><td><span ng-show="simulator.pc == 136">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 136</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[136]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 137 }"><td><span ng-show="simulator.pc == 137">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 137</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[137]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 138 }"><td><span ng-show="simulator.pc == 138">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 138</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[138]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 139 }"><td><span ng-show="simulator.pc == 139">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 139</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[139]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 140 }"><td><span ng-show="simulator.pc == 140">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 140</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[140]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 141 }"><td><span ng-show="simulator.pc == 141">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 141</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[141]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 142 }"><td><span ng-show="simulator.pc == 142">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 142</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[142]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 143 }"><td><span ng-show="simulator.pc == 143">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 143</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[143]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 144 }"><td><span ng-show="simulator.pc == 144">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 144</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[144]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 145 }"><td><span ng-show="simulator.pc == 145">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 145</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[145]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 146 }"><td><span ng-show="simulator.pc == 146">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 146</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[146]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 147 }"><td><span ng-show="simulator.pc == 147">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 147</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[147]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 148 }"><td><span ng-show="simulator.pc == 148">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 148</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[148]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 149 }"><td><span ng-show="simulator.pc == 149">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 149</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[149]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 150 }"><td><span ng-show="simulator.pc == 150">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 150</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[150]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 151 }"><td><span ng-show="simulator.pc == 151">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 151</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[151]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 152 }"><td><span ng-show="simulator.pc == 152">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 152</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[152]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 153 }"><td><span ng-show="simulator.pc == 153">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 153</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[153]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 154 }"><td><span ng-show="simulator.pc == 154">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 154</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[154]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 155 }"><td><span ng-show="simulator.pc == 155">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 155</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[155]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 156 }"><td><span ng-show="simulator.pc == 156">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 156</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[156]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 157 }"><td><span ng-show="simulator.pc == 157">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 157</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[157]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 158 }"><td><span ng-show="simulator.pc == 158">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 158</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[158]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 159 }"><td><span ng-show="simulator.pc == 159">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 159</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[159]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 160 }"><td><span ng-show="simulator.pc == 160">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 160</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[160]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 161 }"><td><span ng-show="simulator.pc == 161">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 161</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[161]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 162 }"><td><span ng-show="simulator.pc == 162">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 162</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[162]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 163 }"><td><span ng-show="simulator.pc == 163">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 163</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[163]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 164 }"><td><span ng-show="simulator.pc == 164">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 164</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[164]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 165 }"><td><span ng-show="simulator.pc == 165">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 165</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[165]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 166 }"><td><span ng-show="simulator.pc == 166">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 166</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[166]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 167 }"><td><span ng-show="simulator.pc == 167">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 167</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[167]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 168 }"><td><span ng-show="simulator.pc == 168">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 168</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[168]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 169 }"><td><span ng-show="simulator.pc == 169">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 169</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[169]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 170 }"><td><span ng-show="simulator.pc == 170">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 170</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[170]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 171 }"><td><span ng-show="simulator.pc == 171">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 171</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[171]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 172 }"><td><span ng-show="simulator.pc == 172">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 172</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[172]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 173 }"><td><span ng-show="simulator.pc == 173">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 173</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[173]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 174 }"><td><span ng-show="simulator.pc == 174">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 174</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[174]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 175 }"><td><span ng-show="simulator.pc == 175">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 175</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[175]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 176 }"><td><span ng-show="simulator.pc == 176">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 176</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[176]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 177 }"><td><span ng-show="simulator.pc == 177">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 177</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[177]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 178 }"><td><span ng-show="simulator.pc == 178">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 178</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[178]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 179 }"><td><span ng-show="simulator.pc == 179">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 179</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[179]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 180 }"><td><span ng-show="simulator.pc == 180">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 180</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[180]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 181 }"><td><span ng-show="simulator.pc == 181">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 181</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[181]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 182 }"><td><span ng-show="simulator.pc == 182">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 182</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[182]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 183 }"><td><span ng-show="simulator.pc == 183">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 183</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[183]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 184 }"><td><span ng-show="simulator.pc == 184">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 184</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[184]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 185 }"><td><span ng-show="simulator.pc == 185">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 185</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[185]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 186 }"><td><span ng-show="simulator.pc == 186">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 186</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[186]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 187 }"><td><span ng-show="simulator.pc == 187">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 187</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[187]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 188 }"><td><span ng-show="simulator.pc == 188">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 188</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[188]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 189 }"><td><span ng-show="simulator.pc == 189">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 189</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[189]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 190 }"><td><span ng-show="simulator.pc == 190">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 190</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[190]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 191 }"><td><span ng-show="simulator.pc == 191">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 191</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[191]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 192 }"><td><span ng-show="simulator.pc == 192">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 192</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[192]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 193 }"><td><span ng-show="simulator.pc == 193">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 193</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[193]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 194 }"><td><span ng-show="simulator.pc == 194">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 194</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[194]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 195 }"><td><span ng-show="simulator.pc == 195">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 195</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[195]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 196 }"><td><span ng-show="simulator.pc == 196">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 196</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[196]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 197 }"><td><span ng-show="simulator.pc == 197">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 197</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[197]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 198 }"><td><span ng-show="simulator.pc == 198">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 198</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[198]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 199 }"><td><span ng-show="simulator.pc == 199">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 199</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[199]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 200 }"><td><span ng-show="simulator.pc == 200">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 200</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[200]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 201 }"><td><span ng-show="simulator.pc == 201">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 201</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[201]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 202 }"><td><span ng-show="simulator.pc == 202">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 202</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[202]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 203 }"><td><span ng-show="simulator.pc == 203">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 203</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[203]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 204 }"><td><span ng-show="simulator.pc == 204">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 204</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[204]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 205 }"><td><span ng-show="simulator.pc == 205">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 205</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[205]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 206 }"><td><span ng-show="simulator.pc == 206">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 206</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[206]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 207 }"><td><span ng-show="simulator.pc == 207">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 207</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[207]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 208 }"><td><span ng-show="simulator.pc == 208">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 208</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[208]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 209 }"><td><span ng-show="simulator.pc == 209">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 209</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[209]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 210 }"><td><span ng-show="simulator.pc == 210">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 210</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[210]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 211 }"><td><span ng-show="simulator.pc == 211">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 211</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[211]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 212 }"><td><span ng-show="simulator.pc == 212">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 212</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[212]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 213 }"><td><span ng-show="simulator.pc == 213">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 213</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[213]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 214 }"><td><span ng-show="simulator.pc == 214">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 214</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[214]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 215 }"><td><span ng-show="simulator.pc == 215">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 215</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[215]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 216 }"><td><span ng-show="simulator.pc == 216">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 216</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[216]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 217 }"><td><span ng-show="simulator.pc == 217">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 217</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[217]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 218 }"><td><span ng-show="simulator.pc == 218">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 218</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[218]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 219 }"><td><span ng-show="simulator.pc == 219">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 219</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[219]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 220 }"><td><span ng-show="simulator.pc == 220">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 220</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[220]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 221 }"><td><span ng-show="simulator.pc == 221">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 221</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[221]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 222 }"><td><span ng-show="simulator.pc == 222">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 222</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[222]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 223 }"><td><span ng-show="simulator.pc == 223">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 223</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[223]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 224 }"><td><span ng-show="simulator.pc == 224">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 224</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[224]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 225 }"><td><span ng-show="simulator.pc == 225">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 225</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[225]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 226 }"><td><span ng-show="simulator.pc == 226">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 226</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[226]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 227 }"><td><span ng-show="simulator.pc == 227">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 227</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[227]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 228 }"><td><span ng-show="simulator.pc == 228">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 228</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[228]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 229 }"><td><span ng-show="simulator.pc == 229">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 229</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[229]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 230 }"><td><span ng-show="simulator.pc == 230">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 230</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[230]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 231 }"><td><span ng-show="simulator.pc == 231">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 231</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[231]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 232 }"><td><span ng-show="simulator.pc == 232">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 232</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[232]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 233 }"><td><span ng-show="simulator.pc == 233">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 233</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[233]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 234 }"><td><span ng-show="simulator.pc == 234">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 234</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[234]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 235 }"><td><span ng-show="simulator.pc == 235">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 235</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[235]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 236 }"><td><span ng-show="simulator.pc == 236">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 236</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[236]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 237 }"><td><span ng-show="simulator.pc == 237">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 237</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[237]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 238 }"><td><span ng-show="simulator.pc == 238">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 238</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[238]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 239 }"><td><span ng-show="simulator.pc == 239">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 239</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[239]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 240 }"><td><span ng-show="simulator.pc == 240">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 240</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[240]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 241 }"><td><span ng-show="simulator.pc == 241">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 241</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[241]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 242 }"><td><span ng-show="simulator.pc == 242">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 242</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[242]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 243 }"><td><span ng-show="simulator.pc == 243">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 243</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[243]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 244 }"><td><span ng-show="simulator.pc == 244">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 244</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[244]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 245 }"><td><span ng-show="simulator.pc == 245">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 245</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[245]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 246 }"><td><span ng-show="simulator.pc == 246">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 246</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[246]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 247 }"><td><span ng-show="simulator.pc == 247">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 247</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[247]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 248 }"><td><span ng-show="simulator.pc == 248">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 248</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[248]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 249 }"><td><span ng-show="simulator.pc == 249">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 249</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[249]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 250 }"><td><span ng-show="simulator.pc == 250">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 250</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[250]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 251 }"><td><span ng-show="simulator.pc == 251">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 251</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[251]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 252 }"><td><span ng-show="simulator.pc == 252">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 252</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[252]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 253 }"><td><span ng-show="simulator.pc == 253">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 253</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[253]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 254 }"><td><span ng-show="simulator.pc == 254">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 254</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[254]}}</td></tr>
+        <tr ng-class="{ danger: simulator.boundary > 255 }"><td><span ng-show="simulator.pc == 255">pc <span class="glyphicon glyphicon-arrow-right"></span></span> 255</td><td>0000 0000 0000 0000</td><td>{{simulator.ram[255]}}</td></tr>
       </table>
     </div>
   </div>

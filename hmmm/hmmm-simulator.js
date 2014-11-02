@@ -169,6 +169,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   //*********************************************
   // Public State
   //*********************************************
+  this.states    = states;
   this.registers = [];
   this.ram       = [];
   this.pc        = 0;

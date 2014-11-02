@@ -127,14 +127,14 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   
 }]);
 
-app.controller('SimulatorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
+app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', function($scope, $location, $timeout, HmmmSim) {
   var hmmmConsole = ace.edit("hmmm-console");
   hmmmConsole.setTheme("ace/theme/monokai");
   hmmmConsole.setReadOnly(true);
   hmmmConsole.setShowPrintMargin(false);
   hmmmConsole.renderer.setShowGutter(false);
   
-  $scope.timingDelay = 1000;
+  $scope.timingDelay = 100;
   
   // Allow fluid layout for affixed sidebar elements
   $('[data-clampedwidth]').each(function () {
@@ -160,17 +160,27 @@ app.controller('SimulatorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) 
   
   $scope.simulator = new HmmmSimulator(inHandler, outAndErrHandler, outAndErrHandler);
   var simulator = $scope.simulator
-  simulator.loadBinary(HmmmSim.getBinary());
+  var binary = HmmmSim.getBinary();
+  if (!binary) {
+    // $location.path("/")
+  }
+  else {
+    simulator.loadBinary(HmmmSim.getBinary());
+  }
   
   $scope.runProgram = function() {
-    console.log(simulator);
     var execute = function() {
-      if (simulator.state !== simulator.states.ERROR &&
-          simulator.state !== simulator.states.HALT) {
+      if (simulator.state !== simulator.states.ERROR && simulator.state !== simulator.states.HALT) {
         $timeout(execute, $scope.timingDelay);
+        simulator.runNextInstruction();
       }
     }
     execute();
+  }
+  
+  $scope.reset = function() {
+    simulator.resetMachine();
+    hmmmConsole.setValue("");
   }
   
 }]);
