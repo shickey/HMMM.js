@@ -108,9 +108,6 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   }
   
   function executeInstruction(operation, args) {
-    // Bump the instruction number
-    machine.pc += 1
-    
     // Unpack Arguments
     var rx, ry, rz, n;
     var signature = hmmm.signatures[operation];
@@ -149,11 +146,17 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       }
     }
     
-    // Now actually execute the correct operation
+    // Handle halt as a special case
     if (operation === "halt") {
       machine.state = states.HALT;
+      return;
     }
-    else if (operation === "read") {
+    
+    // If we didn't halt, bump the instruction number
+    machine.pc += 1
+    
+    // If we didn't halt, execute the correct instruction
+    if (operation === "read") {
       var userInput = machine.inHandler();
       machine.registers[rx] = userInput;
     }
