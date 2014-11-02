@@ -29,8 +29,6 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   //*********************************************
   // Public State
   //*********************************************
-  this.executionDelay = 500; // Milliseconds between instruction executions
-  
   this.registers = [];
   this.ram       = [];
   this.pc        = 0;
@@ -316,7 +314,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     executeInstruction(decoded.operation, decoded.args);
   }
   
-  this.run = function() {
+  this.run = function(willExecute, didExecute) {
     if (machine.state == states.EMPTY) {
       // TODO error
       return;
@@ -329,13 +327,15 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       return;
     }
     machine.state = states.RUN;
-    var execute = function() {
+    while (machine.state === states.RUN) {
+      if (willExecute) {
+        willExecute();
+      }
       machine.runNextInstruction();
-      if (machine.state === states.RUN) {
-        setTimeout(execute, machine.executionDelay);
+      if (didExecute) {
+        didExecute();
       }
     }
-    execute();
   }
   
 }
