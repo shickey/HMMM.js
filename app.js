@@ -183,6 +183,14 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
     HmmmSim.setShowInstructions(false);
   }
   
+  $scope.saveFile = function() {
+    if (hmmmEditor.getValue() === '') {
+      return;
+    }
+    var blob = new Blob([hmmmEditor.getValue()], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "source.hmmm");
+  }
+  
 }]);
 
 app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', function($scope, $location, $timeout, HmmmSim) {
