@@ -342,6 +342,16 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     }
   }
   
+  this.instructionFromBinary = function(binInst) {
+    var decoded = decodeBinaryInstruction(binInst);
+    var instString = decoded.operation;
+    for (var i = 0; i < decoded.args.length; ++i) {
+      var arg = decoded.args[i];
+      instString = instString + " " + arg;
+    }
+    return instString;
+  }
+  
 }
 
 module.exports = exports = HmmmSimulator;
