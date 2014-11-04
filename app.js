@@ -140,6 +140,14 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   
   $scope.showInstructions = HmmmSim.getShowInstructions();
   
+  if (HmmmSim.getBinary()) {
+    $scope.enableSimulation = true;
+  }
+  else {
+    $scope.enableSimulation = false;
+  }
+  
+  
   $scope.assemble = function() {
     
     var session = hmmmEditor.session;
@@ -152,7 +160,7 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
     var output = assembler.assemble(hmmmEditor.getValue());
     if (output.errors.length !== 0) {
       
-      console.log(output.errors);
+      $scope.enableSimulation = false;
       
       session.setAnnotations(output.errors.map(function(e){
         var markerRange = new Range(e.startRow - 1, e.startColumn - 1, e.endRow - 1, e.endColumn - 1);
@@ -175,6 +183,7 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
       binEditor.setValue(output.binary);
       HmmmSim.setHmmmCode(hmmmEditor.getValue());
       HmmmSim.setBinary(output.binary);
+      $scope.enableSimulation = true;
     }
   }
   

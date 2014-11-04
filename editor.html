@@ -30,7 +30,7 @@
       </div>
       <div class="panel-body">
         <div class="editor-head text-right">
-          <button class="btn btn-primary" ng-click="go('/simulate', 'slide-forward')">Simulate! <span class="glyphicon glyphicon-arrow-right"></span></button>
+          <button class="btn btn-primary" ng-click="go('/simulate', 'slide-forward')" ng-disabled="!enableSimulation">Simulate! <span class="glyphicon glyphicon-arrow-right"></span></button>
         </div>
         <div id="bin-editor" class="editor"></div>
       </div>
