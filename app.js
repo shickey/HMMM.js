@@ -257,19 +257,39 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
     simulator.loadBinary(HmmmSim.getBinary());
   }
   
+  $scope.currentTimeout = undefined;
+  
   $scope.runProgram = function() {
     var execute = function() {
       if (simulator.state !== simulator.states.ERROR && simulator.state !== simulator.states.HALT) {
-        $timeout(execute, $scope.timingDelay);
+        $scope.currentTimeout = $timeout(execute, $scope.timingDelay);
         simulator.runNextInstruction();
+      }
+      else {
+        $scope.currentTimeout = undefined;
       }
     }
     execute();
   }
   
+  $scope.pauseExecution = function() {
+    if ($scope.currentTimeout) {
+      $timeout.cancel($scope.currentTimeout);
+      $scope.currentTimeout = undefined;
+    }
+  }
+  
   $scope.reset = function() {
     simulator.resetMachine();
     hmmmConsole.setValue("");
+  }
+  
+  $scope.stepForward = function() {
+    simulator.runNextInstruction();
+  }
+  
+  $scope.stepBack = function() {
+    
   }
   
 }]);

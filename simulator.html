@@ -3,10 +3,15 @@
     <div ui-scrollfix="+50" data-clampedwidth=".affix-parent" class="sim-fixed">
       <div class="panel panel-default">
         <div class="panel-body">
-          <div class="simulator-controls">
+          <div class="simulator-controls ">
             <button class="btn btn-default" ng-click="go('/', 'slide-backward')"><span class="glyphicon glyphicon-arrow-left"></span> Back to Editor</button>
-            <button class="btn btn-default pull-right" ng-click="reset()">Reset <span class="glyphicon glyphicon-refresh"></span></button>
-            <button class="btn btn-primary pull-right" ng-click="runProgram()">Run! <span class="glyphicon glyphicon-play"></span></button>
+            <div class="btn-group pull-right">
+              <button class="btn btn-default" ng-click="reset()">Reset <span class="glyphicon glyphicon-refresh"></span></button>
+              <button class="btn btn-default" ng-click="stepBack()">Step <span class="glyphicon glyphicon-arrow-left"></span></button>
+              <button class="btn btn-default" ng-click="stepForward()">Step <span class="glyphicon glyphicon-arrow-right"></span></button>
+              <button class="btn btn-default" ng-click="pauseExecution()">Pause <span class="glyphicon glyphicon-pause"></span></button>
+              <button class="btn btn-primary" ng-click="runProgram()">Run! <span class="glyphicon glyphicon-play"></span></button>
+            </div>
           </div>
           <div id="hmmm-console"></div>
         </div>
