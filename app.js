@@ -191,6 +191,20 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
     saveAs(blob, "source.hmmm");
   }
   
+  $scope.loadFile = function() {
+    $('#secret-file-select').click();
+  }
+  
+  $scope.fileSelected = function(input) {
+    var file = input.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var text = e.target.result;
+      hmmmEditor.setValue(text);
+    };
+    reader.readAsText(file);
+  }
+  
 }]);
 
 app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', function($scope, $location, $timeout, HmmmSim) {

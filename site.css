@@ -45,6 +45,10 @@ table tr td:first-child, table th:first-child {
   position: absolute;
 }
 
+#secret-file-select {
+  display: none;
+}
+
 /* Simulator */
 
 .register {
