@@ -15,7 +15,7 @@
       <div class="panel-body">
         <div class="editor-head">
           <button class="btn btn-default" ng-click="loadFile()">Load File <span class="glyphicon glyphicon-floppy-open"></span></button>
-          <input type="file" id="secret-file-select" onchange="angular.element(this).scope().fileSelected(this)" />
+          <input type="file" id="secret-file-select" accept=".hmmm" onchange="angular.element(this).scope().fileSelected(this)" />
           <button class="btn btn-default" ng-click="saveFile()">Save File <span class="glyphicon glyphicon-floppy-save"></span></button>
           <button class="btn btn-primary pull-right" ng-click="assemble()">Assemble! <span class="glyphicon glyphicon-arrow-right"></span></button>
         </div>
