@@ -173,6 +173,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   this.registers = [];
   this.ram       = [];
   this.pc        = 0;
+  this.ir        = 0;
   this.boundary  = 0;
   this.state     = states.EMPTY;
   
@@ -453,8 +454,8 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       // TODO Throw Error
       return;
     }
-    var binInst = machine.ram[machine.pc];
-    var decoded = decodeBinaryInstruction(binInst);
+    machine.ir = machine.ram[machine.pc];
+    var decoded = decodeBinaryInstruction(machine.ir);
     executeInstruction(decoded.operation, decoded.args);
   }
   
@@ -480,6 +481,16 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
         didExecute();
       }
     }
+  }
+  
+  this.instructionFromBinary = function(binInst) {
+    var decoded = decodeBinaryInstruction(binInst);
+    var instString = decoded.operation;
+    for (var i = 0; i < decoded.args.length; ++i) {
+      var arg = decoded.args[i];
+      instString = instString + " " + arg;
+    }
+    return instString;
   }
   
 }

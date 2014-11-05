@@ -28,7 +28,8 @@
                 <th>Binary</th>
                 <th>Value</th>
               </thead>
-              <tr><td> pc</td><td>{{simulator.pc | binary}}</td><td>{{simulator.pc}}</td></tr>
+              <tr><td>pc</td><td>{{simulator.pc | binary}}</td><td>{{simulator.pc}}</td></tr>
+              <tr><td>ir</td><td>{{simulator.ir | binary}}</td><td>{{simulator.ir}}</td></tr>
               <tr ng-repeat="register in simulator.registers track by $index">
                 <td>{{"r" + $index}}</td>
                 <td>{{register | binary}}</td>
