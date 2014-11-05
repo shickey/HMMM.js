@@ -33,6 +33,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   this.registers = [];
   this.ram       = [];
   this.pc        = 0;
+  this.ir        = 0;
   this.boundary  = 0;
   this.state     = states.EMPTY;
   
@@ -313,8 +314,8 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       // TODO Throw Error
       return;
     }
-    var binInst = machine.ram[machine.pc];
-    var decoded = decodeBinaryInstruction(binInst);
+    machine.ir = machine.ram[machine.pc];
+    var decoded = decodeBinaryInstruction(machine.ir);
     executeInstruction(decoded.operation, decoded.args);
   }
   
