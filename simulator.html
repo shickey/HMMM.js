@@ -6,11 +6,11 @@
           <div class="simulator-controls ">
             <button class="btn btn-default" ng-click="go('/', 'slide-backward')"><span class="glyphicon glyphicon-arrow-left"></span> Back to Editor</button>
             <div class="btn-group pull-right">
-              <button class="btn btn-default" ng-click="reset()">Reset <span class="glyphicon glyphicon-refresh"></span></button>
-              <button class="btn btn-default" ng-click="stepBack()">Step <span class="glyphicon glyphicon-arrow-left"></span></button>
-              <button class="btn btn-default" ng-click="stepForward()">Step <span class="glyphicon glyphicon-arrow-right"></span></button>
-              <button class="btn btn-default" ng-click="pauseExecution()">Pause <span class="glyphicon glyphicon-pause"></span></button>
-              <button class="btn btn-primary" ng-click="runProgram()">Run! <span class="glyphicon glyphicon-play"></span></button>
+              <button class="btn btn-default" ng-click="reset()" title="Reset Simulator"><span class="glyphicon glyphicon-refresh"></span></button>
+              <button class="btn btn-default" ng-click="stepBack()" title="Step Back"><span class="glyphicon glyphicon-arrow-left"></span></button>
+              <button class="btn btn-default" ng-click="stepForward()" title="Step Forward"><span class="glyphicon glyphicon-arrow-right"></span></button>
+              <button class="btn btn-default" ng-click="pauseExecution()" title="Pause"><span class="glyphicon glyphicon-pause"></span></button>
+              <button class="btn btn-primary" ng-click="runProgram()" title="Run!">Run! <span class="glyphicon glyphicon-play"></span></button>
             </div>
           </div>
           <div id="hmmm-console"></div>
@@ -25,8 +25,8 @@
             <table class="table table-bordered table-very-condensed">
               <thead>
                 <th>Register</th>
-                <th>Binary Value</th>
-                <th>Decimal Value</th>
+                <th>Binary</th>
+                <th>Value</th>
               </thead>
               <tr><td> pc</td><td>{{simulator.pc | binary}}</td><td>{{simulator.pc}}</td></tr>
               <tr ng-repeat="register in simulator.registers track by $index">
