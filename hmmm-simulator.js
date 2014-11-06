@@ -421,7 +421,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   this.runNextInstruction = function() {
     var progCounter = getProgramCounter();
     var binInst = getRam(progCounter);
-    setInstructionRegister(binaryInst);
+    setInstructionRegister(binInst);
     var decoded = decodeBinaryInstruction(getInstructionRegister());
     if (!decoded) {
       throwSimulationError("Unable to decode instruction");
