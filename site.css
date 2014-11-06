@@ -51,9 +51,30 @@ table tr td:first-child, table th:first-child {
 
 /* Simulator */
 
-.register {
-  border: 1px solid black;
+.cpu-register-column {
+  width: 30%;
 }
+
+.cpu-binary-column {
+  width: 35%;
+}
+
+.cpu-value-column {
+  width: 35%;
+}
+
+.ram-address-column {
+  width: 20%;
+}
+
+.ram-binary-column {
+  width: 35%;
+}
+
+.ram-value-column {
+  width: 45%;
+}
+
 
 /* Animations */
 

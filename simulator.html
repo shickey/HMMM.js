@@ -24,9 +24,9 @@
             </div>
             <table class="table table-bordered table-very-condensed">
               <thead>
-                <th>Register</th>
-                <th>Binary</th>
-                <th>Value</th>
+                <th class="cpu-address-column">Register</th>
+                <th class="cpu-binary-column">Binary</th>
+                <th class="cpu-value-column">Value</th>
               </thead>
               <tr><td>pc</td><td>{{simulator.pc | binary}}</td><td>{{simulator.pc}}</td></tr>
               <tr><td>ir</td><td>{{simulator.ir | binary}}</td><td>{{simulator.ir}}</td></tr>
@@ -48,9 +48,9 @@
       </div>
       <table class="table table-bordered table-very-condensed">
         <thead>
-          <th>Address</th>
-          <th>Binary Value</th>
-          <th>Info</th>
+          <th class="ram-address-column">Address</th>
+          <th class="ram-binary-column">Binary</th>
+          <th class="ram-value-column">Value</th>
         </thead>
         <tr ng-repeat="address in simulator.ram track by $index" ng-class="{ danger: simulator.boundary > $index }">
           <td><span ng-show="simulator.pc == $index">pc <span class="glyphicon glyphicon-arrow-right"></span></span> {{$index}}</td>
