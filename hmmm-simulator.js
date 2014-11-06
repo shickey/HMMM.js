@@ -56,7 +56,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   //*********************************************
   
   function validInteger(integer) {
-    return (integer >= -32768 && integer < 32768);
+    return (integer >= -32768 && integer < 65535);
   }
   
   function getProgramCounter() {
@@ -82,6 +82,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   function setInstructionRegister(binaryInst) {
     if (!validInteger(binaryInst)) {
       throwSimulationError("Instruction register overflow");
+      return
     }
     machine.ir = binaryInst;
   }
@@ -124,6 +125,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     }
     if (machine.mode = modes.SAFE && address < machine.boundary) {
       throwSimulationError("Attempted to write into code segment of RAM");
+      return;
     }
     if (!validInteger(value)) {
       throwSimulationError("Integer overflow");
@@ -224,6 +226,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
         }
         else {
           throwSimulationError("Internal inconsistency error");
+          return;
         }
         argNum += 1;
       }
@@ -237,6 +240,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       }
       else {
         throwSimulationError("Internal inconsistency error");
+        return;
       }
     }
     
@@ -373,6 +377,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     }
     else {
       throwSimulationError("Unknown operation");
+      return;
     }
   }
   
