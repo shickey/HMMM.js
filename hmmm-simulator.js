@@ -60,7 +60,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   }
   
   function getProgramCounter() {
-    return this.pc
+    return machine.pc
   }
   
   function setProgramCounter(jumpTarget) {
@@ -68,22 +68,22 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       throwSimulationError("Invalid jump target");
       return;
     }
-    if (this.mode == modes.SAFE && jumpTarget >= this.boundary) {
+    if (machine.mode == modes.SAFE && jumpTarget >= machine.boundary) {
       throwSimulationError("Invalid jump target");
       return;
     }
-    this.pc = jumpTarget;
+    machine.pc = jumpTarget;
   }
   
   function getInstructionRegister() {
-    return this.ir;
+    return machine.ir;
   }
   
   function setInstructionRegister(binaryInst) {
     if (!validInteger(binaryInst)) {
       throwSimulationError("Instruction register overflow");
     }
-    this.ir = binaryInst;
+    machine.ir = binaryInst;
   }
   
   function getRegister(register) {
@@ -91,7 +91,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       throwSimulationError("Attempted to access invalid register: r" + register);
       return;
     }
-    return this.registers[register];
+    return machine.registers[register];
   }
   
   function setRegister(register, value) {
@@ -106,7 +106,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     if (register === 0) {
       return; // Register 0 is always 0
     }
-    this.registers[register] = value;
+    machine.registers[register] = value;
   }
   
   function getRam(address) {
@@ -114,7 +114,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       throwSimulationError("Attempted to access invalid ram address: " + address);
       return;
     }
-    return this.ram[address];
+    return machine.ram[address];
   }
   
   function setRam(address, value) {
@@ -122,20 +122,20 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       throwSimulationError("Attempted to access invalid ram address: " + address);
       return;
     }
-    if (this.mode = modes.SAFE && address < this.boundary) {
+    if (machine.mode = modes.SAFE && address < machine.boundary) {
       throwSimulationError("Attempted to write into code segment of RAM");
     }
     if (!validInteger(value)) {
       throwSimulationError("Integer overflow");
       return;
     }
-    this.registers[register] = value;
+    machine.registers[register] = value;
   }
   
   function throwSimulationError(message) {
-    this.state = this.states.ERROR;
-    if (this.errHandler) {
-      this.errHandler("ERROR: " + message);
+    machine.state = machine.states.ERROR;
+    if (machine.errHandler) {
+      machine.errHandler("ERROR: " + message);
     }
   }
   
