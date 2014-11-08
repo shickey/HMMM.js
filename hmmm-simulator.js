@@ -444,7 +444,6 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   // Public Methods
   //*********************************************
   this.resetMachine = function(clearProgram) {
-    machine.undoStack.clearStack();
     machine.pc = 0;
     
     if (clearProgram) {
@@ -465,7 +464,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     else {
       setMachineState(states.READY);
     }
-    
+    machine.undoStack.clearStack();
   }
   
   this.loadBinary = function(binary) {
