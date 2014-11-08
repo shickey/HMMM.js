@@ -290,7 +290,7 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
   }
   
   $scope.stepBack = function() {
-    
+    simulator.stepBackward();
   }
   
 }]);
