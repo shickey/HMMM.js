@@ -501,7 +501,7 @@ function HmmmParser() {
             generatedError = true;
             break;
           }
-          if (!isValidSignedArgument(argToken.val)) {
+          if (!isValidUnsignedArgument(argToken.val)) {
             errors.push(new ParseError(argToken.row,
                                        argToken.column,
                                        argToken.row,

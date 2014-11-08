@@ -131,7 +131,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       throwSimulationError("Integer overflow");
       return;
     }
-    machine.registers[register] = value;
+    machine.ram[address] = value;
   }
   
   function throwSimulationError(message) {
