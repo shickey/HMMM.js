@@ -181,8 +181,20 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     });
   }
   
+  function getMachineState() {
+    return machine.state;
+  }
+  
+  function setMachineState(state) {
+    var currentState = getMachineState();
+    machine.state = state;
+    machine.undoStack.addUndoableAction(function() {
+      machine.state = currentState;
+    });
+  }
+  
   function throwSimulationError(message) {
-    machine.state = machine.states.ERROR;
+    setMachineState(machine.states.ERROR);
     if (machine.errHandler) {
       machine.errHandler("ERROR: " + message);
     }
@@ -293,7 +305,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     
     // Handle halt as a special case
     if (operation === "halt") {
-      machine.state = states.HALT;
+      setMachineState(states.HALT);
       return;
     }
     
@@ -448,10 +460,10 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     }
     
     if (clearProgram) {
-      machine.state = states.EMPTY;
+      setMachineState(states.EMPTY);
     }
     else {
-      machine.state = states.READY;
+      setMachineState(states.READY);
     }
     
   }
@@ -486,18 +498,18 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   }
   
   this.run = function(willExecute, didExecute) {
-    if (machine.state == states.EMPTY) {
+    if (getMachineState() == states.EMPTY) {
       throwSimulationError("No code loaded into machine");
       return;
     }
-    if (machine.state == states.HALT) {
+    if (getMachineState() == states.HALT) {
       return;
     }
-    if (machine.state == states.ERROR) {
+    if (getMachineState() == states.ERROR) {
       return;
     }
-    machine.state = states.RUN;
-    while (machine.state === states.RUN) {
+    setMachineState(states.RUN);
+    while (getMachineState() === states.RUN) {
       if (willExecute) {
         willExecute();
       }
