@@ -95,7 +95,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   }
   
   function setProgramCounter(jumpTarget) {
-    if (jumpTarget < 0 || jumpTarget >= NUM_REGISTERS) {
+    if (jumpTarget < 0 || jumpTarget >= RAM_SIZE) {
       throwSimulationError("Invalid jump target");
       return;
     }
