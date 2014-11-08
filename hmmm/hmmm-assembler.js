@@ -150,7 +150,7 @@ function HmmmLexer() {
       
       // Ignore comments
       if (peek === '#') {
-        while (!isNewline(lookAhead(1))) {
+        while (!isNewline(lookAhead(1)) && peek !== undefined) {
           peek = getNextChar();
         }
         continue;
