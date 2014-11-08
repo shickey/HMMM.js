@@ -29,7 +29,7 @@
                 <th class="cpu-value-column">Value</th>
               </thead>
               <tr><td>pc</td><td>{{simulator.pc | binary}}</td><td>{{simulator.pc}}</td></tr>
-              <tr><td>ir</td><td>{{simulator.ir | binary}}</td><td>{{simulator.ir}}</td></tr>
+              <tr><td>ir</td><td>{{simulator.ir | binary}}</td><td>{{simulator.ir | instruction}}</td></tr>
               <tr ng-repeat="register in simulator.registers track by $index">
                 <td>{{"r" + $index}}</td>
                 <td>{{register | binary}}</td>
@@ -55,7 +55,8 @@
         <tr ng-repeat="address in simulator.ram track by $index" ng-class="{ danger: simulator.boundary > $index }">
           <td><span ng-show="simulator.pc == $index">pc <span class="glyphicon glyphicon-arrow-right"></span></span> {{$index}}</td>
           <td>{{address | binary}}</td>
-          <td>{{address}}</td>
+          <td ng-if="simulator.boundary > $index">{{address | instruction}}</td>
+          <td ng-if="simulator.boundary <= $index">{{address}}</td>
         </tr>
       </table>
     </div>

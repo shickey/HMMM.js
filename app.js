@@ -29,11 +29,13 @@ app.config(function($routeProvider) {
 
 app.factory('HmmmSim', function() {
   
+  var _simulator = new HmmmSimulator();
   var _showInstructions = true;
   var _hmmmCode = undefined;
   var _binary = undefined;
   
   return {
+    simulator: _simulator,
     getShowInstructions: function() {
       return _showInstructions;
     },
@@ -116,6 +118,12 @@ app.filter('binary', function() {
     return spaceIntoNibbles(binaryForInteger(input, 16));
   };
 });
+
+app.filter('instruction', ['HmmmSim', function(HmmmSim) {
+  return function(input) {
+    return HmmmSim.simulator.instructionFromBinary(input);
+  }
+}]);
 
 app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   
@@ -248,8 +256,13 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
     hmmmConsole.insert(data + "\n");
   }
   
-  $scope.simulator = new HmmmSimulator(inHandler, outAndErrHandler, outAndErrHandler);
-  var simulator = $scope.simulator
+  var simulator = HmmmSim.simulator;
+  $scope.simulator = simulator;
+  simulator.resetMachine(true);
+  simulator.inHandler = inHandler;
+  simulator.outHandler = outAndErrHandler;
+  simulator.errHandler = outAndErrHandler;
+  
   var binary = HmmmSim.getBinary();
   if (!binary) {
     // $location.path("/")
