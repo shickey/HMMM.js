@@ -508,6 +508,10 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     }
   }
   
+  this.stepBackward = function() {
+    machine.undoStack.undo();
+  }
+  
   this.instructionFromBinary = function(binInst) {
     var decoded = decodeBinaryInstruction(binInst);
     if (!decoded) {
