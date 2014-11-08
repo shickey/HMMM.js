@@ -1,5 +1,34 @@
 var hmmm = require('./hmmm-language');
 
+function UndoStack() {
+  
+  'use strict'
+  
+  var stack = [];
+  
+  this.addUndoMarker = function() {
+    stack.push("MARK");
+  };
+  
+  this.addUndoableAction = function(undoFunction) {
+    if (typeof undoFunction !== "function") {
+      console.log("Warning: attempted to add non-function to undo stack");
+      return;
+    };
+    stack.push(undoFunction);
+  }
+  
+  this.undo = function() {
+    var undoFunction;
+    while (stack.length > 0 && (undoFunction = stack.pop()) !== "MARK") {
+      undoFunction.call();
+    }
+  }
+  
+  this.clearStack = function() {
+    stack = [];
+  }
+}
 
 function HmmmSimulator(inHandler, outHandler, errHandler) {
   
@@ -23,6 +52,8 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     SAFE   : 'safe',
     UNSAFE : 'unsafe'
   });
+  
+  this.undoStack = new UndoStack();
   
   //*********************************************
   // User Defined Input/Output Functions
@@ -72,7 +103,11 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       throwSimulationError("Invalid jump target");
       return;
     }
+    var currentPc = getProgramCounter();
     machine.pc = jumpTarget;
+    machine.undoStack.addUndoableAction(function() {
+      machine.pc = currentPc;
+    });
   }
   
   function getInstructionRegister() {
@@ -84,7 +119,11 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       throwSimulationError("Instruction register overflow");
       return
     }
+    var currentIr = getInstructionRegister();
     machine.ir = binaryInst;
+    machine.undoStack.addUndoableAction(function() {
+      machine.ir = currentIr;
+    });
   }
   
   function getRegister(register) {
@@ -107,7 +146,11 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     if (register === 0) {
       return; // Register 0 is always 0
     }
+    var currentValue = getRegister(register);
     machine.registers[register] = value;
+    machine.undoStack.addUndoableAction(function() {
+      machine.registers[register] = currentValue;
+    })
   }
   
   function getRam(address) {
@@ -131,7 +174,11 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       throwSimulationError("Integer overflow");
       return;
     }
+    var currentValue = getRam(address);
     machine.ram[address] = value;
+    machine.undoStack.addUndoableAction(function() {
+      machine.ram[address] = currentValue;
+    });
   }
   
   function throwSimulationError(message) {
@@ -385,6 +432,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   // Public Methods
   //*********************************************
   this.resetMachine = function(clearProgram) {
+    machine.undoStack.clearStack();
     machine.pc = 0;
     
     if (clearProgram) {
@@ -424,11 +472,13 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   }
   
   this.runNextInstruction = function() {
+    machine.undoStack.addUndoMarker();
     var progCounter = getProgramCounter();
     var binInst = getRam(progCounter);
     setInstructionRegister(binInst);
     var decoded = decodeBinaryInstruction(getInstructionRegister());
     if (!decoded) {
+      machine.undoStack.undo();
       throwSimulationError("Unable to decode instruction");
       return;
     }
