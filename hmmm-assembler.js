@@ -78,7 +78,7 @@ function HmmmLexer() {
   }
   
   function isTokenBreak(character) {
-    return (character === undefined || isWhitespace(character) || isNewline(character));
+    return (character === undefined || isWhitespace(character) || isNewline(character) || character === ",");
   }
   
   this.lex = function(source) {
@@ -131,7 +131,7 @@ function HmmmLexer() {
       // Scan over whitespace and find newlines
       while (true) {
         peek = getNextChar();
-        if (isWhitespace(peek)) {
+        if (isWhitespace(peek) || (peek === "," && currentLine.tokens[currentLine.tokens.length - 1] instanceof RegisterToken)) {
           continue;
         }
         else if (isNewline(peek)) {

@@ -82,6 +82,13 @@ describe('HmmmAssembler', function() {
     expect(error.message).to.have.string('Expected signed integer');
   });
   
-  xit('should return an error when a numerical number is out of bounds');
+  it('should allow commas as token delimiters, but only for arguments', function() {
+    var validCommas = assembler.assemble('0 add r1,r2,r3 #comment');
+    expect(validCommas.errors.length).to.equal(0);
+    expect(validCommas.binary).to.equal("0110 0001 0010 0011\n");
+    
+    var invalidCommas = assembler.assemble('0,add,r1 r2 r3');
+    expect(invalidCommas.errors.length).to.be.above(0);
+  })
   
 });
