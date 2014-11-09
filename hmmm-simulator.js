@@ -69,6 +69,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   this.registers = [];
   this.ram       = [];
   this.pc        = 0;
+  this.lastPc    = 0;
   this.ir        = 0;
   this.boundary  = 0;
   this.state     = states.EMPTY;
@@ -95,18 +96,22 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   }
   
   function setProgramCounter(jumpTarget) {
-    if (jumpTarget < 0 || jumpTarget >= RAM_SIZE) {
-      throwSimulationError("Invalid jump target");
-      return;
-    }
-    if (machine.mode == modes.SAFE && jumpTarget >= machine.boundary) {
-      throwSimulationError("Invalid jump target");
-      return;
-    }
     var currentPc = getProgramCounter();
     machine.pc = jumpTarget;
     machine.undoStack.addUndoableAction(function() {
       machine.pc = currentPc;
+    });
+  }
+  
+  function getLastProgramCounter() {
+    return machine.lastPc;
+  }
+  
+  function setLastProgramCounter(lastPc) {
+    var currentLastPc = getLastProgramCounter();
+    machine.lastPc = lastPc;
+    machine.undoStack.addUndoableAction(function() {
+      machine.lastPc = currentLastPc;
     });
   }
   
@@ -191,6 +196,16 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     machine.undoStack.addUndoableAction(function() {
       machine.state = currentState;
     });
+  }
+  
+  function isValidJumpTarget(jumpTarget) {
+    if (jumpTarget < 0 || jumpTarget >= RAM_SIZE) {
+      return false;
+    }
+    if (machine.mode == modes.SAFE && jumpTarget >= machine.boundary) {
+      return false;
+    }
+    return true;
   }
   
   function throwSimulationError(message) {
@@ -306,14 +321,9 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     // Handle halt as a special case
     if (operation === "halt") {
       setMachineState(states.HALT);
-      return;
+      setProgramCounter(getLastProgramCounter());
     }
-    
-    // If we didn't halt, bump the instruction number
-    setProgramCounter(getProgramCounter() + 1);
-    
-    // If we didn't halt, execute the correct instruction
-    if (operation === "read") {
+    else if (operation === "read") {
       var userInput = machine.inHandler();
       var validInput = /^-?[0-9]+$/.test(userInput) || /^-?0[xX][0-9a-fA-F]+$/.test(arg);
       if (!validInput) {
@@ -331,6 +341,10 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     }
     else if (operation === "jumpr") {
       var data = getRegister(rx);
+      if (!isValidJumpTarget(data)) {
+        throwSimulationError("Invalid jump target");
+        return;
+      }
       setProgramCounter(data);
     }
     else if (operation === "setn") {
@@ -403,6 +417,10 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       setRegister(rx, data1 % data2);
     }
     else if (operation === "jumpn") {
+      if (!isValidJumpTarget(n)) {
+        throwSimulationError("Invalid jump target");
+        return;
+      }
       setProgramCounter(n);
     }
     else if (operation === "calln") {
@@ -413,24 +431,40 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
     else if (operation === "jeqzn") {
       var data = getRegister(rx);
       if (data === 0) {
+        if (!isValidJumpTarget(n)) {
+          throwSimulationError("Invalid jump target");
+          return;
+        }
         setProgramCounter(n);
       }
     }
     else if (operation === "jnezn") {
       var data = getRegister(rx);
       if (data !== 0) {
+        if (!isValidJumpTarget(n)) {
+          throwSimulationError("Invalid jump target");
+          return;
+        }
         setProgramCounter(n);
       }
     }
     else if (operation === "jgtzn") {
       var data = getRegister(rx);
       if (data > 0) {
+        if (!isValidJumpTarget(n)) {
+          throwSimulationError("Invalid jump target");
+          return;
+        }
         setProgramCounter(n);
       }
     }
     else if (operation === "jltzn") {
       var data = getRegister(rx);
       if (data < 0) {
+        if (!isValidJumpTarget(n)) {
+          throwSimulationError("Invalid jump target");
+          return;
+        }
         setProgramCounter(n);
       }
     }
@@ -494,6 +528,8 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
       throwSimulationError("Unable to decode instruction");
       return;
     }
+    setLastProgramCounter(progCounter);
+    setProgramCounter(progCounter + 1);
     executeInstruction(decoded.operation, decoded.args);
   }
   
