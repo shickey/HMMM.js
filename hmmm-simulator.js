@@ -479,6 +479,7 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   //*********************************************
   this.resetMachine = function(clearProgram) {
     machine.pc = 0;
+    machine.lastPc = 0;
     machine.ir = 0;
     
     if (clearProgram) {
