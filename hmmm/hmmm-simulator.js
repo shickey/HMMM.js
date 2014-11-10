@@ -661,6 +661,10 @@ function HmmmSimulator(inHandler, outHandler, errHandler) {
   this.runNextInstruction = function() {
     machine.undoStack.addUndoMarker();
     var progCounter = getProgramCounter();
+    if (machine.mode === modes.SAFE && (progCounter < 0 || progCounter >= machine.boundary)) {
+      throwSimulationError("Attempted to execute instruction outside of code segment");
+      return;
+    }
     var binInst = getRam(progCounter);
     setInstructionRegister(binInst);
     var decoded = decodeBinaryInstruction(getInstructionRegister());
