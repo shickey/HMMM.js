@@ -263,5 +263,19 @@ describe('HmmmSimulator', function() {
     simulator.run();
     expect(simulator.registers[3]).to.equal(5);
   });
+  
+  it('throws an error when in safe mode and attempting to execute code outside code segment', function() {
+    var err;
+    var errHandler = function(data) {
+      err = data;
+    }
+    simulator.errHandler = errHandler;
+    var bin = assembler.assemble("0 setn r1 5\n1 addn r1 6\n");
+    simulator.loadBinary(bin.binary);
+    simulator.run();
+    expect(simulator.pc).to.equal(2);
+    expect(simulator.state).to.equal(simulator.states.ERROR);
+    expect(err.toLowerCase()).to.have.string('outside of code segment');
+  });
 
 });
