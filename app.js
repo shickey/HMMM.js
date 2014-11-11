@@ -7,6 +7,10 @@ app.run(function($rootScope, $location) {
     $location.path(path);
   }
   
+  $rootScope.$on('$routeChangeSuccess', function() {
+    ga('send', 'pageview', $location.path());
+  });
+  
 });
 
 app.config(function($routeProvider) {
