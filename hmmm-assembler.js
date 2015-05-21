@@ -66,7 +66,7 @@ function HmmmLexer() {
   }
   
   function isNumericConstant(string) {
-    return /^-?[0-9]+$/.test(string);
+    return /^-?[0-9]+$/.test(string) || /^-?0[xX][0-9a-fA-F]+$/.test(string);
   }
   
   function isRegister(string) {
