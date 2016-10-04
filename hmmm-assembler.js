@@ -1,4 +1,3 @@
-var util = require('util');
 var hmmm = require('./hmmm-language');
 
 //*********************************************
@@ -9,44 +8,76 @@ var tokenTypes = Object.freeze({
   INSTRUCTION : "INSTRUCTION",
   REGISTER    : "REGISTER",
   CONSTANT    : "CONSTANT",
+  COMMENT     : "COMMENT",
   UNKNOWN     : "UNKNOWN"
 });
 
-function Token(type, row, column) {
-  this.type = type;
-  this.row = row;
-  this.column = column;
+function createPoint(row, column) {
+  return {
+    row: row,
+    column: column
+  };
+};
+
+function createRange(startRangeOrStartRow, endRangeOrStartColumn, endRow, endColumn) {
+  if (arguments.length === 2) {
+    return {
+      start: startRangeOrStartRow,
+      end: endRangeOrStartColumn
+    };
+  };
+  return {
+    start: createPoint(startOrStartRow, endOrStartColumn),
+    end: createPoint(endRow, endColumn)
+  };
+};
+
+function createInstructionToken(range, inst) {
+  return {
+    type: tokenTypes.INSTRUCTION,
+    range: range,
+    val: inst
+  };
+};
+
+function createRegisterToken(range, reg) {
+  return {
+    type: tokenTypes.REGISTER,
+    range: range,
+    val: reg
+  };
+};
+
+function createConstantToken(range, constant) {
+  return {
+    type: tokenTypes.CONSTANT,
+    range: range,
+    val: constant
+  };
+};
+
+function createCommentToken(range, comment) {
+  return {
+    type: tokenTypes.COMMENT,
+    range: range,
+    val: comment
+  };
 }
 
-function InstructionToken(inst, row, column) {
-  InstructionToken.super_.call(this, tokenTypes.INSTRUCTION, row, column);
-  this.val = inst;
-}
+function createUnknownToken(range, value) {
+  return {
+    type: tokenTypes.UNKNOWN,
+    range: range,
+    val: value
+  };
+};
 
-function RegisterToken(reg, row, column) {
-  RegisterToken.super_.call(this, tokenTypes.REGISTER, row, column);
-  this.val = reg;
-}
-
-function ConstantToken(constant, row, column) {
-  ConstantToken.super_.call(this, tokenTypes.CONSTANT, row, column);
-  this.val = constant;
-}
-
-function UnknownToken(value, row, column) {
-  UnknownToken.super_.call(this, tokenTypes.UNKNOWN, row, column);
-  this.val = value;
-}
-
-util.inherits(InstructionToken, Token);
-util.inherits(RegisterToken, Token);
-util.inherits(ConstantToken, Token);
-util.inherits(UnknownToken, Token);
-
-function Line(lineNum) {
-  this.lineNum = lineNum;
-  this.tokens  = [];
-}
+function createLine(lineNum) {
+  return {
+    lineNum: lineNum,
+    tokens: []
+  };
+};
 
 //*********************************************
 // Lexer
@@ -83,8 +114,6 @@ function HmmmLexer() {
   
   this.lex = function(source) {
     
-    var tokenizedLines = [];
-    var currentLine = undefined;
     var lineNum = 1;
     var colNum = 0; // Start at 0 since we haven't looked at any characters yet
     var peek = '';
@@ -119,26 +148,27 @@ function HmmmLexer() {
       return chars;
     }
     
-    // Inner function for grouping tokens by source code line
-    function addToken(token) {
-      if (currentLine === undefined) {
-        currentLine = new Line(lineNum);
+    function scanToLineBreak() {
+      var chars = peek;
+      var next = lookAhead(1);
+      while (!isNewline(next)) {
+        peek = getNextChar();
+        chars += peek;
+        next = lookAhead(1);
       }
-      currentLine.tokens.push(token);
+      return chars;
     }
+    
+    var tokens = [];
     
     while (peek !== undefined) {
       // Scan over whitespace and find newlines
       while (true) {
         peek = getNextChar();
-        if (isWhitespace(peek) || (peek === "," && currentLine.tokens[currentLine.tokens.length - 1] instanceof RegisterToken)) {
+        if (isWhitespace(peek) || ((peek === "," && currentLine.tokens[currentLine.tokens.length - 1]).type === tokenTypes.REGISTER)) {
           continue;
         }
         else if (isNewline(peek)) {
-          if (currentLine) {
-            tokenizedLines.push(currentLine);
-            currentLine = undefined;
-          }
           lineNum += 1;
           colNum = 0;
         }
@@ -147,11 +177,15 @@ function HmmmLexer() {
         }
       }
       
-      // Ignore comments
+      // Comments
       if (peek === '#') {
-        while (!isNewline(lookAhead(1)) && peek !== undefined) {
-          peek = getNextChar();
-        }
+        var start = createPoint(lineNum, colNum);
+        var comment = scanToLineBreak();
+        var end = createPoint(lineNum, colNum);
+        var range = createRange(start, end);
+        
+        tokens.push(createCommentToken(range, comment));
+        
         continue;
       }
       
@@ -161,28 +195,28 @@ function HmmmLexer() {
       if (currToken === undefined) {
         continue;
       }
-      else if (isNumericConstant(currToken)) {
+      
+      var start = createPoint(lineNum, colNum);
+      var end   = createPoint(lineNum, colNum + currToken.toString().length);
+      var range = createRange(start, end);
+      
+      if (isNumericConstant(currToken)) {
         var num = (+currToken);
-        addToken(new ConstantToken(num, lineNum, startOfToken));
+        tokens.push(createConstantToken(range, num));
       }
       else if (isRegister(currToken)) {
-        addToken(new RegisterToken(currToken, lineNum, startOfToken));
+        tokens.push(createRegisterToken(range, currToken));
       }
       else if (isInstruction(currToken)) {
-        addToken(new InstructionToken(currToken, lineNum, startOfToken));
+        tokens.push(createInstructionToken(range, currToken));
       }
       else {
-        addToken(new UnknownToken(currToken, lineNum, startOfToken));
+        tokens.push(createUnknownToken(range, currToken));
       }
 
     }
-    // Once we've reached EOF, add the last line, if it exists
-    if (currentLine) {
-      tokenizedLines.push(currentLine);
-      currentLine = undefined;
-    }
     
-    return tokenizedLines;
+    return tokens;
     
   }
   
@@ -199,13 +233,12 @@ function HmmmParser() {
   
   // Error constructor
   
-  function ParseError(startRow, startColumn, endRow, endColumn, message) {
-    this.startRow = startRow;
-    this.startColumn = startColumn;
-    this.endRow = endRow;
-    this.endColumn = endColumn;
-    this.message = message;
-  }
+  function createParseError(range, message) {
+    return {
+      range: range,
+      message: message
+    };
+  };
   
   // Argument validators
   
@@ -230,10 +263,10 @@ function HmmmParser() {
   
   function padZeroesLeft(string, width) {
     var pad = "";
-    for (var i = 0; i < width; ++i) {
+    for (var i = 0; i < width - string.length; ++i) {
       pad += "0";
     }
-    return pad.substring(0, pad.length - string.length) + string;
+    return pad + string;
   }
 
   function binaryForRegister(register) {
@@ -246,8 +279,9 @@ function HmmmParser() {
       width = 8;
     }
 
+    // TODO: This should probably check for negative underflow as well?
     if (integer > Math.pow(2,width)) {
-      // TODO Overflow!
+      // TODO: Overflow!
     }
 
     if (integer < 0) {
@@ -357,20 +391,17 @@ function HmmmParser() {
       if (tokens.length === 0) {
         // The only way this happens is if the tokenized lines are malformed
         // Big error so bail completely
-        errors.push(new ParseError(1, 1, 1, 1, "Internal Parser Error"));
+        var range = createRange(1, 1, 1, 1);
+        errors.push(createParseError(range, "Internal Parser Error"));
         break;
       }
       
       // Check for the correct instruction number
       var instNumToken = tokens[0];
-      if (!instNumToken instanceof ConstantToken || instNumToken.val !== expectedInstNum) {
-        errors.push(new ParseError(instNumToken.row,
-                                   instNumToken.column,
-                                   instNumToken.row,
-                                   instNumToken.column + instNumToken.val.toString().length,
-                                   "Expected instruction number: " + expectedInstNum));
+      if (instNumToken.type !== tokenTypes.CONSTANT || instNumToken.val !== expectedInstNum) {
+        errors.push(createParseError(instNumToken.range, "Expected instruction number: " + expectedInstNum));
         // If the value was at least an integer, try to recover by resetting the expectedInstNum
-        if (instNumToken instanceof ConstantToken && instNumToken.val > 0) {
+        if (instNumToken.type === tokenTypes.CONSTANT && instNumToken.val >= 0) {
           expectedInstNum = instNumToken.val + 1;
         }
         continue;
@@ -383,28 +414,17 @@ function HmmmParser() {
       
       // Check for a valid instruction
       if (tokens.length < 2) {
-        errors.push(new ParseError(instNumToken.row, 
-                                   instNumToken.column + instNumToken.val.toString().length,
-                                   instNumToken.row,
-                                   instNumToken.column + instNumToken.val.toString().length,
-                                   "Missing instruction"));
+        var errorRange = createRange(instNumToken.range.end, instNumToken.range.end);
+        errors.push(createParseError(errorRange, "Missing instruction"));
         continue;
       }
       var instToken = tokens[1];
-      if (!instToken instanceof InstructionToken) {
-        errors.push(new ParseError(instToken.row,
-                                   instToken.column,
-                                   instToken.row,
-                                   instToken.column + instToken.val.toString().length,
-                                   "Expected instruction, found " + instToken.type.toLowerCase()));
+      if (instToken.type !== tokenTypes.INSTRUCTION) {
+        errors.push(createParseError(instToken.range, "Expected instruction, found " + instToken.type.toLowerCase()));
         continue;
       }
       if (Object.keys(hmmm.instructions).indexOf(instToken.val) === -1) {
-        errors.push(new ParseError(instToken.row,
-                                   instToken.column,
-                                   instToken.row,
-                                   instToken.column + instToken.val.toString().length,
-                                   "Invalid instruction"));
+        errors.push(createParseError(instToken.range, "Invalid instruction"));
         continue;
       }
       
@@ -418,27 +438,22 @@ function HmmmParser() {
       var unpaddedSignature = signature.replace(/z/, ""); // Remove z's (since they only represent padding)
       var expectedArgs = unpaddedSignature.length;
       if (expectedArgs !== argTokens.length) {
-        var startRow = 0;
-        var startCol = 0;
-        var endRow = startRow;
-        var endCol = 0;
+        var start = undefined;
+        var end   = undefined;
+        
         if (argTokens.length === 0) {
-          startRow = instToken.row;
-          startCol = instToken.column + instToken.val.toString().length
-          endCol = instToken.column + instToken.val.toString().length
+          start  = instToken.range.end;
+          end    = instToken.range.end;
         }
         else {
-          startRow = argTokens[0].row;
-          startCol = argTokens[0].column;
+          start = argTokens[0].range.start;
           
           var lastArg = argTokens[argTokens.length - 1];
-          endCol = lastArg.column + lastArg.val.toString().length;
+          end = lastArg.range.end;
         }
-        errors.push(new ParseError(startRow,
-                                   startCol,
-                                   endRow,
-                                   endCol,
-                                   "Wrong number of arguments. Expected: " + expectedArgs + ". Found: " + argTokens.length + "."));
+        var range = createRange(start, end);
+        errors.push(createParseError(range, "Wrong number of arguments. Expected: " + expectedArgs + ". Found: " + argTokens.length + "."));
+        
         continue;
       }
       
@@ -451,20 +466,12 @@ function HmmmParser() {
         // Register Args
         if (argType === 'r') {
           if (argToken.type !== tokenTypes.REGISTER) {
-            errors.push(new ParseError(argToken.row,
-                                       argToken.column,
-                                       argToken.row,
-                                       argToken.column + argToken.val.toString().length,
-                                       "Wrong argument type. Expected register, found " + argToken.type.toLowerCase()));
+            errors.push(createParseError(argToken.range, "Wrong argument type. Expected register, found " + argToken.type.toLowerCase()));
             generatedError = true;
             break;
           }
           if (!isValidRegisterArgument(argToken.val)) {
-            errors.push(new ParseError(argToken.row,
-                                       argToken.column,
-                                       argToken.row,
-                                       argToken.column + argToken.val.toString().length,
-                                       "Invalid register argument (must be r0-r15). Found " + argToken.val));
+            errors.push(createParseError(argToken.range, "Invalid register argument (must be r0-r15). Found " + argToken.val));
             generatedError = true;
             break;
           }
@@ -472,20 +479,12 @@ function HmmmParser() {
         // Signed 8-bit args
         else if (argType === 's') {
           if (argToken.type !== tokenTypes.CONSTANT) {
-            errors.push(new ParseError(argToken.row,
-                                       argToken.column,
-                                       argToken.row,
-                                       argToken.column + argToken.val.toString().length,
-                                       "Wrong argument type. Expected signed integer, found " + argToken.type.toLowerCase()));
+            errors.push(createParseError(argToken.range, "Wrong argument type. Expected signed integer, found " + argToken.type.toLowerCase()));
             generatedError = true;
             break;
           }
           if (!isValidSignedArgument(argToken.val)) {
-            errors.push(new ParseError(argToken.row,
-                                       argToken.column,
-                                       argToken.row,
-                                       argToken.column + argToken.val.toString().length,
-                                       "Invalid signed integer argument (must be between -128 and 127). Found " + argToken.val));
+            errors.push(createParseError(argToken.range, "Invalid signed integer argument (must be between -128 and 127). Found " + argToken.val));
             generatedError = true;
             break;
           }
@@ -493,31 +492,19 @@ function HmmmParser() {
         // Unsigned 8-bit args
         else if (argType === 'u') {
           if (argToken.type !== tokenTypes.CONSTANT) {
-            errors.push(new ParseError(argToken.row,
-                                       argToken.column,
-                                       argToken.row,
-                                       argToken.column + argToken.val.toString().length,
-                                       "Wrong argument type. Expected unsigned integer, found " + argToken.type.toLowerCase()));
+            errors.push(createParseError(argToken.range, "Wrong argument type. Expected unsigned integer, found " + argToken.type.toLowerCase()));
             generatedError = true;
             break;
           }
           if (!isValidUnsignedArgument(argToken.val)) {
-            errors.push(new ParseError(argToken.row,
-                                       argToken.column,
-                                       argToken.row,
-                                       argToken.column + argToken.val.toString().length,
-                                       "Invalid unsigned integer argument (must be between 0 and 255). Found " + argToken.val));
+            errors.push(createParseError(argToken.range, "Invalid unsigned integer argument (must be between 0 and 255). Found " + argToken.val));
             generatedError = true;
             break;
           }
         }
         // Any other signature value
         else {
-          errors.push(new ParseError(argToken.row,
-                                     argToken.column,
-                                     argToken.row,
-                                     argToken.column + argToken.val.toString().length,
-                                     "Internal Parser Error. Unknown argument signature type."));
+          errors.push(createParseError(argToken.range, "Internal Parser Error. Unknown argument signature type."));
           generatedError = true;
           break;
         }
@@ -533,7 +520,17 @@ function HmmmParser() {
       
     }
     
-    return { binary: binary, errors: errors }
+    if (errors.length > 0) {
+      return {
+        binary: undefined,
+        errors: errors,
+      };
+    };
+    
+    return { 
+      binary: binary, 
+      errors: errors
+    };
     
   }
   
@@ -556,4 +553,8 @@ function HmmmAssembler() {
   
 }
 
-module.exports = exports = HmmmAssembler;
+module.exports = exports = {
+  lexer: HmmmLexer,
+  parser: HmmmParser,
+  assembler: HmmmAssembler
+};
