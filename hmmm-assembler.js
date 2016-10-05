@@ -253,7 +253,7 @@ function HmmmLexer() {
 
 function HmmmParser() {
   
-  // 'use strict'
+  'use strict'
   
   // Error constructor
   
@@ -578,8 +578,9 @@ function HmmmParser() {
     var currentArgTokens = [];
     
     var token = undefined;
-    var bin = "";
     
+    var bin = "";
+    var errors = [];
     var generatedError = false;
     
     function throwParseError(message) {
@@ -587,7 +588,7 @@ function HmmmParser() {
       if (source !== undefined) {
         var lines = source.split("\n");
         console.log(lines[token.range.start.row - 1]);
-        var caratString = "\033[31m"; // Draw the error in red
+        var caratString = "\x1B[31m"; // Draw the error in red
         for (var k = 0; k < token.range.start.column - 1; ++k) {
           caratString += " ";
         }
@@ -595,9 +596,11 @@ function HmmmParser() {
         for (var k = 0; k < token.range.end.column - token.range.start.column - 1; ++k) {
           caratString += "~";
         }
-        caratString += "\033[0m";
+        caratString += "\x1B[0m";
         console.log(caratString);
       }
+      
+      errors.push(createParseError(token.range, message));
       
       generatedError = true;
       state = parserStates.ERROR;
@@ -741,10 +744,16 @@ function HmmmParser() {
     }
     
     if (generatedError) {
-      return undefined;
+      return {
+        binary: undefined,
+        errors: errors
+      }
     }
     
-    return bin;
+    return {
+      binary: bin,
+      errors: undefined
+    };
     
   }
   
