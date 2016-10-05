@@ -10,10 +10,8 @@ if (process && process.argv) {
   var lexer = new HmmmLexer();
   var tokens = lexer.lex(source);
   
-  console.log("Lexing completed.");
-  
   var parser = new HmmmParser();
-  var assembled = parser.parse(tokens);
+  var assembled = parser.parse(tokens, source);
   
   console.log(assembled);
   

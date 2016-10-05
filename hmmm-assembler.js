@@ -107,7 +107,7 @@ function HmmmLexer() {
   this.lex = function(source) {
     
     var lineNum = 1;
-    var colNum = 0; // Start at 0 since we haven't looked at any characters yet
+    var colNum = 1;
     var peek = '';
     
     // Inner functions for scanning
@@ -164,7 +164,7 @@ function HmmmLexer() {
           var range = createRange(lineNum, colNum, lineNum, colNum);
           tokens.push(createNewlineToken(range));
           lineNum += 1;
-          colNum = 0;
+          colNum = 1;
         }
         else {
           break;
@@ -190,8 +190,8 @@ function HmmmLexer() {
         continue;
       }
       
-      var start = createPoint(lineNum, colNum);
-      var end   = createPoint(lineNum, colNum + currToken.toString().length);
+      var start = createPoint(lineNum, colNum - currToken.toString().length);
+      var end   = createPoint(lineNum, colNum);
       var range = createRange(start, end);
       
       if (isNumericConstant(currToken)) {
@@ -223,7 +223,7 @@ function HmmmLexer() {
 
 function HmmmParser() {
   
-  'use strict'
+  // 'use strict'
   
   // Error constructor
   
@@ -539,7 +539,7 @@ function HmmmParser() {
     ERROR        : "ERROR"
   });
   
-  this.parse = function(tokens) {
+  this.parse = function(tokens, source) {
     
     var state = parserStates.INST_NUM;
     var nextInstNum = 0;
@@ -547,10 +547,29 @@ function HmmmParser() {
     var currentInstToken = undefined;
     var currentArgTokens = [];
     
+    var token = undefined;
     var bin = "";
     
+    var generatedError = false;
+    
     function throwParseError(message) {
-      console.log("ERROR: " + message);
+      console.log("ERROR [" + token.range.start.row + ":" + token.range.start.column + "]: " + message);
+      if (source !== undefined) {
+        var lines = source.split("\n");
+        console.log(lines[token.range.start.row - 1]);
+        var caratString = "\033[31m"; // Draw the error in red
+        for (var k = 0; k < token.range.start.column - 1; ++k) {
+          caratString += " ";
+        }
+        caratString += "^";
+        for (var k = 0; k < token.range.end.column - token.range.start.column - 1; ++k) {
+          caratString += "~";
+        }
+        caratString += "\033[0m";
+        console.log(caratString);
+      }
+      
+      generatedError = true;
       state = parserStates.ERROR;
     }
     
@@ -565,7 +584,7 @@ function HmmmParser() {
     }
     
     for (var i = 0; i < tokens.length; ++i) {
-      var token = tokens[i];
+      token = tokens[i];
       
       // Checking for the next instruction number
       if (state === parserStates.INST_NUM) {
@@ -573,9 +592,6 @@ function HmmmParser() {
         if (token.type === tokenTypes.COMMENT || 
             token.type === tokenTypes.NEWLINE) { continue; }
         
-        console.log("\n\n");
-        console.log(currentInstToken);
-        console.log(currentArgTokens);
         // Reset state
         currentInstToken = undefined;
         currentArgTokens = [];
@@ -584,9 +600,9 @@ function HmmmParser() {
           if (!(token.val === nextInstNum)) {
             throwParseError("Expected instruction number " + nextInstNum + " but found " + token.val);
             
-            // Force the instruction number to be the one found
+            // Force the instruction number to be one more than the one found
             // in order to try to suppress the same error on future lines
-            nextInstNum = token.val;
+            nextInstNum = token.val + 1;
           }
           else {
             nextInstNum += 1;
@@ -612,7 +628,7 @@ function HmmmParser() {
             continue;
           }
           
-          var argSignature = hmmm.signatures[token.val];
+          var argSignature = hmmm.signatures[hmmm.instructions[token.val]]; // Resolve aliases before grabbing signature
           var argCodes = argSignature.split("");
           nextArgTypes = []
           for (var j = 0; j < argCodes.length; ++j) {
@@ -682,6 +698,10 @@ function HmmmParser() {
         if (token.type === tokenTypes.NEWLINE) {
           state = parserStates.INST_NUM;
         }
+        else if (token.type === tokenTypes.REGISTER ||
+                 token.type === tokenTypes.CONSTANT) {
+          throwParseError("Too many arguments. The " + currentInstToken.val + " instruction only takes " + hmmm.signatures[hmmm.instructions[currentInstToken.val]].length  + " argument(s).");
+        }
         else {
           throwParseError("Expected end of line but found " + token.type);
         }
@@ -695,7 +715,11 @@ function HmmmParser() {
       
     }
     
-    console.log(bin);
+    if (generatedError) {
+      return undefined;
+    }
+    
+    return bin;
     
   }
   
