@@ -9,8 +9,30 @@ var tokenTypes = Object.freeze({
   REGISTER    : "REGISTER",
   CONSTANT    : "CONSTANT",
   COMMENT     : "COMMENT",
-  NEWLINE     : "NEWLINE"
+  NEWLINE     : "NEWLINE",
+  UNKNOWN     : "UNKNOWN"
 });
+
+function printableStringForType(tokenType) {
+  if (tokenType === tokenTypes.INSTRUCTION) {
+    return "instruction";
+  }
+  else if (tokenType === tokenTypes.REGISTER) {
+    return "register";
+  }
+  else if (tokenType === tokenTypes.CONSTANT) {
+    return "integer";
+  }
+  else if (tokenType === tokenTypes.COMMENT) {
+    return "comment";
+  }
+  else if (tokenType === tokenTypes.NEWLINE) {
+    return "newline";
+  }
+  else if (tokenType === tokenTypes.UNKNOWN) {
+    return "something odd...(looks like a syntax error)";
+  }
+}
 
 function createPoint(row, column) {
   return {
@@ -71,6 +93,14 @@ function createNewlineToken(range) {
   };
 };
 
+function createUnknownToken(range, value) {
+  return {
+    type: tokenTypes.UNKNOWN,
+    range: range,
+    val: value
+  };
+};
+
 //*********************************************
 // Lexer
 //*********************************************
@@ -97,7 +127,7 @@ function HmmmLexer() {
   }
   
   function isInstruction(string) {
-    return /^[a-zA-Z]+$/.test(string);
+    return string in hmmm.instructions;
   }
   
   function isTokenBreak(character) {
@@ -598,7 +628,7 @@ function HmmmParser() {
         
         if (token.type === tokenTypes.CONSTANT) {
           if (!(token.val === nextInstNum)) {
-            throwParseError("Expected instruction number " + nextInstNum + " but found " + token.val);
+            throwParseError("Expected instruction number " + nextInstNum + " but found " + printableStringForType(token.val));
             
             // Force the instruction number to be one more than the one found
             // in order to try to suppress the same error on future lines
@@ -610,7 +640,7 @@ function HmmmParser() {
           }
         }
         else {
-          throwParseError("Expected an instruction number but found " + token.type);
+          throwParseError("Expected an instruction number but found " + printableStringForType(token.type));
         }
         
       }
@@ -622,11 +652,6 @@ function HmmmParser() {
           
           // Figure out what the next parser states should be and keep them in a queue
           var currentInstToken = token;
-          
-          if (!(token.val in hmmm.instructions)) {
-            throwParseError("Unknown instruction");
-            continue;
-          }
           
           var argSignature = hmmm.signatures[hmmm.instructions[token.val]]; // Resolve aliases before grabbing signature
           var argCodes = argSignature.split("");
@@ -648,7 +673,7 @@ function HmmmParser() {
           
         }
         else {
-          throwParseError("Expected an instruction but found " + token.type);
+          throwParseError("Expected an instruction but found " + printableStringForType(token.type));
         }
       }
       
@@ -661,7 +686,7 @@ function HmmmParser() {
           
         }
         else {
-          throwParseError("Expected a register argument but found " + token.type);
+          throwParseError("Expected a register argument but found " + printableStringForType(token.type));
         }
       }
       
@@ -674,7 +699,7 @@ function HmmmParser() {
           
         }
         else {
-          throwParseError("Expected an unsigned integer argument but found " + token.type);
+          throwParseError("Expected an unsigned integer argument but found " + printableStringForType(token.type));
         }
       }
       
@@ -687,7 +712,7 @@ function HmmmParser() {
           
         }
         else {
-          throwParseError("Expected an signed integer argument but found " + token.type);
+          throwParseError("Expected an signed integer argument but found " + printableStringForType(token.type));
         }
       }
       
@@ -703,7 +728,7 @@ function HmmmParser() {
           throwParseError("Too many arguments. The " + currentInstToken.val + " instruction only takes " + hmmm.signatures[hmmm.instructions[currentInstToken.val]].length  + " argument(s).");
         }
         else {
-          throwParseError("Expected end of line but found " + token.type);
+          throwParseError("Expected end of line but found " + printableStringForType(token.type));
         }
       }
       
