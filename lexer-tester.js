@@ -11,6 +11,7 @@ if (process && process.argv) {
   
   for (var i = 0; i < tokens.length; ++i) {
     var t = tokens[i];
+    console.log(t.type);
     console.log(t.range.start);
     console.log(t.range.end);
     console.log(t.val);

@@ -13,10 +13,8 @@ if (process && process.argv) {
   console.log("Lexing completed.");
   
   var parser = new HmmmParser();
+  var assembled = parser.parse(tokens);
   
-  console.log(parser.padZeroesLeft("11111", 16));
-  // var assembled = parser.parse(tokens);
-  
-  // console.log(assembled);
+  console.log(assembled);
   
 }
