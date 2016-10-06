@@ -1,13 +1,11 @@
-var assembler = require('./hmmm-assembler');
-var HmmmLexer = assembler.lexer;
+var hmmm = require('./hmmm');
 
 if (process && process.argv) {
   
   var fs = require('fs');
   var source = fs.readFileSync(process.argv[2]).toString();
   
-  var lexer = new HmmmLexer();
-  var tokens = lexer.lex(source);
+  var tokens = hmmm.assembler.lex(source);
   
   for (var i = 0; i < tokens.length; ++i) {
     var t = tokens[i];
