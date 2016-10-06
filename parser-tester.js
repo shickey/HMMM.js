@@ -11,8 +11,15 @@ if (process && process.argv) {
   var tokens = lexer.lex(source);
   
   var parser = new HmmmParser();
-  var assembled = parser.parse(tokens, source);
+  var assembled = parser.parse(tokens);
   
-  console.log(assembled);
+  if (assembled.errors) {
+    assembled.errors.forEach(function(error) {
+      console.log(parser.prettyStringForError(error, source));
+    })
+  }
+  else {
+    console.log(assembled);
+  }
   
 }

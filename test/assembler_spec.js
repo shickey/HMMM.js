@@ -1,6 +1,6 @@
 var expect        = require('chai').expect;
 var fs            = require('fs');
-var HmmmAssembler = require('../hmmm-assembler.js');
+var AssemblerFunctions = require('../hmmm-assembler.js');
 
 describe('HmmmAssembler', function() {
   
@@ -20,14 +20,14 @@ describe('HmmmAssembler', function() {
   }
   
   beforeEach(function() {
-    assembler = new HmmmAssembler();
+    assembler = new AssemblerFunctions.assembler();
   });
   
   it('should return the correct HMMM binary for a valid HMMM source', function() {
     var validBinary = readTestFile('valid.out')
     var assembled = assembleFile('valid.hmmm')
     expect(assembled.binary).to.equal(validBinary);
-    expect(assembled.errors.length).to.equal(0);
+    expect(assembled.errors).to.be.undefined;
   });
   
   it('should return an error when syntax is invalid', function() {
@@ -55,36 +55,33 @@ describe('HmmmAssembler', function() {
     var assembled = assembleFile('wrong_num_args.hmmm');
     expect(assembled.errors.length).to.be.above(0)
     var error = assembled.errors[0];
-    expect(error.message).to.have.string('number of arguments');
+    expect(error.message).to.have.string('many arguments');
   });
   
   it('should return an error when an operation is given the wrong type of argument (expecting register)', function() {
     var assembled = assembleFile('wrong_arg_type_reg.hmmm');
     expect(assembled.errors.length).to.be.above(0)
     var error = assembled.errors[0];
-    expect(error.message).to.have.string('argument type');
-    expect(error.message).to.have.string('Expected register');
+    expect(error.message).to.have.string('Expected a register');
   });
   
   it('should return an error when an operation is given the wrong type of argument (expecting unsigned)', function() {
     var assembled = assembleFile('wrong_arg_type_unsigned.hmmm');
     expect(assembled.errors.length).to.be.above(0)
     var error = assembled.errors[0];
-    expect(error.message).to.have.string('argument type');
-    expect(error.message).to.have.string('Expected unsigned integer');
+    expect(error.message).to.have.string('Expected an unsigned integer');
   });
   
   it('should return an error when an operation is given the wrong type of argument (expecting signed)', function() {
     var assembled = assembleFile('wrong_arg_type_signed.hmmm');
     expect(assembled.errors.length).to.be.above(0)
     var error = assembled.errors[0];
-    expect(error.message).to.have.string('argument type');
-    expect(error.message).to.have.string('Expected signed integer');
+    expect(error.message).to.have.string('Expected a signed integer');
   });
   
   it('should allow commas as token delimiters, but only for arguments', function() {
     var validCommas = assembler.assemble('0 add r1,r2,r3 #comment');
-    expect(validCommas.errors.length).to.equal(0);
+    expect(validCommas.errors).to.be.undefined;
     expect(validCommas.binary).to.equal("0110 0001 0010 0011\n");
     
     var invalidCommas = assembler.assemble('0,add,r1 r2 r3');
