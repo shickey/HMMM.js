@@ -1,12 +1,12 @@
-var expect        = require('chai').expect;
-var fs            = require('fs');
-var AssemblerFunctions = require('../hmmm-assembler.js');
+var expect = require('chai').expect;
+var fs     = require('fs');
+var hmmm   = require('../hmmm.js');
 
 describe('HmmmAssembler', function() {
   
   this.timeout(500);
   
-  var assembler;
+  var assembler = hmmm.assembler;
   
   function readTestFile(filename) {
     var filepath = 'test/test_files/';
@@ -18,10 +18,6 @@ describe('HmmmAssembler', function() {
     var source = readTestFile(filename);
     return assembler.assemble(source);
   }
-  
-  beforeEach(function() {
-    assembler = new AssemblerFunctions.assembler();
-  });
   
   it('should return the correct HMMM binary for a valid HMMM source', function() {
     var validBinary = readTestFile('valid.out')

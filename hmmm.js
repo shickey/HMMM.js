@@ -327,7 +327,7 @@ var hmmm = hmmm || {};
     function scanToTokenBreak() {
       var chars = peek;
       var next = lookAhead(1);
-      while (!isTokenBreak(next)) {
+      while (next && !isTokenBreak(next)) {
         peek = getNextChar();
         chars += peek;
         next = lookAhead(1);
@@ -338,7 +338,7 @@ var hmmm = hmmm || {};
     function scanToLineBreak() {
       var chars = peek;
       var next = lookAhead(1);
-      while (!isNewline(next)) {
+      while (next && !isNewline(next)) {
         peek = getNextChar();
         chars += peek;
         next = lookAhead(1);
