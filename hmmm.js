@@ -1,7 +1,7 @@
 /**
  * HMMM.js
  * 
- * A javascript implementation of HMMM (Harvey-Mudd Miniature Machine) [https://www.cs.hmc.edu/~cs5grad/cs5/hmmm/documentation/documentation.html]
+ * A javascript implementation of [Harvey-Mudd Miniature Machine (HMMM)](https://www.cs.hmc.edu/~cs5grad/cs5/hmmm/documentation/documentation.html)
  *
  * 2014-2016 Sean Hickey
  * https://github.com/shickey/HMMM.js

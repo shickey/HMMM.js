@@ -1,7 +1,7 @@
 # HMMM.js
 
-A JavaScript implementation of an assembler and simulator for the HMMM (Harvey Mudd Miniature Machine) assembly language.
+A javascript implementation of [Harvey-Mudd Miniature Machine (HMMM)](https://www.cs.hmc.edu/~cs5grad/cs5/hmmm/documentation/documentation.html)
 
 ## Online Simulator
 
-HMMM.js powers the online HMMM simulator found [here](http://shickey.github.io/HMMM.js/)
+HMMM.js powers [the online HMMM simulator](http://shickey.github.io/HMMM.js/)
