@@ -1438,4 +1438,4 @@ var hmmm = hmmm || {};
  })();
 
 // Expose HMMM to the outside world!
-module.exports = exports = hmmm
+module.exports = exports = hmmm;
