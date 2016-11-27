@@ -1,4 +1,4 @@
-var hmmm = require('./hmmm');
+var hmmm = require('../hmmm');
 
 if (process && process.argv) {
   

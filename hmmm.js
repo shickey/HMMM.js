@@ -793,7 +793,7 @@ var hmmm = hmmm || {};
     parse: parse,
     assemble: assemble,
     prettyStringForError: prettyStringForError
-  }
+  };
   
   
   
@@ -836,7 +836,7 @@ var hmmm = hmmm || {};
       addUndoMarker: addUndoMarker,
       addUndoableAction: addUndoableAction,
       undo: undo,
-      clearStack: clearStack,
+      clearStack: clearStack
     }
     
   }
@@ -1019,91 +1019,15 @@ var hmmm = hmmm || {};
       });
     }
     
+    //---------------------------------------
+    // Simulation Functions
+    //---------------------------------------
+    
     function throwSimulationError(message) {
       setMachineState(simulatorStates.ERROR);
       if (errHandler) {
         errHandler("ERROR: " + message);
       }
-    }
-    
-    //---------------------------------------
-    // Instruction Functions
-    //---------------------------------------
-    
-    function instructionFromBinary(binInst) {
-      var decoded = decodeBinaryInstruction(binInst);
-      if (!decoded) {
-        return;
-      }
-      var instString = decoded.operation;
-      for (var i = 0; i < decoded.args.length; ++i) {
-        var arg = decoded.args[i];
-        instString = instString + " " + arg;
-      }
-      return instString;
-    }
-    
-    function decodeBinaryInstruction(binInst) {
-      var encoded = binInst;
-      var decoded = {
-        operation : null,
-        args      : []
-      };
-      
-      // Find the correct operation by iterating over the
-      // list of instructions in order of precedence
-      hmmm.lang.opcodePrecedence.some(function(operation){
-        var opcode = parseInt(hmmm.lang.opcodes[operation].opcode, 2);
-        var mask   = parseInt(hmmm.lang.opcodes[operation].mask,   2);
-        if ((encoded & mask) === opcode) {
-          // We found the right operation
-          decoded.operation = operation;
-          return true;
-        }
-      });
-      
-      if (!decoded.operation) {
-        // We couldn't decode the operation
-        // TODO: Handle this situation
-        return;
-      }
-      
-      // Parse Arguments
-      var signature = hmmm.lang.signatures[decoded.operation];
-      encoded = encoded << 4;
-      for (var i = 0; i < signature.length; ++i) {
-        var type = signature.charAt(i);
-        if (type === "r") {
-          var reg = (encoded & 0xf000) >> 12;
-          decoded.args.push("r" + reg);
-          encoded = encoded << 4;
-        }
-        else if (type === "s") {
-          var num = (encoded & 0xff00) >> 8;
-          if ((num & 0x80) !== 0) {
-            num -= 256; // Account for sign
-          }
-          decoded.args.push(num);
-          encoded = encoded << 8;
-        }
-        else if (type === "u") {
-          var num = (encoded & 0xff00) >> 8;
-          decoded.args.push(num);
-          encoded = encoded << 8;
-        }
-        else if (type === "z") {
-          encoded = encoded << 4;
-        }
-        else if (type === "n") {
-          decoded.args.push(encoded);
-          encoded = encoded << 16;
-        }
-        else {
-          // TODO: Internal inconsistency error
-          return;
-        }
-      }
-      return decoded;
     }
     
     function executeInstruction(operation, args) {
@@ -1421,7 +1345,95 @@ var hmmm = hmmm || {};
 
   hmmm.simulator = {
     createSimulator: createSimulator
+  };
+
+  
+  //*********************************************
+  //
+  // HMMM Utils
+  //
+  //*********************************************
+  
+  // TODO: Is this the right location for these function declarations?
+
+  function decodeBinaryInstruction(binInst) {
+    var encoded = binInst;
+    var decoded = {
+      operation : null,
+      args      : []
+    };
+    
+    // Find the correct operation by iterating over the
+    // list of instructions in order of precedence
+    hmmm.lang.opcodePrecedence.some(function(operation){
+      var opcode = parseInt(hmmm.lang.opcodes[operation].opcode, 2);
+      var mask   = parseInt(hmmm.lang.opcodes[operation].mask,   2);
+      if ((encoded & mask) === opcode) {
+        // We found the right operation
+        decoded.operation = operation;
+        return true;
+      }
+    });
+    
+    if (!decoded.operation) {
+      // We couldn't decode the operation
+      return undefined;
+    }
+    
+    // Parse Arguments
+    var signature = hmmm.lang.signatures[decoded.operation];
+    encoded = encoded << 4;
+    for (var i = 0; i < signature.length; ++i) {
+      var type = signature.charAt(i);
+      if (type === "r") {
+        var reg = (encoded & 0xf000) >> 12;
+        decoded.args.push("r" + reg);
+        encoded = encoded << 4;
+      }
+      else if (type === "s") {
+        var num = (encoded & 0xff00) >> 8;
+        if ((num & 0x80) !== 0) {
+          num -= 256; // Account for sign
+        }
+        decoded.args.push(num);
+        encoded = encoded << 8;
+      }
+      else if (type === "u") {
+        var num = (encoded & 0xff00) >> 8;
+        decoded.args.push(num);
+        encoded = encoded << 8;
+      }
+      else if (type === "z") {
+        encoded = encoded << 4;
+      }
+      else if (type === "n") {
+        decoded.args.push(encoded);
+        encoded = encoded << 16;
+      }
+      else {
+        // TODO: Internal inconsistency error
+        return undefined;
+      }
+    }
+    return decoded;
   }
+    
+  function instructionFromBinary(binInst) {
+    var decoded = decodeBinaryInstruction(binInst);
+    if (!decoded) {
+      return;
+    }
+    var instString = decoded.operation;
+    for (var i = 0; i < decoded.args.length; ++i) {
+      var arg = decoded.args[i];
+      instString = instString + " " + arg;
+    }
+    return instString;
+  }
+
+  hmmm.util = {
+    instructionFromBinary: instructionFromBinary
+  };
   
  })();
 
