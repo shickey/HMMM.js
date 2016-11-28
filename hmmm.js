@@ -150,6 +150,152 @@ var hmmm = hmmm || {};
   });
 
 
+  //*********************************************
+  //
+  // HMMM Utils
+  //
+  //*********************************************
+
+  function decodeBinaryInstruction(binInst) {
+    var encoded = binInst;
+    var decoded = {
+      operation : null,
+      args      : []
+    };
+    
+    // Find the correct operation by iterating over the
+    // list of instructions in order of precedence
+    hmmm.lang.opcodePrecedence.some(function(operation){
+      var opcode = parseInt(hmmm.lang.opcodes[operation].opcode, 2);
+      var mask   = parseInt(hmmm.lang.opcodes[operation].mask,   2);
+      if ((encoded & mask) === opcode) {
+        // We found the right operation
+        decoded.operation = operation;
+        return true;
+      }
+    });
+    
+    if (!decoded.operation) {
+      // We couldn't decode the operation
+      return undefined;
+    }
+    
+    // Parse Arguments
+    var signature = hmmm.lang.signatures[decoded.operation];
+    encoded = encoded << 4;
+    for (var i = 0; i < signature.length; ++i) {
+      var type = signature.charAt(i);
+      if (type === "r") {
+        var reg = (encoded & 0xf000) >> 12;
+        decoded.args.push("r" + reg);
+        encoded = encoded << 4;
+      }
+      else if (type === "s") {
+        var num = (encoded & 0xff00) >> 8;
+        if ((num & 0x80) !== 0) {
+          num -= 256; // Account for sign
+        }
+        decoded.args.push(num);
+        encoded = encoded << 8;
+      }
+      else if (type === "u") {
+        var num = (encoded & 0xff00) >> 8;
+        decoded.args.push(num);
+        encoded = encoded << 8;
+      }
+      else if (type === "z") {
+        encoded = encoded << 4;
+      }
+      else if (type === "n") {
+        decoded.args.push(encoded);
+        encoded = encoded << 16;
+      }
+      else {
+        // TODO: Internal inconsistency error
+        return undefined;
+      }
+    }
+    return decoded;
+  }
+    
+  function instructionFromBinary(binInst) {
+    var decoded = decodeBinaryInstruction(binInst);
+    if (!decoded) {
+      return;
+    }
+    var instString = decoded.operation;
+    for (var i = 0; i < decoded.args.length; ++i) {
+      var arg = decoded.args[i];
+      instString = instString + " " + arg;
+    }
+    return instString;
+  }
+
+  function binaryForInteger(integer, width) {
+    if (width === undefined) {
+      width = 8;
+    }
+
+    // TODO: This should probably check for negative underflow as well?
+    if (integer > Math.pow(2,width)) {
+      // TODO: Overflow!
+    }
+
+    if (integer < 0) {
+      // Two's Complement
+      var positive = padZeroesLeft(Math.abs(integer).toString(2), width);
+      var flipped = flipBitstring(positive);
+      var backToNum = parseInt(flipped, 2);
+      return padZeroesLeft((backToNum + 1).toString(2), width);
+    }
+
+    return padZeroesLeft(parseInt(integer).toString(2), width);
+  }
+  
+  function padZeroesLeft(string, width) {
+    var pad = "";
+    for (var i = 0; i < width - string.length; ++i) {
+      pad += "0";
+    }
+    return pad + string;
+  }
+
+  function flipBitstring(bitstring) {
+    var flipped = "";
+    for (var i = 0; i < bitstring.length; ++i) {
+      if (bitstring[i] == "0") {
+        flipped += "1"
+      }
+      else if (bitstring[i] == "1") {
+        flipped += "0"
+      }
+      else {
+        return null;
+      }
+    }
+    return flipped;
+  }
+  
+  function spaceIntoNibbles(bitstring) {
+    var spaced = "";
+    for (var i = 0; i < bitstring.length; ++i) {
+      if (i % 4 === 0 && i !== 0) {
+        spaced += " ";
+      }
+      spaced += bitstring[i];
+    }
+    return spaced;
+  }
+
+  hmmm.util = {
+    instructionFromBinary: instructionFromBinary,
+    binaryForInteger: binaryForInteger,
+    padZeroesLeft: padZeroesLeft,
+    flipBitstring: flipBitstring,
+    spaceIntoNibbles: spaceIntoNibbles
+  };
+
+
 
 
 
@@ -448,62 +594,6 @@ var hmmm = hmmm || {};
   function binaryForRegister(register) {
     var bin_string = (+(register.slice(1))).toString(2);
     return padZeroesLeft(bin_string, 4);
-  }
-
-  function binaryForInteger(integer, width) {
-    if (width === undefined) {
-      width = 8;
-    }
-
-    // TODO: This should probably check for negative underflow as well?
-    if (integer > Math.pow(2,width)) {
-      // TODO: Overflow!
-    }
-
-    if (integer < 0) {
-      // Two's Complement
-      var positive = padZeroesLeft(Math.abs(integer).toString(2), width);
-      var flipped = flipBitstring(positive);
-      var backToNum = parseInt(flipped, 2);
-      return padZeroesLeft((backToNum + 1).toString(2), width);
-    }
-
-    return padZeroesLeft(parseInt(integer).toString(2), width);
-  }
-  
-  function padZeroesLeft(string, width) {
-    var pad = "";
-    for (var i = 0; i < width - string.length; ++i) {
-      pad += "0";
-    }
-    return pad + string;
-  }
-
-  function flipBitstring(bitstring) {
-    var flipped = "";
-    for (var i = 0; i < bitstring.length; ++i) {
-      if (bitstring[i] == "0") {
-        flipped += "1"
-      }
-      else if (bitstring[i] == "1") {
-        flipped += "0"
-      }
-      else {
-        return null;
-      }
-    }
-    return flipped;
-  }
-  
-  function spaceIntoNibbles(bitstring) {
-    var spaced = "";
-    for (var i = 0; i < bitstring.length; ++i) {
-      if (i % 4 === 0 && i !== 0) {
-        spaced += " ";
-      }
-      spaced += bitstring[i];
-    }
-    return spaced;
   }
   
   function binaryForTokens(instToken, argTokens) {
@@ -1345,94 +1435,6 @@ var hmmm = hmmm || {};
 
   hmmm.simulator = {
     createSimulator: createSimulator
-  };
-
-  
-  //*********************************************
-  //
-  // HMMM Utils
-  //
-  //*********************************************
-  
-  // TODO: Is this the right location for these function declarations?
-
-  function decodeBinaryInstruction(binInst) {
-    var encoded = binInst;
-    var decoded = {
-      operation : null,
-      args      : []
-    };
-    
-    // Find the correct operation by iterating over the
-    // list of instructions in order of precedence
-    hmmm.lang.opcodePrecedence.some(function(operation){
-      var opcode = parseInt(hmmm.lang.opcodes[operation].opcode, 2);
-      var mask   = parseInt(hmmm.lang.opcodes[operation].mask,   2);
-      if ((encoded & mask) === opcode) {
-        // We found the right operation
-        decoded.operation = operation;
-        return true;
-      }
-    });
-    
-    if (!decoded.operation) {
-      // We couldn't decode the operation
-      return undefined;
-    }
-    
-    // Parse Arguments
-    var signature = hmmm.lang.signatures[decoded.operation];
-    encoded = encoded << 4;
-    for (var i = 0; i < signature.length; ++i) {
-      var type = signature.charAt(i);
-      if (type === "r") {
-        var reg = (encoded & 0xf000) >> 12;
-        decoded.args.push("r" + reg);
-        encoded = encoded << 4;
-      }
-      else if (type === "s") {
-        var num = (encoded & 0xff00) >> 8;
-        if ((num & 0x80) !== 0) {
-          num -= 256; // Account for sign
-        }
-        decoded.args.push(num);
-        encoded = encoded << 8;
-      }
-      else if (type === "u") {
-        var num = (encoded & 0xff00) >> 8;
-        decoded.args.push(num);
-        encoded = encoded << 8;
-      }
-      else if (type === "z") {
-        encoded = encoded << 4;
-      }
-      else if (type === "n") {
-        decoded.args.push(encoded);
-        encoded = encoded << 16;
-      }
-      else {
-        // TODO: Internal inconsistency error
-        return undefined;
-      }
-    }
-    return decoded;
-  }
-    
-  function instructionFromBinary(binInst) {
-    var decoded = decodeBinaryInstruction(binInst);
-    if (!decoded) {
-      return;
-    }
-    var instString = decoded.operation;
-    for (var i = 0; i < decoded.args.length; ++i) {
-      var arg = decoded.args[i];
-      instString = instString + " " + arg;
-    }
-    return instString;
-  }
-
-  hmmm.util = {
-    instructionFromBinary: instructionFromBinary
   };
   
  })();
