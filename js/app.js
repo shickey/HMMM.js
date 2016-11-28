@@ -8,7 +8,7 @@ app.run(function($rootScope, $location) {
   }
   
   $rootScope.$on('$routeChangeSuccess', function() {
-    ga('send', 'pageview', $location.path());
+    // ga('send', 'pageview', $location.path());
   });
   
 });
@@ -16,15 +16,15 @@ app.run(function($rootScope, $location) {
 app.config(function($routeProvider) {
   $routeProvider
     .when('/', {
-      templateUrl: 'editor.html',
+      templateUrl: 'templates/editor.html',
       controller: 'EditorCtrl'
     })
     .when('/simulate', {
-      templateUrl: 'simulator.html',
+      templateUrl: 'templates/simulator.html',
       controller: 'SimulatorCtrl'
     })
     .when('/about', {
-      templateUrl: 'about.html'
+      templateUrl: 'templates/about.html'
     })
     .otherwise({
       redirectTo: '/'
@@ -33,13 +33,11 @@ app.config(function($routeProvider) {
 
 app.factory('HmmmSim', function() {
   
-  var _simulator = new HmmmSimulator();
   var _showInstructions = true;
   var _hmmmCode = undefined;
   var _binary = undefined;
   
   return {
-    simulator: _simulator,
     getShowInstructions: function() {
       return _showInstructions;
     },
@@ -67,65 +65,14 @@ app.factory('HmmmSim', function() {
 
 app.filter('binary', function() {
   
-  function padZeroesLeft(string, width) {
-    var pad = "";
-    for (var i = 0; i < width; ++i) {
-      pad += "0";
-    }
-    return pad.substring(0, pad.length - string.length) + string;
-  }
-  
-  function binaryForInteger(integer, width) {
-    if (width === undefined) {
-      width = 16;
-    }
-    
-    if (integer < 0) {
-      // Two's Complement
-      var positive = padZeroesLeft(Math.abs(integer).toString(2), width);
-      var flipped = flipBitstring(positive);
-      var backToNum = parseInt(flipped, 2);
-      return padZeroesLeft((backToNum + 1).toString(2), width);
-    }
-
-    return padZeroesLeft(parseInt(integer).toString(2), width);
-  }
-
-  function flipBitstring(bitstring) {
-    var flipped = "";
-    for (var i = 0; i < bitstring.length; ++i) {
-      if (bitstring[i] == "0") {
-        flipped += "1"
-      }
-      else if (bitstring[i] == "1") {
-        flipped += "0"
-      }
-      else {
-        return null;
-      }
-    }
-    return flipped;
-  }
-  
-  function spaceIntoNibbles(bitstring) {
-    var spaced = "";
-    for (var i = 0; i < bitstring.length; ++i) {
-      if (i % 4 === 0 && i !== 0) {
-        spaced += " ";
-      }
-      spaced += bitstring[i];
-    }
-    return spaced;
-  }
-  
   return function(input) {
-    return spaceIntoNibbles(binaryForInteger(input, 16));
+    return hmmm.util.spaceIntoNibbles(hmmm.util.binaryForInteger(input, 16));
   };
 });
 
 app.filter('instruction', ['HmmmSim', function(HmmmSim) {
   return function(input) {
-    return HmmmSim.simulator.instructionFromBinary(input);
+    return hmmm.util.instructionFromBinary(input);
   }
 }]);
 
@@ -145,7 +92,7 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   binEditor.setShowPrintMargin(false);
   binEditor.setValue(HmmmSim.getBinary());
   
-  var assembler = new HmmmAssembler();
+  var assembler = hmmm.assembler;
   
   var Range = ace.require("ace/range").Range;
   
@@ -162,7 +109,7 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   
   
   $scope.assemble = function() {
-    
+
     var session = hmmmEditor.session;
     session.clearAnnotations();
     errorMarkerIds.forEach(function(markerId) {
@@ -171,17 +118,17 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
     errorMarkerIds = [];
     
     var output = assembler.assemble(hmmmEditor.getValue());
-    if (output.errors.length !== 0) {
+    if (output.errors !== undefined) {
       
       $scope.enableSimulation = false;
       
       session.setAnnotations(output.errors.map(function(e){
-        var markerRange = new Range(e.startRow - 1, e.startColumn - 1, e.endRow - 1, e.endColumn - 1);
+        var markerRange = new Range(e.range.start.row - 1, e.range.start.column - 1, e.range.end.row - 1, e.range.end.column - 1);
         var markerId = session.addMarker(markerRange, "hmmm-error", "text");
         errorMarkerIds.push(markerId);
         return {
-          row: e.startRow - 1,
-          column: e.startColumn,
+          row: e.range.start.row - 1,
+          column: e.range.start.column,
           text: e.message,
           type: "error"
         }
@@ -260,13 +207,9 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
     hmmmConsole.insert(data + "\n");
   }
   
-  var simulator = HmmmSim.simulator;
+  var simulator = hmmm.simulator.createSimulator(inHandler, outAndErrHandler, outAndErrHandler);
   $scope.simulator = simulator;
-  simulator.resetMachine(true);
-  simulator.inHandler = inHandler;
-  simulator.outHandler = outAndErrHandler;
-  simulator.errHandler = outAndErrHandler;
-  
+
   var binary = HmmmSim.getBinary();
   if (!binary) {
     // $location.path("/")
@@ -279,7 +222,7 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
   
   $scope.runProgram = function() {
     var execute = function() {
-      if (simulator.state !== simulator.states.ERROR && simulator.state !== simulator.states.HALT) {
+      if (simulator.state !== hmmm.simulator.simulatorStates.ERROR && simulator.state !== hmmm.simulator.simulatorStates.HALT) {
         $scope.currentTimeout = $timeout(execute, $scope.timingDelay);
         simulator.runNextInstruction();
       }

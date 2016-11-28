@@ -52,11 +52,11 @@
           <th class="ram-binary-column">Binary</th>
           <th class="ram-value-column">Value</th>
         </thead>
-        <tr ng-repeat="address in simulator.ram track by $index" ng-class="{ danger: simulator.boundary > $index }">
+        <tr ng-repeat="address in simulator.ram track by $index" ng-class="{ danger: simulator.codeSegmentBoundary > $index }">
           <td><span ng-show="simulator.pc == $index">pc <span class="glyphicon glyphicon-arrow-right"></span></span> {{$index}}</td>
           <td>{{address | binary}}</td>
-          <td ng-if="simulator.boundary > $index">{{address | instruction}}</td>
-          <td ng-if="simulator.boundary <= $index">{{address}}</td>
+          <td ng-if="simulator.codeSegmentBoundary > $index">{{address | instruction}}</td>
+          <td ng-if="simulator.codeSegmentBoundary <= $index">{{address}}</td>
         </tr>
       </table>
     </div>
