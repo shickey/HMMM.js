@@ -99,7 +99,7 @@ app.filter('nibble', function() {
 
 app.filter('instruction', ['HmmmSim', function(HmmmSim) {
   return function(input) {
-    return hmmm.util.instructionFromBinary(input);
+    return hmmm.util.instructionFromBinary(input) || "[Invalid instruction]";
   }
 }]);
 
@@ -239,7 +239,7 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
 
   var binary = HmmmSim.getBinary();
   if (!binary) {
-    // $location.path("/")
+    $location.path("/")
   }
   else {
     simulator.loadBinary(HmmmSim.getBinary());
@@ -279,5 +279,22 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
   $scope.stepBack = function() {
     simulator.stepBackward();
   }
+
+  $scope.selectedRamIndex = -1;
+
+  $scope.selectRam = function(index) {
+    $scope.selectedRamIndex = index;
+  }
+
+  $scope.ramViews = {
+    GRID: "GRID",
+    LIST: "LIST"
+  };
+
+  $scope.ramView = $scope.ramViews.GRID;
+
+  $scope.changeRamView = function(viewType) {
+    $scope.ramView = viewType;
+  };
   
 }]);

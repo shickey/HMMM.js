@@ -28,7 +28,7 @@ table tr td:first-child, table th:first-child {
 }
 
 #hmmm-console {
-  height: 160px;
+  height: 120px;
 }
 
 .simulator-controls {
@@ -83,29 +83,60 @@ table tr td:first-child, table th:first-child {
   width: 6%;
 }
 
+.pc-pointer {
+  color: #FFED58;
+}
+
+.last-pc-pointer {
+  color: #D46755;
+}
+
 .code-seg {
-  background-color: red;
+  background-color: #6BB997;
 }
 
 .pc-index {
-  background-color: yellow;
+  background-color: #FFED58;
+}
+
+.last-pc-index {
+  background-color: #D46755;
 }
 
 .changed-ram {
+  background-color: #EBC3F5;
+}
+
+.changed-ram-animated {
   animation-duration: 1s;
   animation-name: ram-animation;
-  background-color: #FFFD9D;
 }
 
 @keyframes ram-animation {
   from {
-    background-color: #FFEE07;
+    background-color: #D68EF5;
   }
   to {
-    background-color: #FFFD9D;
+    background-color: #EBC3F5;
   }
 }
 
+.selected-ram {
+  font-weight: bold;
+}
+
+.ram-table-info {
+  margin-top: 21px;
+}
+
+/* Bootstrap Overrides */
+
+/*.dl-horizontal dt {
+  width: 300px;
+}
+.dl-horizontal dd {
+  margin-left: 320px;
+}*/
 
 /* Animations */
 
