@@ -52,8 +52,8 @@
       <div class="panel-heading clearfix">
         <h4 class="pull-left">RAM</h4>
         <div class="btn-group pull-right" role="group">
-            <button type="button" class="btn btn-default" ng-class="active: ramView == ramViews.GRID" ng-click="changeRamView(ramViews.GRID)"><span class="glyphicon glyphicon-th"></span> Grid View</button>
-            <button type="button" class="btn btn-default" ng-class="active: ramView == ramViews.LIST" ng-click="changeRamView(ramViews.LIST)"><span class="glyphicon glyphicon-th-list"></span> List View</button>
+            <button type="button" class="btn btn-default" ng-class="{ active: ramView == ramViews.GRID }" ng-click="changeRamView(ramViews.GRID)"><span class="glyphicon glyphicon-th"></span> Grid View</button>
+            <button type="button" class="btn btn-default" ng-class="{ active: ramView == ramViews.LIST }" ng-click="changeRamView(ramViews.LIST)"><span class="glyphicon glyphicon-th-list"></span> List View</button>
         </div>
       </div>
 
