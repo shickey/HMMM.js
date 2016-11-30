@@ -10,6 +10,14 @@ app.run(function($rootScope, $location) {
   $rootScope.$on('$routeChangeSuccess', function() {
     // ga('send', 'pageview', $location.path());
   });
+
+  $rootScope.range = function(num) {
+    var r = []
+    for (var i = 0; i < num; ++i) {
+      r.push(i);
+    }
+    return r;
+  }
   
 });
 
@@ -68,6 +76,25 @@ app.filter('binary', function() {
   return function(input) {
     return hmmm.util.spaceIntoNibbles(hmmm.util.binaryForInteger(input, 16));
   };
+
+});
+
+app.filter('hex', function() {
+
+  return function(input) {
+    var bin = parseInt(hmmm.util.binaryForInteger(input, 16), 2);
+    return hmmm.util.padZeroesLeft(bin.toString(16).toUpperCase(), 2);
+  };
+
+});
+
+app.filter('nibble', function() {
+
+  return function(input) {
+    var bin = parseInt(hmmm.util.binaryForInteger(input, 16), 2)
+    return hmmm.util.padZeroesLeft(bin.toString(16).toUpperCase(), 4);
+  };
+
 });
 
 app.filter('instruction', ['HmmmSim', function(HmmmSim) {

@@ -287,12 +287,24 @@ var hmmm = hmmm || {};
     return spaced;
   }
 
+  function spaceIntoBytes(bitstring) {
+    var spaced = "";
+    for (var i = 0; i < bitstring.length; ++i) {
+      if (i % 2 === 0 && i !== 0) {
+        spaced += " ";
+      }
+      spaced += bitstring[i];
+    }
+    return spaced;
+  }
+
   hmmm.util = {
     instructionFromBinary: instructionFromBinary,
     binaryForInteger: binaryForInteger,
     padZeroesLeft: padZeroesLeft,
     flipBitstring: flipBitstring,
-    spaceIntoNibbles: spaceIntoNibbles
+    spaceIntoNibbles: spaceIntoNibbles,
+    spaceIntoBytes: spaceIntoBytes
   };
 
 

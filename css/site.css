@@ -75,6 +75,37 @@ table tr td:first-child, table th:first-child {
   width: 45%;
 }
 
+.ram-base-column {
+  width: 4%;
+}
+
+.ram-column {
+  width: 6%;
+}
+
+.code-seg {
+  background-color: red;
+}
+
+.pc-index {
+  background-color: yellow;
+}
+
+.changed-ram {
+  animation-duration: 1s;
+  animation-name: ram-animation;
+  background-color: #FFFD9D;
+}
+
+@keyframes ram-animation {
+  from {
+    background-color: #FFEE07;
+  }
+  to {
+    background-color: #FFFD9D;
+  }
+}
+
 
 /* Animations */
 
