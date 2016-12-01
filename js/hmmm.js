@@ -1006,7 +1006,7 @@ var hmmm = hmmm || {};
       if (jumpTarget < 0 || jumpTarget >= RAM_SIZE) {
         return false;
       }
-      if (machine.mode == simulatorModes.SAFE && jumpTarget >= codeSegmentBoundary) {
+      if (machine.mode == simulatorModes.SAFE && jumpTarget >= machine.codeSegmentBoundary) {
         return false;
       }
       return true;

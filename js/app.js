@@ -133,6 +133,12 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   else {
     $scope.enableSimulation = false;
   }
+
+  $scope.examples = examples; // Global loaded from hmmm_examples.js
+
+  $scope.selectExample = function(index) {
+    HmmmSim.setHmmmCode(examples[index].code);
+  }
   
   
   $scope.assemble = function() {
