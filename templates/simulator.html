@@ -34,12 +34,12 @@
             <th class="cpu-hex-column">Hex</th>
             <th class="cpu-value-column">Decimal/Instruction</th>
           </thead>
-          <tr><td>pc</td><td>{{simulator.pc | binary}}</td><td>0x{{simulator.pc | nibble}}</td><td>{{simulator.pc}}</td></tr>
-          <tr><td>ir</td><td>{{simulator.ir | binary}}</td><td>0x{{simulator.ir | nibble}}</td><td>{{simulator.ir | instruction}}</td></tr>
+          <tr><td>pc</td><td>{{simulator.pc | binary}}</td><td>0x{{simulator.pc | word}}</td><td>{{simulator.pc}}</td></tr>
+          <tr><td>ir</td><td>{{simulator.ir | binary}}</td><td>0x{{simulator.ir | word}}</td><td>{{simulator.ir | instruction}}</td></tr>
           <tr ng-repeat="register in simulator.registers track by $index">
             <td>{{"r" + $index}}</td>
             <td>{{register | binary}}</td>
-            <td>0x{{register | nibble}}</td>
+            <td>0x{{register | word}}</td>
             <td>{{register}}</td>
           </tr>
         </table>
@@ -61,21 +61,21 @@
       <table class="table table-bordered table-very-condensed" ng-show="ramView == ramViews.GRID">
         <thead>
           <th class="ram-base-column"></th>
-          <th ng-repeat="i in range(16)" class="ram-column text-right">{{ i | hex }}</th>
+          <th ng-repeat="i in range(16)" class="ram-column text-right">{{ i | byte }}</th>
         </thead>
         <tr ng-repeat="i in range(16)">
-          <td class="text-right">{{i * 16 | hex}}</td>
-          <td ng-repeat="j in range(16)" ng-class="{ 'code-seg': simulator.codeSegmentBoundary > (i * 16) + j , 'last-pc-index': simulator.lastPc == (i * 16) + j, 'pc-index': simulator.pc == (i * 16) + j, 'changed-ram': (simulator.ram[(i * 16) + j] != 0) && (i * 16) + j >= simulator.codeSegmentBoundary, 'changed-ram-animated': (simulator.ram[(i * 16) + j] != 0) && (i * 16) + j >= simulator.codeSegmentBoundary, 'selected-ram': (i * 16) + j == selectedRamIndex }" ng-click="selectRam((i * 16) +j)" class="text-right">{{ simulator.ram[(i * 16) + j] | nibble }}</td>
+          <td class="text-right">{{i * 16 | byte}}</td>
+          <td ng-repeat="j in range(16)" ng-class="{ 'code-seg': simulator.codeSegmentBoundary > (i * 16) + j , 'last-pc-index': simulator.lastPc == (i * 16) + j, 'pc-index': simulator.pc == (i * 16) + j, 'changed-ram': (simulator.ram[(i * 16) + j] != 0) && (i * 16) + j >= simulator.codeSegmentBoundary, 'changed-ram-animated': (simulator.ram[(i * 16) + j] != 0) && (i * 16) + j >= simulator.codeSegmentBoundary, 'selected-ram': (i * 16) + j == selectedRamIndex }" ng-click="selectRam((i * 16) +j)" class="text-right" style="font-family: 'Droid Sans Mono', monospace;">{{ simulator.ram[(i * 16) + j] | word }}</td>
         </tr>
       </table>
 
-      <div class="ram-table-info">
+      <div class="ram-table-info" ng-show="ramView == ramViews.GRID">
         <div class="row">
           <div class="col-md-8">
-            <dl class="dl-horizontal" ng-show="ramView == ramViews.GRID">
-              <dt>Selected Address</dt><dd>{{selectedRamIndex >= 0 ? ("0x" + (selectedRamIndex | hex)) : ""}}</dd>
+            <dl class="dl-horizontal">
+              <dt>Selected Address</dt><dd>{{selectedRamIndex >= 0 ? ("0x" + (selectedRamIndex | byte)) : ""}}</dd>
               <dt>Binary Value</dt><dd>{{selectedRamIndex >= 0 ? (simulator.ram[selectedRamIndex] | binary) : ""}}</dd>
-              <dt>Hex Value</dt><dd>{{selectedRamIndex >= 0 ? ("0x" + (simulator.ram[selectedRamIndex] | nibble)) : ""}}</dd>
+              <dt>Hex Value</dt><dd>{{selectedRamIndex >= 0 ? ("0x" + (simulator.ram[selectedRamIndex] | word)) : ""}}</dd>
               <dt>Instruction Value</dt><dd>{{selectedRamIndex >= 0 ? (simulator.ram[selectedRamIndex] | instruction) : ""}}</dd>
             </dl>
           </div>
@@ -104,7 +104,7 @@
             <span ng-show="simulator.lastPc == $index">now <span class="glyphicon glyphicon-arrow-right last-pc-pointer"></span></span> {{$index}}
           </td>
           <td>{{address | binary}}</td>
-          <td>0x{{address | nibble}}</td>
+          <td>0x{{address | word}}</td>
           <td ng-if="simulator.codeSegmentBoundary > $index">{{address | instruction}}</td>
           <td ng-if="simulator.codeSegmentBoundary <= $index">{{address}}</td>
         </tr>

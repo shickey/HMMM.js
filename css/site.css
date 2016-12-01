@@ -1,6 +1,7 @@
 body {
   /*padding-top: 70px;*/
   background: #004358;
+  font-family: 'Noto Sans', sans-serif;
 }
 
 table tr td:first-child, table th:first-child {

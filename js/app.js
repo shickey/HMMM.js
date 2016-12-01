@@ -79,7 +79,7 @@ app.filter('binary', function() {
 
 });
 
-app.filter('hex', function() {
+app.filter('byte', function() {
 
   return function(input) {
     var bin = parseInt(hmmm.util.binaryForInteger(input, 16), 2);
@@ -88,7 +88,7 @@ app.filter('hex', function() {
 
 });
 
-app.filter('nibble', function() {
+app.filter('word', function() {
 
   return function(input) {
     var bin = parseInt(hmmm.util.binaryForInteger(input, 16), 2)
