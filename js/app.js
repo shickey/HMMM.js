@@ -232,7 +232,8 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
   });
   
   var inHandler = function() {
-    return +(prompt("Please input an integer"));
+    var input = +(prompt("Please input an integer"))
+    return input;
   }
   
   var outAndErrHandler = function(data) {

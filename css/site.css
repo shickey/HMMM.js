@@ -85,11 +85,11 @@ table tr td:first-child, table th:first-child {
 }
 
 .pc-pointer {
-  color: #FFED58;
+  color: #ABD19F;
 }
 
 .last-pc-pointer {
-  color: #D46755;
+  color: #ADC2DB;
 }
 
 .code-seg {
@@ -141,10 +141,10 @@ table tr td:first-child, table th:first-child {
 /* Bootstrap Overrides */
 
 .dl-horizontal dt {
-  width: 240px;
+  width: 260px;
 }
 .dl-horizontal dd {
-  margin-left: 260px;
+  margin-left: 280px;
 }
 
 /* Animations */
