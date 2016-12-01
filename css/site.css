@@ -131,12 +131,12 @@ table tr td:first-child, table th:first-child {
 
 /* Bootstrap Overrides */
 
-/*.dl-horizontal dt {
+.dl-horizontal dt {
   width: 300px;
 }
 .dl-horizontal dd {
   margin-left: 320px;
-}*/
+}
 
 /* Animations */
 
