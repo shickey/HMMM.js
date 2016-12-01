@@ -1,6 +1,6 @@
 body {
   /*padding-top: 70px;*/
-  background: rgba(0, 40, 100, .6);
+  background: #004358;
 }
 
 table tr td:first-child, table th:first-child {
@@ -92,19 +92,19 @@ table tr td:first-child, table th:first-child {
 }
 
 .code-seg {
-  background-color: #6BB997;
+  background-color: #F0CAB1;
 }
 
 .pc-index {
-  background-color: #FFED58;
+  background-color: #ABD19F;
 }
 
 .last-pc-index {
-  background-color: #D46755;
+  background-color: #ADC2DB;
 }
 
 .changed-ram {
-  background-color: #EBC3F5;
+  background-color: #FFF4BA;
 }
 
 .changed-ram-animated {
@@ -114,10 +114,10 @@ table tr td:first-child, table th:first-child {
 
 @keyframes ram-animation {
   from {
-    background-color: #D68EF5;
+    background-color: #FFF000;
   }
   to {
-    background-color: #EBC3F5;
+    background-color: #FFF4BA;
   }
 }
 
@@ -129,13 +129,21 @@ table tr td:first-child, table th:first-child {
   margin-top: 21px;
 }
 
+.color-box {
+  border: 1px solid grey;
+}
+
+.color-box::after {
+  content: '\00A0\00A0\00A0\00A0';
+}
+
 /* Bootstrap Overrides */
 
 .dl-horizontal dt {
-  width: 300px;
+  width: 240px;
 }
 .dl-horizontal dd {
-  margin-left: 320px;
+  margin-left: 260px;
 }
 
 /* Animations */

@@ -81,10 +81,10 @@
           </div>
           <div class="col-md-8">
             <dl class="dl-horizontal" ng-show="ramView == ramViews.GRID">
-              <dt>Code</dt><dd><span class="code-seg">&nbsp;&nbsp;&nbsp;&nbsp;</span></dd>
-              <dt>Current Instruction</dt><dd><span class="last-pc-index">&nbsp;&nbsp;&nbsp;&nbsp;</span></dd>
-              <dt>Next Instruction (pointed to by pc)</dt><dd><span class="pc-index">&nbsp;&nbsp;&nbsp;&nbsp;</span></dd>
-              <dt>Updated RAM Values</dt><dd><span class="changed-ram">&nbsp;&nbsp;&nbsp;&nbsp;</span></dd>
+              <dt>Code</dt><dd><span class="color-box code-seg"></span></dd>
+              <dt>Current Instruction</dt><dd><span class="color-box last-pc-index"></span></dd>
+              <dt>Next Instruction (pointed to by pc)</dt><dd><span class="color-box pc-index"></span></dd>
+              <dt>Updated RAM Values</dt><dd><span class="color-box changed-ram"></span></dd>
             </dl>
           </div>
         </div>
@@ -98,7 +98,7 @@
           <th style="width: 15%;">Hex</th>
           <th style="width: 25%;">Value</th>
         </thead>
-        <tr ng-repeat="address in simulator.ram track by $index" ng-class="{ danger: simulator.boundary > $index }">
+        <tr ng-repeat="address in simulator.ram track by $index" ng-class="{ 'code-seg': simulator.codeSegmentBoundary > $index }">
           <td>
             <span ng-show="simulator.pc == $index">next <span class="glyphicon glyphicon-arrow-right pc-pointer"></span></span>
             <span ng-show="simulator.lastPc == $index">now <span class="glyphicon glyphicon-arrow-right last-pc-pointer"></span></span> {{$index}}
