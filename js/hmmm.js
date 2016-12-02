@@ -1444,7 +1444,7 @@ var hmmm = hmmm || {};
         return false;
       };
       var parsedInput = parseInt(input);
-      setRegister(rx, input);
+      setRegister(rx, parsedInput);
       setMachineState(simulatorStates.READY);
       readTargetRegister = undefined;
       return true;
