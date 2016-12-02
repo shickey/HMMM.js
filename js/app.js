@@ -273,17 +273,26 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
 
   $scope.waitingForInput = false;
   $scope.inputValue = undefined;
+  $scope.invalidInputInteger = false;
 
   $scope.readInput = function(input) {
     if (simulator.readInput(input)) {
       $scope.waitingForInput = false;
-      $timeout(execute, $scope.timingDelay);
+      $scope.inputValue = undefined;
+      $scope.invalidInputInteger = false;
+      $timeout(execute, $scope.timingDelay); // TODO: Only call this is run has been pressed (i.e., not when single-stepping)
+    }
+    else {
+      $scope.invalidInputInteger = true;
     }
   }
 
   $scope.$watch('waitingForInput', function(newVal, oldVal) {
     if (newVal === true) {
-      $('#input-modal').modal();
+      $('#input-modal').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
     }
     else {
       $('#input-modal').modal('hide');
@@ -308,6 +317,10 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
   
   $scope.stepForward = function() {
     simulator.runNextInstruction();
+    if (simulator.state === hmmm.simulator.simulatorStates.WAIT) {
+      $scope.waitingForInput = true;
+      $scope.currentTimeout = undefined;
+    }
   }
   
   $scope.stepBack = function() {

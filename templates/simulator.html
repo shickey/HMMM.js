@@ -115,22 +115,22 @@
 </div>
 
 <!-- Input Modal -->
-<div class="modal" id="input-modal">
+<div class="modal" id="input-modal" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">HMMM Input</h4>
       </div>
       <div class="modal-body">
-      <form class="form-horizontal">
-        <div class="form-group">
-          <label for="hmmm-input" class="col-sm-8 control-label">Please enter an integer</label>
-          <div class="col-sm-8">
-            <input type="text" class="form-control" id="hmmm-input" ng-model="inputValue">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="hmmm-input" class="col-sm-8 control-label">Please enter an integer:</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="hmmm-input" ng-model="inputValue">
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+        <p class="text-danger text-right" ng-show="invalidInputInteger"><strong>Oh snap!</strong> That's not a valid integer. Try again!</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="readInput(inputValue)">Enter</button>

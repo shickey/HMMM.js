@@ -1438,7 +1438,7 @@ var hmmm = hmmm || {};
 
     function readInput(input) {
       var rx = readTargetRegister;
-      var validInput = /^-?[0-9]+$/.test(input) || /^-?0[xX][0-9a-fA-F]+$/.test(arg);
+      var validInput = /^-?[0-9]+$/.test(input) || /^-?0[xX][0-9a-fA-F]+$/.test(input);
       if (!validInput) {
         throwSimulationError("Invalid user input");
         return false;
