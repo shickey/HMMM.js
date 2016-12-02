@@ -207,6 +207,7 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
     reader.onload = function(e) {
       var text = e.target.result;
       hmmmEditor.setValue(text);
+      hmmmEditor.clearSelection();
     };
     reader.readAsText(file);
   }
