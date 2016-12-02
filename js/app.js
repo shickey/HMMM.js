@@ -253,17 +253,44 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
   }
   
   $scope.currentTimeout = undefined;
+
+  var execute = function() {
+    if (simulator.state !== hmmm.simulator.simulatorStates.ERROR && simulator.state !== hmmm.simulator.simulatorStates.HALT && simulator.state !== hmmm.simulator.simulatorStates.WAIT) {
+      simulator.runNextInstruction();
+      if (simulator.state === hmmm.simulator.simulatorStates.WAIT) {
+        $scope.waitingForInput = true;
+        $scope.currentTimeout = undefined;
+        return;
+      }
+      $scope.currentTimeout = $timeout(execute, $scope.timingDelay);
+    }
+    else {
+      $scope.currentTimeout = undefined;
+    }
+  }
+
+  // Input Handling
+
+  $scope.waitingForInput = false;
+  $scope.inputValue = undefined;
+
+  $scope.readInput = function(input) {
+    if (simulator.readInput(input)) {
+      $scope.waitingForInput = false;
+      $timeout(execute, $scope.timingDelay);
+    }
+  }
+
+  $scope.$watch('waitingForInput', function(newVal, oldVal) {
+    if (newVal === true) {
+      $('#input-modal').modal();
+    }
+    else {
+      $('#input-modal').modal('hide');
+    }
+  });
   
   $scope.runProgram = function() {
-    var execute = function() {
-      if (simulator.state !== hmmm.simulator.simulatorStates.ERROR && simulator.state !== hmmm.simulator.simulatorStates.HALT) {
-        $scope.currentTimeout = $timeout(execute, $scope.timingDelay);
-        simulator.runNextInstruction();
-      }
-      else {
-        $scope.currentTimeout = undefined;
-      }
-    }
     execute();
   }
   

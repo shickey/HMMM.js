@@ -948,7 +948,7 @@ var hmmm = hmmm || {};
     EMPTY   : 'EMPTY',
     READY   : 'READY',
     RUN     : 'RUN',
-    PAUSE   : 'PAUSE',
+    WAIT    : 'WAIT',
     HALT    : 'HALT',
     ERROR   : 'ERROR'
   });
@@ -975,7 +975,7 @@ var hmmm = hmmm || {};
     machine.errHandler = errHandler;
     
     //---------------------------------------
-    // Internal State
+    // Machine State (Public)
     //---------------------------------------
     machine.registers            = [];
     machine.ram                  = [];
@@ -985,6 +985,13 @@ var hmmm = hmmm || {};
     machine.codeSegmentBoundary  = 0;
     machine.state                = simulatorStates.EMPTY;
     machine.mode                 = simulatorModes.SAFE;
+
+    //---------------------------------------
+    // Internal State
+    //---------------------------------------
+    var readTargetRegister = undefined; // Used to keep track of the register
+                                        // associated with a read instruction
+                                        // while waiting for user input
     
     for (var i = 0; i < NUM_REGISTERS; ++i) {
       machine.registers.push(0);
@@ -1181,14 +1188,17 @@ var hmmm = hmmm || {};
         setProgramCounter(getLastProgramCounter());
       }
       else if (operation === "read") {
-        var userInput = inHandler();
-        var validInput = /^-?[0-9]+$/.test(userInput) || /^-?0[xX][0-9a-fA-F]+$/.test(arg);
-        if (!validInput) {
-          throwSimulationError("Invalid user input");
-          return;
-        };
-        var parsedInput = parseInt(userInput);
-        setRegister(rx, parsedInput);
+        readTargetRegister = rx;
+        setMachineState(simulatorStates.WAIT);
+        return;
+        // var input = inHandler();
+        // var validInput = /^-?[0-9]+$/.test(input) || /^-?0[xX][0-9a-fA-F]+$/.test(arg);
+        // if (!validInput) {
+        //   throwSimulationError("Invalid user input");
+        //   return;
+        // };
+        // var parsedInput = parseInt(input);
+        // setRegister(rx, input);
       }
       else if (operation === "write") {
         var data = getRegister(rx);
@@ -1376,6 +1386,10 @@ var hmmm = hmmm || {};
     }
     
     function runNextInstruction() {
+      if (machine.state === simulatorStates.WAIT) {
+        console.log("Simulator is waiting for user input");
+        return;
+      }
       machine.undoStack.addUndoMarker();
       var progCounter = getProgramCounter();
       if (machine.mode === simulatorModes.SAFE && (progCounter < 0 || progCounter >= machine.codeSegmentBoundary)) {
@@ -1395,38 +1409,53 @@ var hmmm = hmmm || {};
       executeInstruction(decoded.operation, decoded.args);
     }
     
-    function run(willExecute, didExecute) {
-      if (getMachineState() == simulatorStates.EMPTY) {
-        throwSimulationError("No code loaded into machine");
-        return;
-      }
-      if (getMachineState() == simulatorStates.HALT) {
-        return;
-      }
-      if (getMachineState() == simulatorStates.ERROR) {
-        return;
-      }
-      setMachineState(simulatorStates.RUN);
-      while (getMachineState() === simulatorStates.RUN) {
-        if (willExecute) {
-          willExecute();
-        }
-        runNextInstruction();
-        if (didExecute) {
-          didExecute();
-        }
-      }
-    }
+    // function run(willExecute, didExecute) {
+    //   if (getMachineState() == simulatorStates.EMPTY) {
+    //     throwSimulationError("No code loaded into machine");
+    //     return;
+    //   }
+    //   if (getMachineState() == simulatorStates.HALT) {
+    //     return;
+    //   }
+    //   if (getMachineState() == simulatorStates.ERROR) {
+    //     return;
+    //   }
+    //   setMachineState(simulatorStates.RUN);
+    //   while (getMachineState() === simulatorStates.RUN) {
+    //     if (willExecute) {
+    //       willExecute();
+    //     }
+    //     runNextInstruction();
+    //     if (didExecute) {
+    //       didExecute();
+    //     }
+    //   }
+    // }
     
     function stepBackward() {
       machine.undoStack.undo();
     }
 
+    function readInput(input) {
+      var rx = readTargetRegister;
+      var validInput = /^-?[0-9]+$/.test(input) || /^-?0[xX][0-9a-fA-F]+$/.test(arg);
+      if (!validInput) {
+        throwSimulationError("Invalid user input");
+        return false;
+      };
+      var parsedInput = parseInt(input);
+      setRegister(rx, input);
+      setMachineState(simulatorStates.READY);
+      readTargetRegister = undefined;
+      return true;
+    }
+
     machine.resetMachine = resetMachine;
     machine.loadBinary = loadBinary;
     machine.runNextInstruction = runNextInstruction;
-    machine.run = run;
+    // machine.run = run;
     machine.stepBackward = stepBackward;
+    machine.readInput = readInput;
     
     return machine;
     
