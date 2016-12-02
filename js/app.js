@@ -8,7 +8,7 @@ app.run(function($rootScope, $location) {
   }
   
   $rootScope.$on('$routeChangeSuccess', function() {
-    // ga('send', 'pageview', $location.path());
+    ga('send', 'pageview', $location.path());
   });
 
   $rootScope.range = function(num) {
