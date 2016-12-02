@@ -111,6 +111,7 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   hmmmEditor.setHighlightActiveLine(false);
   hmmmEditor.setShowPrintMargin(false);
   hmmmEditor.setValue(HmmmSim.getHmmmCode());
+  hmmmEditor.clearSelection();
 
   var binEditor = ace.edit("bin-editor");
   binEditor.setTheme("ace/theme/monokai");
@@ -118,6 +119,7 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
   binEditor.setHighlightActiveLine(false);
   binEditor.setShowPrintMargin(false);
   binEditor.setValue(HmmmSim.getBinary());
+  binEditor.clearSelection();
   
   var assembler = hmmm.assembler;
   
@@ -138,6 +140,7 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
 
   $scope.selectExample = function(index) {
     HmmmSim.setHmmmCode(examples[index].code);
+    hmmmEditor.clearSelection();
   }
   
   
@@ -174,6 +177,7 @@ app.controller('EditorCtrl', ['$scope', 'HmmmSim', function($scope, HmmmSim) {
     }
     else {
       binEditor.setValue(output.binary);
+      binEditor.clearSelection();
       HmmmSim.setHmmmCode(hmmmEditor.getValue());
       HmmmSim.setBinary(output.binary);
       $scope.enableSimulation = true;
@@ -231,17 +235,12 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
     $(window).resize(resizeFn);
   });
   
-  var inHandler = function() {
-    var input = +(prompt("Please input an integer"))
-    return input;
-  }
-  
   var outAndErrHandler = function(data) {
     hmmmConsole.navigateFileEnd();
     hmmmConsole.insert(data + "\n");
   }
   
-  var simulator = hmmm.simulator.createSimulator(inHandler, outAndErrHandler, outAndErrHandler);
+  var simulator = hmmm.simulator.createSimulator(null, outAndErrHandler, outAndErrHandler);
   $scope.simulator = simulator;
 
   var binary = HmmmSim.getBinary();
@@ -293,6 +292,7 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
         backdrop: 'static',
         keyboard: false
       });
+      $('#hmmm-input').focus();
     }
     else {
       $('#input-modal').modal('hide');

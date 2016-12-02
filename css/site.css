@@ -158,7 +158,7 @@ table tr td:first-child, table th:first-child {
   width: 100%;
 }
 
-.view-frame.slide-forward.ng-enter {
+/*.view-frame.slide-forward.ng-enter {
   -webkit-animation: 0.5s slide-in-from-right;
   -moz-animation: 0.5s slide-in-from-right;
   -o-animation: 0.5s slide-in-from-right;
@@ -188,7 +188,7 @@ table tr td:first-child, table th:first-child {
   -o-animation: 0.5s slide-out-to-right;
   animation: 0.5s slide-out-to-right;
   z-index: 99;
-}
+}*/
 
 @keyframes slide-in-from-right {
   from { left: 100%; }

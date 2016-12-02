@@ -122,18 +122,18 @@
         <h4 class="modal-title" id="myModalLabel">HMMM Input</h4>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal">
+        <form class="form-horizontal" ng-submit="readInput(inputValue)">
           <div class="form-group">
-            <label for="hmmm-input" class="col-sm-8 control-label">Please enter an integer:</label>
-            <div class="col-sm-8">
+            <label for="hmmm-input" class="col-sm-6 control-label">Please enter an integer:</label>
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="hmmm-input" ng-model="inputValue">
+            </div>
+            <div class="col-sm-4">
+              <button type="submit" class="btn btn-primary">Enter</button>
             </div>
           </div>
         </form>
         <p class="text-danger text-right" ng-show="invalidInputInteger"><strong>Oh snap!</strong> That's not a valid integer. Try again!</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="readInput(inputValue)">Enter</button>
       </div>
     </div>
   </div>
