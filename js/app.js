@@ -287,6 +287,13 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
     }
   }
 
+  $scope.cancelInput = function() {
+    $scope.waitingForInput = false;
+    $scope.inputValue = undefined;
+    $scope.invalidInputInteger = false;
+    simulator.stepBackward();
+  }
+
   $scope.$watch('waitingForInput', function(newVal, oldVal) {
     if (newVal === true) {
       $('#input-modal').modal({
