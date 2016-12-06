@@ -13,7 +13,13 @@
                 <option ng-repeat="mode in simulatorModes" value="{{mode}}">{{displayStringForMode(mode)}}</option>
               </select>
             </div>
-            <a data-toggle="tooltip" data-placement="bottom" title="Simulator Modes: Safe mode prevents writing to the code segment and prevents execution outside the code segment. Warn mode will log a warning in these cases. Unsafe mode will let you do whatever you want!"><span class="badge">?</span></a>
+            <a data-toggle="tooltip" data-placement="bottom" title="Simulator Modes
+
+Safe Mode: Prevents writing to the code segment and executing outside the code segment
+
+Warn Mode: Logs a warning when writing to the code segment or executing outside the code segment
+
+Unsafe Mode: Lets you do whatever you want!"><span class="badge">?</span></a>
           </form>
         </div>
         <div class="btn-group pull-right">
@@ -58,7 +64,7 @@
 
     <div class="panel panel-default">
       <div class="panel-heading clearfix">
-        <h4>RAM</h4>
+        <h4 class="pull-left">RAM</h4>
         <div class="btn-group pull-right" role="group">
           <button type="button" class="btn btn-default" ng-class="{ active: ramView == ramViews.GRID }" ng-click="changeRamView(ramViews.GRID)"><span class="glyphicon glyphicon-th"></span> Grid View</button>
           <button type="button" class="btn btn-default" ng-class="{ active: ramView == ramViews.LIST }" ng-click="changeRamView(ramViews.LIST)"><span class="glyphicon glyphicon-th-list"></span> List View</button>
@@ -73,7 +79,14 @@
         </thead>
         <tr ng-repeat="i in range(16)">
           <td class="text-right">{{i * 16 | byte}}</td>
-          <td ng-repeat="j in range(16)" ng-class="{ 'code-seg': simulator.codeSegmentBoundary > (i * 16) + j , 'last-pc-index': simulator.lastPc == (i * 16) + j, 'pc-index': simulator.pc == (i * 16) + j, 'changed-ram': (simulator.ram[(i * 16) + j] != 0) && (i * 16) + j >= simulator.codeSegmentBoundary, 'changed-ram-animated': (simulator.ram[(i * 16) + j] != 0) && (i * 16) + j >= simulator.codeSegmentBoundary, 'selected-ram': (i * 16) + j == selectedRamIndex }" ng-click="selectRam((i * 16) +j)" class="text-right" style="font-family: 'Droid Sans Mono', monospace;">{{ simulator.ram[(i * 16) + j] | word }}</td>
+          <td ng-repeat="j in range(16)" ng-class="{ 
+          'code-seg': simulator.codeSegmentBoundary > (i * 16) + j,
+          'last-pc-index': simulator.lastPc == (i * 16) + j,
+          'pc-index': simulator.pc == (i * 16) + j,
+          'changed-ram': (simulator.ram[(i * 16) + j] != 0) && (i * 16) + j >= simulator.codeSegmentBoundary,
+          'changed-ram-animated': (simulator.ram[(i * 16) + j] != 0) && (i * 16) + j >= simulator.codeSegmentBoundary,
+          'selected-ram': (i * 16) + j == selectedRamIndex 
+          }" ng-click="selectRam((i * 16) +j)" class="text-right" style="font-family: 'Droid Sans Mono', monospace;">{{ simulator.ram[(i * 16) + j] | word }}</td>
         </tr>
       </table>
 
