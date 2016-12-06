@@ -287,12 +287,24 @@ var hmmm = hmmm || {};
     return spaced;
   }
 
+  function spaceIntoBytes(bitstring) {
+    var spaced = "";
+    for (var i = 0; i < bitstring.length; ++i) {
+      if (i % 2 === 0 && i !== 0) {
+        spaced += " ";
+      }
+      spaced += bitstring[i];
+    }
+    return spaced;
+  }
+
   hmmm.util = {
     instructionFromBinary: instructionFromBinary,
     binaryForInteger: binaryForInteger,
     padZeroesLeft: padZeroesLeft,
     flipBitstring: flipBitstring,
-    spaceIntoNibbles: spaceIntoNibbles
+    spaceIntoNibbles: spaceIntoNibbles,
+    spaceIntoBytes: spaceIntoBytes
   };
 
 
@@ -936,7 +948,7 @@ var hmmm = hmmm || {};
     EMPTY   : 'EMPTY',
     READY   : 'READY',
     RUN     : 'RUN',
-    PAUSE   : 'PAUSE',
+    WAIT    : 'WAIT',
     HALT    : 'HALT',
     ERROR   : 'ERROR'
   });
@@ -950,34 +962,43 @@ var hmmm = hmmm || {};
     
     var NUM_REGISTERS = 16;
     var RAM_SIZE      = 256;
-    
-    var undoStack = createUndoStack();
+
+    var machine = {};
+
+    machine.undoStack = createUndoStack();
     
     //---------------------------------------
     // User Defined Input/Output Functions
     //---------------------------------------
-    var inHandler  = inHandler;
-    var outHandler = outHandler;
-    var errHandler = errHandler;
+    machine.inHandler  = inHandler;
+    machine.outHandler = outHandler;
+    machine.errHandler = errHandler;
     
+    //---------------------------------------
+    // Machine State (Public)
+    //---------------------------------------
+    machine.registers            = [];
+    machine.ram                  = [];
+    machine.pc                   = 0;
+    machine.lastPc               = 0;
+    machine.ir                   = 0;
+    machine.codeSegmentBoundary  = 0;
+    machine.state                = simulatorStates.EMPTY;
+    machine.mode                 = simulatorModes.SAFE;
+
     //---------------------------------------
     // Internal State
     //---------------------------------------
-    var registers            = [];
-    var ram                  = [];
-    var pc                   = 0;
-    var lastPc               = 0;
-    var ir                   = 0;
-    var codeSegmentBoundary  = 0;
-    var state                = simulatorStates.EMPTY;
-    var mode                 = simulatorModes.SAFE;
+    var readTargetRegister = undefined; // Used to keep track of the register
+                                        // associated with a read instruction
+                                        // while waiting for user input
     
     for (var i = 0; i < NUM_REGISTERS; ++i) {
-      registers.push(0);
+      machine.registers.push(0);
     }
     
     for (var j = 0; j < RAM_SIZE; ++j) {
-      ram.push(0);
+      machine.ram.push(0);
     }
     
     //---------------------------------------
@@ -992,7 +1013,7 @@ var hmmm = hmmm || {};
       if (jumpTarget < 0 || jumpTarget >= RAM_SIZE) {
         return false;
       }
-      if (mode == simulatorModes.SAFE && jumpTarget >= codeSegmentBoundary) {
+      if (machine.mode == simulatorModes.SAFE && jumpTarget >= machine.codeSegmentBoundary) {
         return false;
       }
       return true;
@@ -1003,31 +1024,31 @@ var hmmm = hmmm || {};
     //---------------------------------------
     
     function getProgramCounter() {
-      return pc
+      return machine.pc
     }
     
     function setProgramCounter(jumpTarget) {
       var currentPc = getProgramCounter();
-      pc = jumpTarget;
-      undoStack.addUndoableAction(function() {
-        pc = currentPc;
+      machine.pc = jumpTarget;
+      machine.undoStack.addUndoableAction(function() {
+        machine.pc = currentPc;
       });
     }
     
     function getLastProgramCounter() {
-      return lastPc;
+      return machine.lastPc;
     }
     
     function setLastProgramCounter(lastPc) {
       var currentLastPc = getLastProgramCounter();
-      lastPc = lastPc;
-      undoStack.addUndoableAction(function() {
-        lastPc = currentLastPc;
+      machine.lastPc = lastPc;
+      machine.undoStack.addUndoableAction(function() {
+        machine.lastPc = currentLastPc;
       });
     }
     
     function getInstructionRegister() {
-      return ir;
+      return machine.ir;
     }
     
     function setInstructionRegister(binaryInst) {
@@ -1036,9 +1057,9 @@ var hmmm = hmmm || {};
         return
       }
       var currentIr = getInstructionRegister();
-      ir = binaryInst;
-      undoStack.addUndoableAction(function() {
-        ir = currentIr;
+      machine.ir = binaryInst;
+      machine.undoStack.addUndoableAction(function() {
+        machine.ir = currentIr;
       });
     }
     
@@ -1047,7 +1068,7 @@ var hmmm = hmmm || {};
         throwSimulationError("Attempted to access invalid register: r" + register);
         return;
       }
-      return registers[register];
+      return machine.registers[register];
     }
     
     function setRegister(register, value) {
@@ -1063,9 +1084,9 @@ var hmmm = hmmm || {};
         return; // Register 0 is always 0
       }
       var currentValue = getRegister(register);
-      registers[register] = value;
-      undoStack.addUndoableAction(function() {
-        registers[register] = currentValue;
+      machine.registers[register] = value;
+      machine.undoStack.addUndoableAction(function() {
+        machine.registers[register] = currentValue;
       })
     }
     
@@ -1074,7 +1095,7 @@ var hmmm = hmmm || {};
         throwSimulationError("Attempted to access invalid ram address: " + address);
         return;
       }
-      return ram[address];
+      return machine.ram[address];
     }
     
     function setRam(address, value) {
@@ -1082,7 +1103,7 @@ var hmmm = hmmm || {};
         throwSimulationError("Attempted to access invalid ram address: " + address);
         return;
       }
-      if (mode = simulatorModes.SAFE && address < codeSegmentBoundary) {
+      if (machine.mode = simulatorModes.SAFE && address < machine.codeSegmentBoundary) {
         throwSimulationError("Attempted to write into code segment of RAM");
         return;
       }
@@ -1091,21 +1112,21 @@ var hmmm = hmmm || {};
         return;
       }
       var currentValue = getRam(address);
-      ram[address] = value;
-      undoStack.addUndoableAction(function() {
-        ram[address] = currentValue;
+      machine.ram[address] = value;
+      machine.undoStack.addUndoableAction(function() {
+        machine.ram[address] = currentValue;
       });
     }
     
     function getMachineState() {
-      return state;
+      return machine.state;
     }
     
     function setMachineState(newState) {
       var currentState = getMachineState();
-      state = newState;
-      undoStack.addUndoableAction(function() {
-        state = currentState;
+      machine.state = newState;
+      machine.undoStack.addUndoableAction(function() {
+        machine.state = currentState;
       });
     }
     
@@ -1167,14 +1188,17 @@ var hmmm = hmmm || {};
         setProgramCounter(getLastProgramCounter());
       }
       else if (operation === "read") {
-        var userInput = inHandler();
-        var validInput = /^-?[0-9]+$/.test(userInput) || /^-?0[xX][0-9a-fA-F]+$/.test(arg);
-        if (!validInput) {
-          throwSimulationError("Invalid user input");
-          return;
-        };
-        var parsedInput = parseInt(userInput);
-        setRegister(rx, parsedInput);
+        readTargetRegister = rx;
+        setMachineState(simulatorStates.WAIT);
+        return;
+        // var input = inHandler();
+        // var validInput = /^-?[0-9]+$/.test(input) || /^-?0[xX][0-9a-fA-F]+$/.test(arg);
+        // if (!validInput) {
+        //   throwSimulationError("Invalid user input");
+        //   return;
+        // };
+        // var parsedInput = parseInt(input);
+        // setRegister(rx, input);
       }
       else if (operation === "write") {
         var data = getRegister(rx);
@@ -1321,20 +1345,20 @@ var hmmm = hmmm || {};
     // Public Functions
     //---------------------------------------
     function resetMachine(clearProgram) {
-      pc = 0;
-      lastPc = 0;
-      ir = 0;
+      machine.pc = 0;
+      machine.lastPc = 0;
+      machine.ir = 0;
       
       if (clearProgram) {
-        codeSegmentBoundary = 0;
+        machine.codeSegmentBoundary = 0;
       }
       
-      for (var i = 0; i < registers.length; ++i) {
-        registers[i] = 0;
+      for (var i = 0; i < machine.registers.length; ++i) {
+        machine.registers[i] = 0;
       }
       
-      for (var j = codeSegmentBoundary; j < ram.length; ++j) {
-        ram[j] = 0;
+      for (var j = machine.codeSegmentBoundary; j < machine.ram.length; ++j) {
+        machine.ram[j] = 0;
       }
       
       if (clearProgram) {
@@ -1343,7 +1367,7 @@ var hmmm = hmmm || {};
       else {
         setMachineState(simulatorStates.READY);
       }
-      undoStack.clearStack();
+      machine.undoStack.clearStack();
     }
     
     function loadBinary(binary) {
@@ -1355,16 +1379,20 @@ var hmmm = hmmm || {};
         instructions.push(parseInt(line.replace(/ /g, ""), 2));
       });
       for (var i = 0; i < instructions.length; ++i) {
-        ram[i] = instructions[i];
+        machine.ram[i] = instructions[i];
       }
-      codeSegmentBoundary = instructions.length;
+      machine.codeSegmentBoundary = instructions.length;
       resetMachine(false);
     }
     
     function runNextInstruction() {
-      undoStack.addUndoMarker();
+      if (machine.state === simulatorStates.WAIT) {
+        console.log("Simulator is waiting for user input");
+        return;
+      }
+      machine.undoStack.addUndoMarker();
       var progCounter = getProgramCounter();
-      if (mode === simulatorModes.SAFE && (progCounter < 0 || progCounter >= codeSegmentBoundary)) {
+      if (machine.mode === simulatorModes.SAFE && (progCounter < 0 || progCounter >= machine.codeSegmentBoundary)) {
         throwSimulationError("Attempted to execute instruction outside of code segment");
         return;
       }
@@ -1372,7 +1400,7 @@ var hmmm = hmmm || {};
       setInstructionRegister(binInst);
       var decoded = decodeBinaryInstruction(getInstructionRegister());
       if (!decoded) {
-        undoStack.undo();
+        machine.undoStack.undo();
         throwSimulationError("Unable to decode instruction");
         return;
       }
@@ -1381,49 +1409,55 @@ var hmmm = hmmm || {};
       executeInstruction(decoded.operation, decoded.args);
     }
     
-    function run(willExecute, didExecute) {
-      if (getMachineState() == simulatorStates.EMPTY) {
-        throwSimulationError("No code loaded into machine");
-        return;
-      }
-      if (getMachineState() == simulatorStates.HALT) {
-        return;
-      }
-      if (getMachineState() == simulatorStates.ERROR) {
-        return;
-      }
-      setMachineState(simulatorStates.RUN);
-      while (getMachineState() === simulatorStates.RUN) {
-        if (willExecute) {
-          willExecute();
-        }
-        runNextInstruction();
-        if (didExecute) {
-          didExecute();
-        }
-      }
-    }
+    // function run(willExecute, didExecute) {
+    //   if (getMachineState() == simulatorStates.EMPTY) {
+    //     throwSimulationError("No code loaded into machine");
+    //     return;
+    //   }
+    //   if (getMachineState() == simulatorStates.HALT) {
+    //     return;
+    //   }
+    //   if (getMachineState() == simulatorStates.ERROR) {
+    //     return;
+    //   }
+    //   setMachineState(simulatorStates.RUN);
+    //   while (getMachineState() === simulatorStates.RUN) {
+    //     if (willExecute) {
+    //       willExecute();
+    //     }
+    //     runNextInstruction();
+    //     if (didExecute) {
+    //       didExecute();
+    //     }
+    //   }
+    // }
     
     function stepBackward() {
-      undoStack.undo();
+      machine.undoStack.undo();
     }
+
+    function readInput(input) {
+      var rx = readTargetRegister;
+      var validInput = /^-?[0-9]+$/.test(input) || /^-?0[xX][0-9a-fA-F]+$/.test(input);
+      if (!validInput) {
+        throwSimulationError("Invalid user input");
+        return false;
+      };
+      var parsedInput = parseInt(input);
+      setRegister(rx, parsedInput);
+      setMachineState(simulatorStates.READY);
+      readTargetRegister = undefined;
+      return true;
+    }
+
+    machine.resetMachine = resetMachine;
+    machine.loadBinary = loadBinary;
+    machine.runNextInstruction = runNextInstruction;
+    // machine.run = run;
+    machine.stepBackward = stepBackward;
+    machine.readInput = readInput;
     
-    return {
-      registers: registers,
-      ram: ram,
-      pc: pc,
-      lastPc: lastPc,
-      ir: ir,
-      codeSegmentBoundary: codeSegmentBoundary,
-      state: state,
-      mode: mode,
-      
-      resetMachine: resetMachine,
-      loadBinary: loadBinary,
-      runNextInstruction: runNextInstruction,
-      run: run,
-      stepBackward: stepBackward
-    }
+    return machine;
     
   }
   
@@ -1434,10 +1468,9 @@ var hmmm = hmmm || {};
   //*********************************************
 
   hmmm.simulator = {
+    simulatorStates: simulatorStates,
+    simulatorModes: simulatorModes,
     createSimulator: createSimulator
   };
   
  })();
-
-// Expose HMMM to the outside world!
-module.exports = exports = hmmm;
