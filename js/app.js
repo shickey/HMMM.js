@@ -220,6 +220,10 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
   hmmmConsole.setReadOnly(true);
   hmmmConsole.setShowPrintMargin(false);
   hmmmConsole.renderer.setShowGutter(false);
+
+  $('[data-toggle="tooltip"]').tooltip({
+    container: 'body'
+  });
   
   $scope.timingDelay = 100;
   
@@ -243,6 +247,23 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
   
   var simulator = hmmm.simulator.createSimulator(null, outAndErrHandler, outAndErrHandler);
   $scope.simulator = simulator;
+  $scope.simulatorModes = [
+    hmmm.simulator.simulatorModes.SAFE,
+    hmmm.simulator.simulatorModes.WARN,
+    hmmm.simulator.simulatorModes.UNSAFE
+  ];
+
+  $scope.displayStringForMode = function(mode) {
+    if (mode === hmmm.simulator.simulatorModes.SAFE) {
+      return "Safe Mode"
+    }
+    else if (mode === hmmm.simulator.simulatorModes.WARN) {
+      return "Warn Mode"
+    }
+    else if (mode === hmmm.simulator.simulatorModes.UNSAFE) {
+      return "Unsafe Mode!"
+    }
+  }
 
   var binary = HmmmSim.getBinary();
   if (!binary) {
@@ -320,6 +341,7 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
   
   $scope.reset = function() {
     simulator.resetMachine();
+    simulator.loadBinary(HmmmSim.getBinary());
     hmmmConsole.setValue("");
   }
   

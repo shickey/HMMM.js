@@ -955,6 +955,7 @@ var hmmm = hmmm || {};
 
   var simulatorModes = Object.freeze({
     SAFE   : 'SAFE',
+    WARN   : 'WARN',
     UNSAFE : 'UNSAFE'
   });
 
@@ -1013,10 +1014,14 @@ var hmmm = hmmm || {};
       if (jumpTarget < 0 || jumpTarget >= RAM_SIZE) {
         return false;
       }
-      if (machine.mode == simulatorModes.SAFE && jumpTarget >= machine.codeSegmentBoundary) {
-        return false;
-      }
       return true;
+    }
+
+    function isJumpTargetInCodeSegment(jumpTarget) {
+      if (jumpTarget >= 0 && jumpTarget < machine.codeSegmentBoundary) {
+        return true;
+      }
+      return false;
     }
     
     //---------------------------------------
@@ -1103,9 +1108,14 @@ var hmmm = hmmm || {};
         throwSimulationError("Attempted to access invalid ram address: " + address);
         return;
       }
-      if (machine.mode = simulatorModes.SAFE && address < machine.codeSegmentBoundary) {
-        throwSimulationError("Attempted to write into code segment of RAM");
-        return;
+      if (address < machine.codeSegmentBoundary) {
+        if (machine.mode === simulatorModes.SAFE) {
+          throwSimulationError("Attempted to write into code segment of RAM");
+          return;
+        }
+        else if (machine.mode === simulatorModes.WARN) {
+          reportSimulationWarning("Writing into code segment of RAM");
+        }
       }
       if (!isValidInteger(value)) {
         throwSimulationError("Integer overflow");
@@ -1138,6 +1148,12 @@ var hmmm = hmmm || {};
       setMachineState(simulatorStates.ERROR);
       if (errHandler) {
         errHandler("ERROR: " + message);
+      }
+    }
+
+    function reportSimulationWarning(message) {
+      if (errHandler) {
+        errHandler("WARNING: " + message);
       }
     }
     
@@ -1203,6 +1219,15 @@ var hmmm = hmmm || {};
         if (!isValidJumpTarget(data)) {
           throwSimulationError("Invalid jump target");
           return;
+        }
+        if (!isJumpTargetInCodeSegment(data)) {
+          if (machine.mode === simulatorModes.SAFE) {
+            throwSimulationError("Attempted to jump to address outside of code segment");
+            return;
+          }
+          else if (machine.mode === simulatorModes.WARN) {
+            reportSimulationWarning("Jumping to address outside of code segment");
+          }
         }
         setProgramCounter(data);
       }
@@ -1280,9 +1305,31 @@ var hmmm = hmmm || {};
           throwSimulationError("Invalid jump target");
           return;
         }
+        if (!isJumpTargetInCodeSegment(n)) {
+          if (machine.mode === simulatorModes.SAFE) {
+            throwSimulationError("Attempted to jump to address outside of code segment");
+            return;
+          }
+          else if (machine.mode === simulatorModes.WARN) {
+            reportSimulationWarning("Jumping to address outside of code segment");
+          }
+        }
         setProgramCounter(n);
       }
       else if (operation === "calln") {
+        if (!isValidJumpTarget(n)) {
+          throwSimulationError("Invalid jump target");
+          return;
+        }
+        if (!isJumpTargetInCodeSegment(n)) {
+          if (machine.mode === simulatorModes.SAFE) {
+            throwSimulationError("Attempted to jump to address outside of code segment");
+            return;
+          }
+          else if (machine.mode === simulatorModes.WARN) {
+            reportSimulationWarning("Jumping to address outside of code segment");
+          }
+        }
         var nextInst = getProgramCounter(); // We've already bumped at this point
         setRegister(rx, nextInst);
         setProgramCounter(n);
@@ -1294,6 +1341,15 @@ var hmmm = hmmm || {};
             throwSimulationError("Invalid jump target");
             return;
           }
+          if (!isJumpTargetInCodeSegment(n)) {
+            if (machine.mode === simulatorModes.SAFE) {
+              throwSimulationError("Attempted to jump to address outside of code segment");
+              return;
+            }
+            else if (machine.mode === simulatorModes.WARN) {
+              reportSimulationWarning("Jumping to address outside of code segment");
+            }
+          }
           setProgramCounter(n);
         }
       }
@@ -1303,6 +1359,15 @@ var hmmm = hmmm || {};
           if (!isValidJumpTarget(n)) {
             throwSimulationError("Invalid jump target");
             return;
+          }
+          if (!isJumpTargetInCodeSegment(n)) {
+            if (machine.mode === simulatorModes.SAFE) {
+              throwSimulationError("Attempted to jump to address outside of code segment");
+              return;
+            }
+            else if (machine.mode === simulatorModes.WARN) {
+              reportSimulationWarning("Jumping to address outside of code segment");
+            }
           }
           setProgramCounter(n);
         }
@@ -1314,6 +1379,15 @@ var hmmm = hmmm || {};
             throwSimulationError("Invalid jump target");
             return;
           }
+          if (!isJumpTargetInCodeSegment(n)) {
+            if (machine.mode === simulatorModes.SAFE) {
+              throwSimulationError("Attempted to jump to address outside of code segment");
+              return;
+            }
+            else if (machine.mode === simulatorModes.WARN) {
+              reportSimulationWarning("Jumping to address outside of code segment");
+            }
+          }
           setProgramCounter(n);
         }
       }
@@ -1323,6 +1397,15 @@ var hmmm = hmmm || {};
           if (!isValidJumpTarget(n)) {
             throwSimulationError("Invalid jump target");
             return;
+          }
+          if (!isJumpTargetInCodeSegment(n)) {
+            if (machine.mode === simulatorModes.SAFE) {
+              throwSimulationError("Attempted to jump to address outside of code segment");
+              return;
+            }
+            else if (machine.mode === simulatorModes.WARN) {
+              reportSimulationWarning("Jumping to address outside of code segment");
+            }
           }
           setProgramCounter(n);
         }
@@ -1384,9 +1467,14 @@ var hmmm = hmmm || {};
       }
       machine.undoStack.addUndoMarker();
       var progCounter = getProgramCounter();
-      if (machine.mode === simulatorModes.SAFE && (progCounter < 0 || progCounter >= machine.codeSegmentBoundary)) {
-        throwSimulationError("Attempted to execute instruction outside of code segment");
-        return;
+      if (progCounter < 0 || progCounter >= machine.codeSegmentBoundary) {
+        if (machine.mode === simulatorModes.SAFE) {
+          throwSimulationError("Attempted to execute instruction outside of code segment");
+          return;
+        }
+        else if (machine.mode === simulatorModes.WARN) {
+          reportSimulationWarning("Executing instruction outside of code segment");
+        }
       }
       var binInst = getRam(progCounter);
       setInstructionRegister(binInst);
