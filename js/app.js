@@ -273,6 +273,7 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
     simulator.loadBinary(HmmmSim.getBinary());
   }
   
+  $scope.running = false;
   $scope.currentTimeout = undefined;
 
   var execute = function() {
@@ -286,6 +287,9 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
       $scope.currentTimeout = $timeout(execute, $scope.timingDelay);
     }
     else {
+      if (simulator.state === hmmm.simulator.simulatorStates.ERROR || simulator.state === hmmm.simulator.simulatorStates.HALT) {
+        $scope.running = false;
+      }
       $scope.currentTimeout = undefined;
     }
   }
@@ -301,7 +305,9 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
       $scope.waitingForInput = false;
       $scope.inputValue = undefined;
       $scope.invalidInputInteger = false;
-      $timeout(execute, $scope.timingDelay); // TODO: Only call this is run has been pressed (i.e., not when single-stepping)
+      if ($scope.running === true) {
+        $timeout(execute, $scope.timingDelay);
+      }
     }
     else {
       $scope.invalidInputInteger = true;
@@ -312,6 +318,7 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
     $scope.waitingForInput = false;
     $scope.inputValue = undefined;
     $scope.invalidInputInteger = false;
+    $scope.running = false;
     simulator.stepBackward();
   }
 
@@ -329,6 +336,7 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
   });
   
   $scope.runProgram = function() {
+    $scope.running = true;
     execute();
   }
   
@@ -336,6 +344,7 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
     if ($scope.currentTimeout) {
       $timeout.cancel($scope.currentTimeout);
       $scope.currentTimeout = undefined;
+      $scope.running = false;
     }
   }
   
@@ -343,6 +352,7 @@ app.controller('SimulatorCtrl', ['$scope', '$location', '$timeout', 'HmmmSim', f
     simulator.resetMachine();
     simulator.loadBinary(HmmmSim.getBinary());
     hmmmConsole.setValue("");
+    $scope.running = false;
   }
   
   $scope.stepForward = function() {
